@@ -47,11 +47,6 @@
               :final-time (.toString (c/from-long (first final-price)))}
              (str "Not enough data for: " id))))
 
-(defn json-get [url]
-      (as-> (cnt/get url) x
-            (:body x)
-            (jsn/read-str x :key-fn keyword)))
-
 (defn data-by-id [curr-id]
       (println curr-id)
       {:id curr-id
@@ -81,6 +76,9 @@
 
 (defn green? [{:keys [open close]}]
       (> close open))
+
+(defn red? [{:keys [open close]}]
+      (> open close))
 
 (defn to-human [unix]
       (.toString (c/from-long (* 1000 (long unix)))))
@@ -135,6 +133,56 @@
                                 :last y})))))
              data)))
 
+(defn profit-calc-red [open nextlow low nextclose close]
+      (if
+        (< nextlow low)
+        (- low close)
+        (- nextclose close)))
+
+(defn simple-strat-red
+      "The short side"
+      [data & opts]
+      (let [humantime (if opts true false)]
+           (reduce
+             (fn [x
+                  {nexttime :time nextopen :open nexthigh :high nextlow :low nextclose :close :as y}]
+                 (let []
+                      (cond
+                        (contains? x :reds)
+                        (let [{:keys [time open high low close] :as last} (:last x)]
+                             (if (red? last)
+                               {:reds (conj (:reds x) {:basetimestamp (if
+                                                                            humantime
+                                                                            (to-human time)
+                                                                            (long time))
+                                                           :nexttimestamp (if
+                                                                            humantime
+                                                                            (to-human nexttime)
+                                                                            (long time))
+
+                                                           :profit (profit-calc open nextlow low nextclose close)
+                                                           :prof-calc [(:last x) y]})
+                                :last y}
+                               {:reds (:reds x)
+                                :last y}))
+                        :else
+                        (let [{:keys [time open high low close]} x]
+                             (if (red? x)
+                               {:reds [{:basetimestamp (if
+                                                           humantime
+                                                           (to-human time)
+                                                           (long time))
+                                          :nexttimestamp (if
+                                                           humantime
+                                                           (to-human nexttime)
+                                                           (long time))
+                                          :profit (profit-calc open nextlow low nextclose close)
+                                          :prof-calc [x y]}]
+                                :last y}
+                               {:reds []
+                                :last y})))))
+             data)))
+
 (defn simple-strat-profit-calc [simple-strat-data]
       (->>
         simple-strat-data
@@ -142,19 +190,8 @@
         (map :profit)
         (reduce +)))
 
-(defn cryptocompare-url-gen [fsym tsym timescale limit]
-
-
-
-      )
 
 (comment
-
-  (def url "https://www.cryptocompare.com/api/data/histoday/?e=CCCAGG&fsym=BTC&limit=1000&tsym=USD")
-  (def hoururl "https://www.cryptocompare.com/api/data/histominute/?e=CCCAGG&fsym=BTC&limit=1000&tsym=USD")
-
-  (def resp (json-get url))
-  (def hourresp (json-get hoururl))
 
   (simple-strat-profit-calc
     (simple-strat (:Data resp)))
@@ -417,19 +454,5 @@
          )
        )
 
-  (do
-    (load-file "simple.clj")
-    (ts/unstrument)
-    (ts/instrument))
-
-  (ts/summarize-results
-    (ts/check
-      'boot.user/raw->unix
-      {:clojure.spec.test.check/opts {:num-tests 1}}))
-
-  (ts/summarize-results
-    (ts/check
-      (ts/checkable-syms)
-      {:clojure.spec.test.check/opts {:num-tests 1}}))
   )
 

@@ -22,7 +22,7 @@
 
 (comment
 
-  (load-file "build.boot")
+ (smp/simple-strat (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000))))
 
   (do
     (load-file "src/core/utils.clj")
@@ -33,14 +33,13 @@
 
   (ts/summarize-results
     (ts/check
-      'boot.user/raw->unix
+      'core.utils/json-get
       {:clojure.spec.test.check/opts {:num-tests 1}}))
 
   (ts/summarize-results
     (ts/check
       (ts/checkable-syms)
       {:clojure.spec.test.check/opts {:num-tests 1}}))
-
   )
 
 
