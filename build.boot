@@ -22,7 +22,18 @@
 
 (comment
 
- (smp/simple-strat (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000))))
+  (def rslt (smp/simple-strat
+              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))
+              :human))
+
+  (def reds (:reds rslt))
+
+  (->>
+    (map :profit reds)
+    (reduce +))
+
+  (pprint reds)
+  (first reds)
 
   (do
     (load-file "src/core/utils.clj")

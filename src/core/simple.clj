@@ -83,6 +83,12 @@
 (defn to-human [unix]
       (.toString (c/from-long (* 1000 (long unix)))))
 
+(defn profit-calc-red [nexthigh high close nextclose]
+      (if
+        (> nexthigh high)
+        (- close high)
+        (- close nextclose)))
+
 (defn profit-calc [open nextlow low nextclose close]
       (if
         (< nextlow low)
@@ -90,98 +96,71 @@
         (- nextclose close)))
 
 (defn simple-strat
-      "Basic strat caclulating price differences after green candle"
+      "Basic strat backtesting price differences after in both directions"
       [data & opts]
       (let [humantime (if opts true false)]
            (reduce
              (fn [x
                   {nexttime :time nextopen :open nexthigh :high nextlow :low nextclose :close :as y}]
-                 (let []
-                      (cond
-                        (contains? x :greens)
-                        (let [{:keys [time open high low close] :as last} (:last x)]
-                             (if (green? last)
-                               {:greens (conj (:greens x) {:basetimestamp (if
-                                                                            humantime
-                                                                            (to-human time)
-                                                                            (long time))
-                                                           :nexttimestamp (if
-                                                                            humantime
-                                                                            (to-human nexttime)
-                                                                            (long time))
+                 (cond
+                   (contains? x :greens)
+                   (let [{:keys [time open high low close] :as last} (:last x)]
+                        (if (green? last)
+                          {:greens (conj (:greens x) {:basetimestamp (if
+                                                                       humantime
+                                                                       (to-human time)
+                                                                       (long time))
+                                                      :nexttimestamp (if
+                                                                       humantime
+                                                                       (to-human nexttime)
+                                                                       (long time))
 
-                                                           :profit (profit-calc open nextlow low nextclose close)
-                                                           :prof-calc [(:last x) y]})
-                                :last y}
-                               {:greens (:greens x)
-                                :last y}))
-                        :else
-                        (let [{:keys [time open high low close]} x]
-                             (if (green? x)
-                               {:greens [{:basetimestamp (if
-                                                           humantime
-                                                           (to-human time)
-                                                           (long time))
-                                          :nexttimestamp (if
-                                                           humantime
-                                                           (to-human nexttime)
-                                                           (long time))
-                                          :profit (profit-calc open nextlow low nextclose close)
-                                          :prof-calc [x y]}]
-                                :last y}
-                               {:greens []
-                                :last y})))))
+                                                      :profit (profit-calc open nextlow low nextclose close)
+                                                      :prof-calc [(:last x) y]})
+                           :reds (:reds x)
+                           :last y}
+                          {:greens (:greens x)
+                           :reds (conj (:reds x) {:basetimestamp (if
+                                                                   humantime
+                                                                   (to-human time)
+                                                                   (long time))
+                                                  :nexttimestamp (if
+                                                                   humantime
+                                                                   (to-human nexttime)
+                                                                   (long time))
+
+                                                  :profit (profit-calc-red nexthigh high close nextclose)
+                                                  :prof-calc [(:last x) y]})
+                           :last y}))
+                   :else
+                   (let [{:keys [time open high low close]} x]
+                        (if (green? x)
+                          {:greens [{:basetimestamp (if
+                                                      humantime
+                                                      (to-human time)
+                                                      (long time))
+                                     :nexttimestamp (if
+                                                      humantime
+                                                      (to-human nexttime)
+                                                      (long time))
+                                     :profit (profit-calc open nextlow low nextclose close)
+                                     :prof-calc [x y]}]
+                           :reds []
+                           :last y}
+                          {:greens []
+                           :reds [{:basetimestamp (if
+                                                    humantime
+                                                    (to-human time)
+                                                    (long time))
+                                   :nexttimestamp (if
+                                                    humantime
+                                                    (to-human nexttime)
+                                                    (long time))
+                                   :profit (profit-calc-red nexthigh high close nextclose)
+                                   :prof-calc [x y]}]
+                           :last y}))))
              data)))
 
-(defn profit-calc-red [open nextlow low nextclose close]
-      (if
-        (< nextlow low)
-        (- low close)
-        (- nextclose close)))
-
-(defn simple-strat-red
-      "The short side"
-      [data & opts]
-      (let [humantime (if opts true false)]
-           (reduce
-             (fn [x
-                  {nexttime :time nextopen :open nexthigh :high nextlow :low nextclose :close :as y}]
-                 (let []
-                      (cond
-                        (contains? x :reds)
-                        (let [{:keys [time open high low close] :as last} (:last x)]
-                             (if (red? last)
-                               {:reds (conj (:reds x) {:basetimestamp (if
-                                                                            humantime
-                                                                            (to-human time)
-                                                                            (long time))
-                                                           :nexttimestamp (if
-                                                                            humantime
-                                                                            (to-human nexttime)
-                                                                            (long time))
-
-                                                           :profit (profit-calc open nextlow low nextclose close)
-                                                           :prof-calc [(:last x) y]})
-                                :last y}
-                               {:reds (:reds x)
-                                :last y}))
-                        :else
-                        (let [{:keys [time open high low close]} x]
-                             (if (red? x)
-                               {:reds [{:basetimestamp (if
-                                                           humantime
-                                                           (to-human time)
-                                                           (long time))
-                                          :nexttimestamp (if
-                                                           humantime
-                                                           (to-human nexttime)
-                                                           (long time))
-                                          :profit (profit-calc open nextlow low nextclose close)
-                                          :prof-calc [x y]}]
-                                :last y}
-                               {:reds []
-                                :last y})))))
-             data)))
 
 (defn simple-strat-profit-calc [simple-strat-data]
       (->>

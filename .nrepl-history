@@ -226,3 +226,85 @@ data
       {:clojure.spec.test.check/opts {:num-tests 1}}))
  (smp/simple-strat (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))
  (smp/simple-strat (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000))) )
+(do
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (ts/unstrument)
+    (ts/instrument))
+ (smp/simple-strat (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000))))
+  (def rslt (smp/simple-strat
+              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))))
+rslt
+  (:reds rslt)
+(do
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (ts/unstrument)
+    (ts/instrument))
+  (do
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (ts/unstrument)
+    (ts/instrument))
+  (def rslt (smp/simple-strat
+              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))))
+(do
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (ts/unstrument)
+    (ts/instrument))
+  (def rslt (smp/simple-strat
+              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))))
+(do
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (ts/unstrument)
+    (ts/instrument))
+  (def rslt (smp/simple-strat
+              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))))
+rslt
+  (:reds rslt)
+  (def reds (:reds rslt))
+reds
+  (first reds)
+  (def rslt (smp/simple-strat
+              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))
+              :human))
+  (def reds (:reds rslt))
+reds
+  (first reds)
+  (def rslt (smp/simple-strat
+              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 10)))
+              :human))
+  (def reds (:reds rslt))
+reds
+  (def rslt (smp/simple-strat
+              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 50)))
+              :human))
+  (def reds (:reds rslt))
+  (first reds)
+  reds
+  (pprint reds)
+  (map :profit reds)
+  (->>
+    (map :profit reds)
+    (reduce +))
+  (def rslt (smp/simple-strat
+              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 500)))
+              :human))
+  (def reds (:reds rslt))
+  (->>
+    (map :profit reds)
+    (reduce +))
+  (def rslt (smp/simple-strat
+              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))
+              :human))
+  (def reds (:reds rslt))
+  (->>
+    (map :profit reds)
+    (reduce +))
