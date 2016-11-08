@@ -19,6 +19,7 @@
   '[core.utils :as u]
   '[core.spike :as sp]
   '[core.types :as tps]
+  '[core.marketcap :as cmc]
   '[core.simple :as smp])
 
 (deftask my-task
@@ -31,20 +32,28 @@
 
 (comment
 
-  (def raw-data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))
-  (u/to-human (first (:Data raw-data)))
+  (def all-curr-surface-data (u/json-get "https://api.coinmarketcap.com/v1/ticker/?limit=1000"))
 
-  (def rslt (smp/simple-strat
-              (:Data raw-data)
-              :human))
+  (def all-ids (map :id all-curr-surface-data))
 
-  (def reds (:reds rslt))
+  (def big-daddy-data
+    (map data-by-id all-ids))
+
+  (def rslt (smp/coinmarketcap-data-by-id "bitcoin"))
+
+  (year-calc (nth big-daddy-data 11))
+
+ (keys rslt)
+  (keys (:data rslt))
+
+  (s/exercise ::tps/coinmarketcap-sym)
 
   (do
     (load-file "src/core/types.clj")
     (load-file "src/core/utils.clj")
     (load-file "src/core/simple.clj")
     (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
     (load-file "build.boot")
     (ts/unstrument)
     (ts/instrument))
