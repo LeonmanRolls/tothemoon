@@ -15,30 +15,37 @@
   '[clojure.spec.gen :as gen]
   '[clojure.spec.test :as ts :refer [check]]
   '[clojure.spec.gen :as gen]
-  '[clojure.tools.namespace.repl :as repl]
+  '[clojure.core.reducers :as rd]
   '[core.utils :as u]
   '[core.spike :as sp]
+  '[core.types :as tps]
   '[core.simple :as smp])
+
+(deftask my-task
+         "Does nothing."
+         []
+         (fn [next-task]
+             (fn [fileset]
+                 (println "hi hi")
+                 (next-task fileset))))
 
 (comment
 
+  (def raw-data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))
+  (u/to-human (first (:Data raw-data)))
+
   (def rslt (smp/simple-strat
-              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))
+              (:Data raw-data)
               :human))
 
   (def reds (:reds rslt))
 
-  (->>
-    (map :profit reds)
-    (reduce +))
-
-  (pprint reds)
-  (first reds)
-
   (do
+    (load-file "src/core/types.clj")
     (load-file "src/core/utils.clj")
     (load-file "src/core/simple.clj")
     (load-file "src/core/spike.clj")
+    (load-file "build.boot")
     (ts/unstrument)
     (ts/instrument))
 

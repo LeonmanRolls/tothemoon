@@ -308,3 +308,104 @@ reds
   (->>
     (map :profit reds)
     (reduce +))
+  (load-file "build.boot")
+  (reduce + (rd/map inc [1 2 3])) === (reduce (fn [ret x] (+ ret (inc x))) (+) [1 2 3])
+  (reduce + (rd/map inc [1 2 3]))  
+(rd/map inc [1 2 3])
+  (repl/refresh)
+  (def dirs (get-env :directories))
+dirs
+  (apply repl/set-refresh-dirs dirs)
+  (repl/refresh)
+tt
+  smp/tt
+  (do
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+  (def raw-data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))
+raw-data
+  (first (:Data raw-data)) 
+    (load-file "src/core/utils.clj")
+  (u/to-huamn (first (:Data raw-data))) 
+    (load-file "src/core/utils.clj")
+  (u/to-huamn (first (:Data raw-data)))
+  (u/to-human (first (:Data raw-data)))
+    (load-file "build.boot")
+  :core.utils/cryptocomapre-sym
+(s/exercise
+    :core.utils/cryptocomapre-sym)
+  (s/exercise
+    :core.utils/cryptocomapre-sym)
+    (load-file "src/core/utils.clj")
+  u/cryptocompare-syms
+    (load-file "src/core/utils.clj")
+  u/cryptocompare-syms
+  (s/exercise
+    :core.utils/cryptocomapre-sym)
+(watch)
+(boot (watch))
+ (boot
+    (watch)
+    (do
+      (load-file "src/core/types.clj")
+      (load-file "src/core/utils.clj")
+      (load-file "src/core/simple.clj")
+      (load-file "src/core/spike.clj")
+      (load-file "build.boot")
+      (ts/unstrument)
+      (ts/instrument)))
+  (boot
+    (watch)
+    (do
+      (load-file "src/core/utils.clj")
+      (load-file "src/core/simple.clj")
+      (load-file "src/core/spike.clj")
+      (load-file "build.boot")
+      (ts/unstrument)
+      (ts/instrument)))
+  (boot
+    (watch)
+    (do
+      (load-file "src/core/simple.clj")
+      (load-file "src/core/spike.clj")
+      (load-file "build.boot")
+      (ts/unstrument)
+      (ts/instrument)))
+  (boot
+    (watch)
+    (do
+      (load-file "build.boot")
+      (ts/unstrument)
+      (ts/instrument)))
+  (boot
+    (watch)
+    (do
+      (println "hi there")
+      (ts/unstrument)
+      (ts/instrument)))
+(boot
+    (watch)
+    (my-task)
+    )
+(deftask my-task
+         "Does nothing."
+         []
+         (fn [next-task]
+             (fn [fileset]
+                 (do
+                   (println "hi there")
+                   (ts/unstrument)
+                   (ts/instrument))
+                 (next-task fileset))))
+  (boot
+    (watch)
+    (my-task)
+    )
+  (boot
+    (watch)
+    (my-task)
+    (repl))

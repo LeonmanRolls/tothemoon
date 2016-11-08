@@ -78,10 +78,6 @@
 ;Should make sure these are in sequential order
 (s/def ::timeseries (s/coll-of ::timestamp))
 
-(s/def ::unixtimestamp 
-  (s/with-gen 
-    (s/and number? #(> 1577580878000 % 0))  
-    (fn [] (s/gen #{157758087000}))))
 
 (s/def ::unixtimeseries (s/coll-of ::unixtimestamp))
 
@@ -466,16 +462,6 @@
            (:price %))))))
 
 (comment 
-
-
-
-
-  (type 
-    (lgc/run* [q]
-              (lgc/membero q [1 2 3])
-              (lgc/membero q [2 3 4])))
-
-:text (str (:unixtimestamp %) " , " (:price %))
 
 highest-grads (take 10 (sort-by :grad  > gradz))
 

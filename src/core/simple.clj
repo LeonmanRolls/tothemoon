@@ -50,7 +50,7 @@
 (defn data-by-id [curr-id]
       (println curr-id)
       {:id curr-id
-       :data (json-get (str "https://api.coinmarketcap.com/v1/datapoints/" curr-id "/1351941414000/1478141343000/"))})
+       :data (u/json-get (str "https://api.coinmarketcap.com/v1/datapoints/" curr-id "/1351941414000/1478141343000/"))})
 
 (defn less-than-year-filter [data]
       (as-> data x
@@ -80,8 +80,6 @@
 (defn red? [{:keys [open close]}]
       (> open close))
 
-(defn to-human [unix]
-      (.toString (c/from-long (* 1000 (long unix)))))
 
 (defn profit-calc-red [nexthigh high close nextclose]
       (if
@@ -108,11 +106,11 @@
                         (if (green? last)
                           {:greens (conj (:greens x) {:basetimestamp (if
                                                                        humantime
-                                                                       (to-human time)
+                                                                       (u/to-human time)
                                                                        (long time))
                                                       :nexttimestamp (if
                                                                        humantime
-                                                                       (to-human nexttime)
+                                                                       (u/to-human nexttime)
                                                                        (long time))
 
                                                       :profit (profit-calc open nextlow low nextclose close)
@@ -122,11 +120,11 @@
                           {:greens (:greens x)
                            :reds (conj (:reds x) {:basetimestamp (if
                                                                    humantime
-                                                                   (to-human time)
+                                                                   (u/to-human time)
                                                                    (long time))
                                                   :nexttimestamp (if
                                                                    humantime
-                                                                   (to-human nexttime)
+                                                                   (u/to-human nexttime)
                                                                    (long time))
 
                                                   :profit (profit-calc-red nexthigh high close nextclose)
@@ -137,11 +135,11 @@
                         (if (green? x)
                           {:greens [{:basetimestamp (if
                                                       humantime
-                                                      (to-human time)
+                                                      (u/to-human time)
                                                       (long time))
                                      :nexttimestamp (if
                                                       humantime
-                                                      (to-human nexttime)
+                                                      (u/to-human nexttime)
                                                       (long time))
                                      :profit (profit-calc open nextlow low nextclose close)
                                      :prof-calc [x y]}]
@@ -150,17 +148,16 @@
                           {:greens []
                            :reds [{:basetimestamp (if
                                                     humantime
-                                                    (to-human time)
+                                                    (u/to-human time)
                                                     (long time))
                                    :nexttimestamp (if
                                                     humantime
-                                                    (to-human nexttime)
+                                                    (u/to-human nexttime)
                                                     (long time))
                                    :profit (profit-calc-red nexthigh high close nextclose)
                                    :prof-calc [x y]}]
                            :last y}))))
              data)))
-
 
 (defn simple-strat-profit-calc [simple-strat-data]
       (->>
@@ -203,7 +200,7 @@
   (map #(ich/add-pointer plot (:unixtimestamp %) (:price %)))
 
 
-  (def all-curr-surface-data (json-get "https://api.coinmarketcap.com/v1/ticker/?limit=1000"))
+  (def all-curr-surface-data (u/json-get "https://api.coinmarketcap.com/v1/ticker/?limit=1000"))
 
   (def all-ids (map :id all-curr-surface-data))
 
@@ -257,7 +254,7 @@
 
   (def test-endpoint "https://api.coinmarketcap.com/v1/datapoints/ripple/1351941414000/1478141343000/")
 
-  (def testing (json-get test-endpoint))
+  (def testing (u/json-get test-endpoint))
 
   (ffirst (:price_btc testing))
 
@@ -308,8 +305,8 @@
                       (contains? x :greens)
                       (let [{:keys [time open high low close] :as last} (:last x)]
                            (if (green? last)
-                             {:greens (conj (:greens x) {:basetimestamp (to-human time)
-                                                         :nexttimestamp (to-human nexttime)
+                             {:greens (conj (:greens x) {:basetimestamp (u/to-human time)
+                                                         :nexttimestamp (u/to-human nexttime)
                                                          :profit (profit-calc open nextlow low nextclose close)
                                                          :prof-calc [(:last x) y]})
                               :last y}
@@ -318,8 +315,8 @@
                       :else
                       (let [{:keys [time open high low close]} x]
                            (if (green? x)
-                             {:greens [{:basetimestamp (to-human time)
-                                        :nexttimestamp (to-human nexttime)
+                             {:greens [{:basetimestamp (u/to-human time)
+                                        :nexttimestamp (u/to-human nexttime)
                                         :profit (profit-calc open nextlow low nextclose close)
                                         :prof-calc [x y]}]
                               :last y}
