@@ -18,14 +18,11 @@
       [core.types :as tps]
       [core.utils :as u]))
 
-
-
 (defn green? [{:keys [open close]}]
       (> close open))
 
 (defn red? [{:keys [open close]}]
       (> open close))
-
 
 (defn profit-calc-red [nexthigh high close nextclose]
       (if
@@ -127,15 +124,11 @@
                #(update-in % [:time] long)
                (:Data resp)))
 
-
-
   (let [plot (ich/candle-stick-plot
                :data (ic/to-dataset timez)
                :date :time)]
 
        (ic/view plot)
-
-
        )
 
   (ic/view
@@ -206,98 +199,10 @@
                                 )) (map first (:price_usd data)))
     )
 
-  (map first (:price_usd data))
-  (map first (:price_usd data))
-  first
-  c/from-long
   (apply
     min-key
     #(Math/abs (- (first %) (c/to-long (t/plus (c/from-long hitcap-time) (t/years 1)))))
     )
-
-  (first (:price_usd data))
-
-  (c/to-long (t/plus (c/from-long hitcap-time) (t/years 1)))
-
-  (first (:price_usd data))
-
-  (apply min-key #(Math/abs (- % 5)) [0 0 1 6  20 11])
-
-  (apply min-key identity [2 3 4 5])
-
-
-  (as-> example-response x
-        (:body x)
-        (jsn/read-str x :key-fn keyword)
-        (keys x))
-
-  ;----------------- Year calc
-
-
-  (let [data (:Data hourresp)]
-       (->>
-         (reduce
-           (fn [x
-                {nexttime :time nextopen :open nexthigh :high nextlow :low nextclose :close :as y}]
-               (let []
-                    (cond
-                      (contains? x :greens)
-                      (let [{:keys [time open high low close] :as last} (:last x)]
-                           (if (green? last)
-                             {:greens (conj (:greens x) {:basetimestamp (u/to-human time)
-                                                         :nexttimestamp (u/to-human nexttime)
-                                                         :profit (profit-calc open nextlow low nextclose close)
-                                                         :prof-calc [(:last x) y]})
-                              :last y}
-                             {:greens (:greens x)
-                              :last y}))
-                      :else
-                      (let [{:keys [time open high low close]} x]
-                           (if (green? x)
-                             {:greens [{:basetimestamp (u/to-human time)
-                                        :nexttimestamp (u/to-human nexttime)
-                                        :profit (profit-calc open nextlow low nextclose close)
-                                        :prof-calc [x y]}]
-                              :last y}
-                             {:greens []
-                              :last y})))))
-           data)
-         :greens
-         (map :profit)
-         (reduce +)
-         )
-       )
-
-
-
-
-
-
-  ;---------------------------------------
-
-  (:Data resp)
-
-  (defn map->mapofcol [damap]
-        (into {} (map (fn [x] [(first x) [(last x)]]) damap)))
-
-  (defn series-insert [series damap]
-        (apply
-          merge
-          (map
-            (fn [y]
-                {(first y) (conj (last y) ((first y) damap))})
-            series)))
-
-  (defn reduce->mapofcol [collofmap]
-        (reduce
-          (fn [x y]
-              (cond
-                (vector? (val (first x))) (series-insert x y)
-                :else (series-insert (map->mapofcol x) y)))
-          collofmap))
-
-  (keys
-    (reduce->mapofcol (:Data resp)))
 
   (ich/candle-stick-plot
     :data (reduce->mapofcol (:Data resp))
@@ -308,66 +213,6 @@
     :data (ic/to-dataset (take 2 (:Data resp)))
     :date :time
     )
-
-  ;(candle-stick-plot :data {:a [1 2 3]})
-  (defn greet [& options]
-        (apply str "Hello there, " rest))
-  (greet "one" "two" "three" "four")
-
-  (assoc {} :hi "there")
-
-  (fn [& args] args)
-
-  (apply
-    (concat
-      (mapcat #(vector % %) [:volume :high :low :open :close :date])
-      (apply concat
-             (seq (apply assoc {}
-                         [:main-title ""
-                          :time-label ""
-                          :value-label ""
-                          :series-label ""]))
-
-             )
-      )
-    )
-
-  (type (:time (first (:Data resp))))
-  (long (:time (first (:Data resp))))
-
-  (let [data (:Data hourresp)]
-       (->>
-         (reduce
-           (fn [x
-                {nexttime :time nextopen :open nexthigh :high nextlow :low nextclose :close :as y}]
-               (let []
-                    (cond
-                      (contains? x :greens)
-                      (let [{:keys [time open high low close] :as last} (:last x)]
-                           (if (green? last)
-                             {:greens (conj (:greens x) {:basetimestamp (to-human time)
-                                                         :nexttimestamp (to-human nexttime)
-                                                         :profit (profit-calc open nextlow low nextclose close)
-                                                         :prof-calc [(:last x) y]})
-                              :last y}
-                             {:greens (:greens x)
-                              :last y}))
-                      :else
-                      (let [{:keys [time open high low close]} x]
-                           (if (green? x)
-                             {:greens [{:basetimestamp (to-human time)
-                                        :nexttimestamp (to-human nexttime)
-                                        :profit (profit-calc open nextlow low nextclose close)
-                                        :prof-calc [x y]}]
-                              :last y}
-                             {:greens []
-                              :last y})))))
-           data)
-         :greens
-         (map :profit)
-         (reduce +)
-         )
-       )
 
   )
 

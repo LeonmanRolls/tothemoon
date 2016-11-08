@@ -19,6 +19,7 @@
   '[core.utils :as u]
   '[core.spike :as sp]
   '[core.types :as tps]
+  '[core.oanda :as oa]
   '[core.marketcap :as cmc]
   '[core.simple :as smp])
 
@@ -32,25 +33,15 @@
 
 (comment
 
-  (def all-curr-surface-data (u/json-get "https://api.coinmarketcap.com/v1/ticker/?limit=1000"))
-
-  (def all-ids (map :id all-curr-surface-data))
-
-  (def big-daddy-data
-    (map data-by-id all-ids))
-
-  (def rslt (smp/coinmarketcap-data-by-id "bitcoin"))
-
-  (year-calc (nth big-daddy-data 11))
-
- (keys rslt)
-  (keys (:data rslt))
-
-  (s/exercise ::tps/coinmarketcap-sym)
+  (u/json-get
+    (str oa/rest-api-base "accounts")
+    {:Authorization (str "Bearer " oa/oanda-api-key)}
+    )
 
   (do
     (load-file "src/core/types.clj")
     (load-file "src/core/utils.clj")
+    (load-file "src/core/oanda.clj")
     (load-file "src/core/simple.clj")
     (load-file "src/core/spike.clj")
     (load-file "src/core/marketcap.clj")

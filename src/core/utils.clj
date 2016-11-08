@@ -39,8 +39,8 @@
         :args (s/cat :url ::url)
         :ret map?)
 
-(defn json-get [url]
-      (as-> (cnt/get url) x
+(defn json-get [url & header-map]
+      (as-> (cnt/get url (when header-map {:headers (first header-map)})) x
             (:body x)
             (jsn/read-str x :key-fn keyword)))
 
@@ -50,5 +50,22 @@
 (defn to-human [unix]
       (.toString (c/from-long (* 1000 (long unix)))))
 
+(defn map->mapofcol [damap]
+      (into {} (map (fn [x] [(first x) [(last x)]]) damap)))
 
+(defn series-insert [series damap]
+      (apply
+        merge
+        (map
+          (fn [y]
+              {(first y) (conj (last y) ((first y) damap))})
+          series)))
+
+(defn reduce->mapofcol [collofmap]
+      (reduce
+        (fn [x y]
+            (cond
+              (vector? (val (first x))) (series-insert x y)
+              :else (series-insert (map->mapofcol x) y)))
+        collofmap))
 
