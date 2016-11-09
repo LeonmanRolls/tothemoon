@@ -39,8 +39,8 @@
         :args (s/cat :url ::url)
         :ret map?)
 
-(defn json-get [url & header-map]
-      (as-> (cnt/get url (when header-map {:headers (first header-map)})) x
+(defn json-get [url & opts]
+      (as-> (cnt/get url (when opts (first opts))) x
             (:body x)
             (jsn/read-str x :key-fn keyword)))
 

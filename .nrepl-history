@@ -1,78 +1,3 @@
-    (ts/instrument))
-(u/cryptocompare-url-gen "BTC" "USD" "histoday" 10)
-(in-ns 'core.utils)
-(s/def ::url (s/and string? #(.contains % "http://")))
-::url
- (cryptocompare-url-gen "BTC" "USD" "histoday" 10)
- (ts/checkable-syms)
- (json-get  (cryptocompare-url-gen "BTC" "USD" "histoday" 10))
-(defn json-get [url]
-      (as-> (cnt/get url) x
-            (:body x)
-            (jsn/read-str x :key-fn keyword)))
-(ns core.utils
-    (:require
-      [clj-http.client :as cnt]
-      [clojure.data.json :as jsn]
-      [clojure.spec :as s]
-      [clojure.spec.gen :as gen]
-      [clojure.spec.test :as ts :refer [check]]
-      [clojure.spec.gen :as gen]))
-(defn json-get [url]
-      (as-> (cnt/get url) x
-            (:body x)
-            (jsn/read-str x :key-fn keyword)))
- (json-get  (cryptocompare-url-gen "BTC" "USD" "histoday" 10))
-(s/fdef json-get
-        :args (s/cat :fsym ::cryptocomapre-sym :tsym ::fiat-sym
-                     :timescale ::timescale :limit #(>= 1000 %  0))
-        :ret map?)
-(do
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (ts/unstrument)
-    (ts/instrument))
-  (ts/summarize-results
-    (ts/check
-      (ts/checkable-syms)
-      {:clojure.spec.test.check/opts {:num-tests 1}}))
-  (do
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (ts/unstrument)
-    (ts/instrument))
-  (ts/summarize-results
-    (ts/check
-      (ts/checkable-syms)
-      {:clojure.spec.test.check/opts {:num-tests 1}}))
-(in-ns 'boot.user)
-  (ts/summarize-results
-    (ts/check
-      'core.utils/json-get
-      {:clojure.spec.test.check/opts {:num-tests 1}}))
-(do
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (ts/unstrument)
-    (ts/instrument))
-  (ts/summarize-results
-    (ts/check
-      'core.utils/json-get
-      {:clojure.spec.test.check/opts {:num-tests 1}}))
-(s/def ::url (s/with-gen
-               (s/and string? #(.contains % "http://"))
-               (fn [] (s/gen #{"http://www.google.com"}))))
-(do
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (ts/unstrument)
-    (ts/instrument))
-(ts/summarize-results
-    (ts/check
       'core.utils/json-get
       {:clojure.spec.test.check/opts {:num-tests 1}}))
 (s/def ::url (s/with-gen
@@ -498,3 +423,78 @@ rslt
     (str oa/rest-api-base "accounts")
     {:Authorization (str "Bearer " oa/oanda-api-key)}
     )
+  (u/json-get
+    (str oa/rest-api-base "accounts")
+    {:Authorization (str "Bearer " oa/oanda-api-key)})
+  (u/json-get
+    (str oa/rest-api-base "candles")
+    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+     :query-params {:instrument "EUR_USD"
+                    :count 2
+                    :granularity "D"}})
+  (u/json-get
+    (str oa/rest-api-base "candles")
+    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+     :query-params {"instrument" "EUR_USD"
+                    "count" 2
+                    "granularity" "D"}})
+  (u/json-get
+    (str oa/rest-api-base "candles")
+    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+     :query-params {"instrument" "EUR_USD"
+                    "count" "2" 
+                    "granularity" "D"}})
+  (u/json-get
+    (str oa/rest-api-base "candles")
+    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)
+               :query-params {"instrument" "EUR_USD"
+                              "count" "2"
+                              "granularity" "D"}}})
+(u/json-get
+    (str oa/rest-api-base "candles")
+    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)
+               :query-params {"instrument" "EUR_USD"
+                              "count" "2"
+                              "granularity" "D"}}})
+(u/json-get
+    (str oa/rest-api-base "candles")
+    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+     :query-params {"instrument" "EUR_USD"
+                              "count" "2"
+                              "granularity" "D"}})
+(u/json-get
+    (str oa/rest-api-base "candles")
+    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+     })
+    (load-file "src/core/utils.clj")
+  (u/json-get
+    (str oa/rest-api-base "accounts")
+    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}})
+  (u/json-get
+    (str oa/rest-api-base "candles")
+    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+     })
+(u/json-get
+    (str oa/rest-api-base "candles")
+    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+     :query-params {"instrument" "EUR_USD"
+                              "count" "2"
+                              "granularity" "D"}
+     })
+  (do
+    (load-file "src/core/types.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/oanda.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+  (u/json-get
+    (str oa/rest-api-base "candles")
+    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+     :query-params {"instrument" "EUR_USD"
+                              "count" "2"
+                              "granularity" "D"}
+     })

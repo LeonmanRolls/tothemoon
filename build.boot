@@ -33,10 +33,21 @@
 
 (comment
 
+  {:query-params {:a "a"}}
+
+  (u/json-get
+    (str oa/rest-api-base "candles")
+    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+     :query-params {"instrument" "EUR_USD"
+                              "count" "2"
+                              "granularity" "D"}
+     })
+
+
+
   (u/json-get
     (str oa/rest-api-base "accounts")
-    {:Authorization (str "Bearer " oa/oanda-api-key)}
-    )
+    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}})
 
   (do
     (load-file "src/core/types.clj")
