@@ -1,344 +1,9 @@
-      'core.utils/json-get
-      {:clojure.spec.test.check/opts {:num-tests 1}}))
-(s/def ::url (s/with-gen
-               (s/and string? #(.contains % "http://"))
-               (fn [] (s/gen #{"https://jsonplaceholder.typicode.com/posts/1"}))))
-(do
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (ts/unstrument)
-    (ts/instrument))
-  (ts/summarize-results
-    (ts/check
-      'core.utils/json-get
-      {:clojure.spec.test.check/opts {:num-tests 1}}))
-  (do
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (ts/unstrument)
-    (ts/instrument))
-  (ts/summarize-results
-    (ts/check
-      'core.utils/json-get
-      {:clojure.spec.test.check/opts {:num-tests 1}}))
-  (do
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (ts/unstrument)
-    (ts/instrument))
-  (ts/summarize-results
-    (ts/check
-      'core.utils/json-get
-      {:clojure.spec.test.check/opts {:num-tests 1}}))
-  (ts/summarize-results
-    (ts/check
-      (ts/checkable-syms)
-      {:clojure.spec.test.check/opts {:num-tests 1}}))
- (smp/simple-strat (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))
- (smp/simple-strat (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000))) )
-(do
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (ts/unstrument)
-    (ts/instrument))
- (smp/simple-strat (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000))))
-  (def rslt (smp/simple-strat
-              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))))
-rslt
-  (:reds rslt)
-(do
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (ts/unstrument)
-    (ts/instrument))
-  (do
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (ts/unstrument)
-    (ts/instrument))
-  (def rslt (smp/simple-strat
-              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))))
-(do
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (ts/unstrument)
-    (ts/instrument))
-  (def rslt (smp/simple-strat
-              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))))
-(do
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (ts/unstrument)
-    (ts/instrument))
-  (def rslt (smp/simple-strat
-              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))))
-rslt
-  (:reds rslt)
-  (def reds (:reds rslt))
-reds
-  (first reds)
-  (def rslt (smp/simple-strat
-              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))
-              :human))
-  (def reds (:reds rslt))
-reds
-  (first reds)
-  (def rslt (smp/simple-strat
-              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 10)))
-              :human))
-  (def reds (:reds rslt))
-reds
-  (def rslt (smp/simple-strat
-              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 50)))
-              :human))
-  (def reds (:reds rslt))
-  (first reds)
-  reds
-  (pprint reds)
-  (map :profit reds)
-  (->>
-    (map :profit reds)
-    (reduce +))
-  (def rslt (smp/simple-strat
-              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 500)))
-              :human))
-  (def reds (:reds rslt))
-  (->>
-    (map :profit reds)
-    (reduce +))
-  (def rslt (smp/simple-strat
-              (:Data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))
-              :human))
-  (def reds (:reds rslt))
-  (->>
-    (map :profit reds)
-    (reduce +))
-  (load-file "build.boot")
-  (reduce + (rd/map inc [1 2 3])) === (reduce (fn [ret x] (+ ret (inc x))) (+) [1 2 3])
-  (reduce + (rd/map inc [1 2 3]))  
-(rd/map inc [1 2 3])
-  (repl/refresh)
-  (def dirs (get-env :directories))
-dirs
-  (apply repl/set-refresh-dirs dirs)
-  (repl/refresh)
-tt
-  smp/tt
-  (do
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (def raw-data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))
-raw-data
-  (first (:Data raw-data)) 
-    (load-file "src/core/utils.clj")
-  (u/to-huamn (first (:Data raw-data))) 
-    (load-file "src/core/utils.clj")
-  (u/to-huamn (first (:Data raw-data)))
-  (u/to-human (first (:Data raw-data)))
-    (load-file "build.boot")
-  :core.utils/cryptocomapre-sym
-(s/exercise
-    :core.utils/cryptocomapre-sym)
-  (s/exercise
-    :core.utils/cryptocomapre-sym)
-    (load-file "src/core/utils.clj")
-  u/cryptocompare-syms
-    (load-file "src/core/utils.clj")
-  u/cryptocompare-syms
-  (s/exercise
-    :core.utils/cryptocomapre-sym)
-(watch)
-(boot (watch))
- (boot
-    (watch)
-    (do
-      (load-file "src/core/types.clj")
-      (load-file "src/core/utils.clj")
-      (load-file "src/core/simple.clj")
-      (load-file "src/core/spike.clj")
-      (load-file "build.boot")
-      (ts/unstrument)
-      (ts/instrument)))
-  (boot
-    (watch)
-    (do
-      (load-file "src/core/utils.clj")
-      (load-file "src/core/simple.clj")
-      (load-file "src/core/spike.clj")
-      (load-file "build.boot")
-      (ts/unstrument)
-      (ts/instrument)))
-  (boot
-    (watch)
-    (do
-      (load-file "src/core/simple.clj")
-      (load-file "src/core/spike.clj")
-      (load-file "build.boot")
-      (ts/unstrument)
-      (ts/instrument)))
-  (boot
-    (watch)
-    (do
-      (load-file "build.boot")
-      (ts/unstrument)
-      (ts/instrument)))
-  (boot
-    (watch)
-    (do
-      (println "hi there")
-      (ts/unstrument)
-      (ts/instrument)))
-(boot
-    (watch)
-    (my-task)
-    )
-(deftask my-task
-         "Does nothing."
-         []
-         (fn [next-task]
-             (fn [fileset]
-                 (do
-                   (println "hi there")
-                   (ts/unstrument)
-                   (ts/instrument))
-                 (next-task fileset))))
-  (boot
-    (watch)
-    (my-task)
-    )
-  (boot
-    (watch)
-    (my-task)
-    (repl))
-  (def raw-data (u/json-get (u/cryptocompare-url-gen "BTC" "USD" "histoday" 1000)))
-  (u/to-human (first (:Data raw-data)))
-(first (:Data raw-data))
-  (u/to-human (:time (first (:Data raw-data))) )
-  (now) 
-  (now)
-(System/currentTimeMillis)
+                  (doseq [s (http/string resp)]
+                         (println s))))
 (do
     (load-file "src/core/types.clj")
     (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (def rslt (smp/coinmarketcap-data-by-id "ETH"))
-  (def rslt (smp/coinmarketcap-data-by-id "eth"))
-  (def rslt (smp/coinmarketcap-data-by-id "ether"))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-(smp/coinmarketcap-data-by-id "bitcoin")
-  (def rslt (smp/coinmarketcap-data-by-id "bitcoin"))
-  (def all-curr-surface-data (u/json-get "https://api.coinmarketcap.com/v1/ticker/?limit=1000"))
-  (def all-ids (map :id all-curr-surface-data))
-all-ds
-all-ids
-(def cmp-syms #{"MCN" "FRN" "SDP" "DGORE" "HYP" "PAK" "2BACCO" "CPC" "NEOS" "GRN" "TWLV" "MND" "RIPO" "VTA" "HAL" "RCX" "ENRG" "1337" "NUBIS" "LANA" "BEN" "2015" "ZRC" "IOC" "CJ" "CDX" "BST" "SQL" "VPRC" "NRS" "BTCRY" "STEPS" "CNL" "LQD" "DT" "ADZ" "HALLO" "1CR" "DASH" "EQUAL" "MST" "BYC" "BSTY" "XT" "NTC" "XHI" "SOLE" "MINT" "TRIG" "CRW" "LAB" "BAY" "RISE" "RZR" "GEN" "CACH" "CLINT" "WBB" "UIS" "BTCL" "SNRG" "REP" "MOIN" "QTL" "ISL" "XBOT" "ANS" "NEU" "SC" "MOOND" "CYP" "START" "OK" "GP" "BCR" "NRB" "MC" "EDRC" "GAY" "BOTS" "611" "EQM" "VRC" "GRS" "SH" "CRBIT" "KEY" "MIL" "ARG" "RT2" "OC" "GOON" "LXC" "MSC" "GB" "DGD" "ROYAL" "BLC" "LSD" "GAP" "CRX" "FTP" "1ST" "RDD" "ADCN" "LTB" "CHILD" "NXTI" "TAGR" "NEBU" "XPM" "MUE" "AERO" "CRE" "NYAN" "FIRE" "MRP" "UTIL" "NZC" "COC" "UNC" "NAUT" "CRACK" "CMC" "DIME" "CC" "CHOOF" "BLK" "FCT" "TEAM" "FLT" "SBD" "SWEET" "WOLF" "BM" "MAPC" "HZ" "PYC" "ZOOM" "ALF" "42" "XNX" "TELL" "ERC" "TRON" "SWIFT" "NOTE" "DKC" "ANTI" "CKC" "SRC" "AMP" "007" "GIVE" "EMIGR" "TRUST" "MYR" "EKN" "EXCL" "CLR" "CALC" "YOC" "PSEUD" "GRT" "GPU" "DOT" "UNB" "C2" "CBX" "QTZ" "LYC" "XRE" "CTC" "DTC" "ERB" "CHASH" "AMC" "BOB" "SKB" "LC" "LEA" "DB" "NKC" "MI" "XCR" "XMG" "LYB" "ELE" "CRC" "AEC" "WC" "LTC" "QRK" "PKB" "XWT" "DCNT" "TOR" "CHA" "FRC" "CURE" "CIN" "LDOGE" "NSR" "SYNC" "EAGS" "TRI" "SHLD" "SAK" "NANAS" "BNCR" "GLX" "CAM" "VTR" "GMC" "CYT" "SFE" "CARBON" "ZED" "SBC" "AIB" "DEUR" "SCT" "CIRC" "BCN" "NMC" "BITB" "XTC" "TMC" "STO" "QBK" "BCX" "VRM" "AEON" "CSC" "KMD" "VTC" "ALN" "NAV" "LBC" "PEERPLAYS" "ZNY" "JBS" "ROS" "BTC" "VIA" "BURST" "MG" "AND" "XAI" "DLISK" "NKT" "CLUB" "LTH" "UNAT" "DBG" "IBANK" "BYTES" "GSY" "EDC" "EXP" "SPC" "KGC" "XDN" "XUP" "BLU" "ETH" "BTG" "GROW" "GCC" "CINNI" "MMC" "AIR" "EC" "VIP" "STR*" "TEK" "XXX" "GCR" "DGDC" "SLG" "KOBO" "SAT2" "LGBTQ" "UNITY" "BET" "UNIQ" "XCE" "MOON" "FFC" "ASN" "XID" "HODL" "GLOBE" "MAX" "GRC" "SLS" "OCTO" "MNM" "JUDGE" "BTE" "SCRPT" "TRK" "FSC2" "RMS" "VLT" "XPH" "TDFB" "STEEM" "DEM" "PSY" "RUST" "MEME" "CON" "JKC" "BLOCKPAY" "HKG" "ELC" "PXL" "ZCC" "ORB" "RCN" "STHR" "BAC" "XC" "OBITS" "SWING" "DGC" "THC" "FLAP" "MONETA" "XPY" "NTRN" "VAPOR" "APC" "ORLY" "MONA" "NUM" "DSB" "J" "WGC" "JOBS" "CLV" "OPAL" "SPOTS" "BOOM" "ARCH" "MED" "BQC" "TES" "EAC" "KUBO" "SXC" "SSD" "HTC" "PWR" "PINK" "CUBE" "CRYPT" "XVG" "BUK" "VPN" "EVENT" "INV" "SMLY" "PDC" "ACOIN" "INCP" "CRAFT" "GSM" "FOREX" "SEN" "PBC" "BTX" "EMC2" "HILL" "HVC" "UTH" "LSK" "BUCKS" "SUPER" "VTX" "KRAK" "STS" "RYC" "FC2" "LEMON" "DIGS" "XBS" "TX" "SPRTS" "OMNI" "NEC" "MPRO" "BBCC" "OMC" "RPC" "XWC" "BLOCK" "SLING" "ARDR" "XMS" "CF" "GRID" "LFC" "ANC" "CFC" "N7" "COOL" "TCR" "PIZZA" "SDC" "PRE" "TTC" "PRIME" "KARM" "VERSA" "ETC" "DGB" "NAN" "XRP" "X2" "BRK" "TOT" "DISK" "WDC" "TRA" "SMAC" "GDC" "MUDRA" "NBT" "MDC" "JIF" "FLY" "FCN" "EXB" "CHESS" "DVC" "MARV" "BTMI" "2FLAV" "PRM" "DNET" "CLOAK" "PTS" "MIN" "EGO" "BERN" "XRA" "INFX" "REE" "ULTC" "BELA" "SOUL" "LIMX" "VOOT" "GAIA" "XG" "DCR" "HNC" "FX" "JPC" "CAP" "LUX" "VEC2" "SMSR" "GIG" "RING" "GRM" "DRZ" "XAU" "M1" "GBT" "RBIT" "SCRT" "GIZ" "TODAY" "KAT" "TAG" "ZET2" "DROP" "COX" "SPHR" "XAUR" "ZYD" "RBT" "FCS" "BRONZ" "SCN" "SCOT" "QSLV" "B3" "POLY" "INCH" "OMA" "ANTC" "AC" "MMNXT" "SPM" "TUR" "MRS" "COV" "SIGU" "HBN" "TIA" "GHC" "WAY" "CHIP" "DMD" "DES" "FRK" "DIEM" "TAM" "SUP" "PXC" "DRKT" "CANN" "UNIT" "XZC" "CNMT" "CYG" "CTO" "QORA" "GLYPH" "SPX" "GLD" "OLYMP" "BTD" "XMR" "2GIVE" "XDE2" "CAT" "PRC" "LAZ" "TRUMP" "FONZ" "CRNK" "DCC" "KTK" "ENE" "COVAL" "UFO" "RRT" "GRAV" "SMC" "DLC" "FLO" "EGG" "CXC" "ION" "LK7" "GMX" "HMP" "KRB" "PHS" "BTA" "EXIT" "SPORT" "HVCO" "STRAT" "LOG" "LTCD" "RDN" "TKN" "VIOR" "UBIQ" "CSH" "REV" "RIC" "EGC" "BIOS" "HIRE" "BITUSD" "GML" "ICN" "BITCNY" "FRAC" "ACP" "FAIR" "CYC" "MN" "DOGE" "MZC" "NOBL" "AUR" "CASH" "FIBRE" "MARS" "OSC" "FRWC" "BOST" "BUZZ" "EVIL" "CRAIG" "KORE" "SOON" "CESC" "LTCX" "DANK" "KRC" "LKY" "AGS" "GREXIT" "GHS" "XDB" "GLC" "SHF" "GOTX" "ICB" "VIRAL" "NEVA" "PSI" "MAID" "BITS" "PSB" "CLUD" "RBR" "CGA" "VOX" "SLM" "GNJ" "XDP" "MMXIV" "BON" "NBL" "BITZ" "XLB" "GPL" "404" "XFC" "STR" "EZC" "NAS2" "TIT" "FJC" "WINGS" "CLAM" "BTCR" "ZNE" "XQN" "CRAB" "DCK" "BTM" "USDE" "COIN" "XST" "XNA" "MYST" "DSH" "NXS" "XCP" "SNS" "GEO" "DBTC" "SLR" "NVC" "CNC" "TENNET" "ARM" "TRC" "RBY" "XBC" "PIO" "I0C" "ZUR" "BCY" "NKA" "SPACE" "AXR" "32BIT" "FLDC" "HYPER" "BIGUP" "GUE" "EMD" "SANDG" "SPR" "MNE" "POST" "IXC" "NXTTY" "BHC" "WEX" "WAVES" "EDGE" "BTS" "ZEIT" "BSC" "GAME" "NET" "SYS" "IVZ" "KNC" "CCN" "ATM" "SONG" "TAB" "UNO" "STA" "STV" "MWC" "LTBC" "ZET" "HUGE" "DCS." "VMC" "MT" "XCO" "CAIX" "YBC" "RADS" "XEM" "BTQ" "BXT" "LGD" "HEAT" "OLDSF" "COMM" "NLC" "WMC" "GHOUL" "ROOT" "EXE" "METAL" "NODE" "BEATS" "CRAVE" "MRY" "CREVA" "SSTC" "FLX" "XPD" "MOJO" "MARYJ" "MEC" "ARI" "ETHS" "AMS" "VOYA" "SJCX" "SILK" "LIR" "SEC" "CV2" "SYNX" "SIB" "SOIL" "SAR" "DBIC" "TGC" "GBRC" "BLITZ" "DOPE" "BTB" "BLRY" "DOGED" "LYKKE" "POINTS" "U" "CAB" "XDQ" "SPEC" "RBIES" "GAM" "MTR" "ICASH" "SPA" "UTC" "GEMZ" "XVC" "XSI" "FTC" "EMC" "AXIOM" "LTS" "HEDG" "BS" "ENTER" "BBR" "VTY" "ADC" "DPAY" "PEC" "FUZZ" "KR" "UNF" "PUTIN" "BIT16" "POT" "SNGLS" "EPY" "PNK" "CMT" "NMB" "NXT" "FSN" "GSX" "808" "IFC" "OBS" "BFX" "BTCD" "BRAIN" "DUB" "BNT" "VDO" "YAC" "PULSE" "ABY" "ZEC" "BOLI" "MYC" "ADN" "SPT" "YOVI" "RUBIT" "EBS" "HCC" "ARB" "PTC" "ATOM" "FUTC" "QCN" "NXE" "SWARM" "CETI" "NETC" "ANNC" "888" "DRKC" "DRACO" "GRAM" "APEX" "AM" "KDC" "SFR" "XPOKE" "STAR" "HUC" "8BIT" "CELL" "EFL" "TAK" "FST" "SHREK" "SHADE" "EKO" "XCN" "FIT" "PXI" "SSV" "PINKX" "MINE" "XPB" "PIGGY" "URO" "XSEED" "NLG" "JWL" "XPO" "MNC" "PPC" "WARP" "BSD" "XCASH" "XJO" "AMBER"  })
-cmp-syms
-  (do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (smp/coinmarketcap-data-by-id "isdfds")
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (smp/coinmarketcap-data-by-id "isdfds")
-  (s/exchange :tps/coinmarketcap-sym)
-  (s/exercise :tps/coinmarketcap-sym)
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (s/exercise :tps/coinmarketcap-sym)
-  (s/exercise ::tps/coinmarketcap-sym)
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (s/exercise ::tps/coinmarketcap-sym)
-  (smp/coinmarketcap-data-by-id "isdfds")
-  (smp/coinmarketcap-data-by-id "ethereum")
-  tps/cmp-syms
-  (type tps/cmp-syms)
-all-ids
-  (do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (s/exercise ::tps/coinmarketcap-sym)
-  (smp/coinmarketcap-data-by-id "sdfsd")
-  (smp/coinmarketcap-data-by-id "bitcoin")
-  (def rslt (smp/coinmarketcap-data-by-id "bitcoin"))
-rslt
- (keys rslt)
-  (:data rslt)
-  (keys (:data rslt)) 
-  (do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
     (load-file "src/core/oanda.clj")
     (load-file "src/core/simple.clj")
     (load-file "src/core/spike.clj")
@@ -346,46 +11,10 @@ rslt
     (load-file "build.boot")
     (ts/unstrument)
     (ts/instrument))
-  (do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-    (load-file "src/core/utils.clj")
-  (do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (u/get-headers
-    (str oa/rest-api-base "accounts")
-    {:Authorization oa/oanda-api-key})
-  (u/get-headers
-    (str oa/rest-api-base "accounts")
-    {:Authorization (str "Bearer " oa/oanda-api-key)})
 (do
     (load-file "src/core/types.clj")
     (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
     (load-file "src/core/oanda.clj")
     (load-file "src/core/simple.clj")
     (load-file "src/core/spike.clj")
@@ -393,97 +22,402 @@ rslt
     (load-file "build.boot")
     (ts/unstrument)
     (ts/instrument))
-  (u/get-headers
-    (str oa/rest-api-base "accounts")
-    {:Authorization (str "Bearer " oa/oanda-api-key)})
-(defn json-get [url & header-map]
-      (as-> (cnt/get url (when header-map (first header-map))) x
-            (:body x)
-            (jsn/read-str x :key-fn keyword)))
-    (load-file "src/core/utils.clj")
-(u/json-get 
-    (str oa/rest-api-base "accounts")
-    {:Authorization (str "Bearer " oa/oanda-api-key)}
-    )
-    (load-file "src/core/utils.clj")
-  (u/json-get
-    (str oa/rest-api-base "accounts")
-    {:Authorization (str "Bearer " oa/oanda-api-key)}
-    )
-    (load-file "src/core/utils.clj")
-  (u/json-get
-    (str oa/rest-api-base "accounts")
-    {:Authorization (str "Bearer " oa/oanda-api-key)}
-    )
-  (u/get-headers
-    (str oa/rest-api-base "accounts")
-    {:Authorization (str "Bearer " oa/oanda-api-key)})
-    (load-file "src/core/utils.clj")
-  (u/json-get
-    (str oa/rest-api-base "accounts")
-    {:Authorization (str "Bearer " oa/oanda-api-key)}
-    )
-  (u/json-get
-    (str oa/rest-api-base "accounts")
-    {:Authorization (str "Bearer " oa/oanda-api-key)})
-  (u/json-get
-    (str oa/rest-api-base "candles")
-    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-     :query-params {:instrument "EUR_USD"
-                    :count 2
-                    :granularity "D"}})
-  (u/json-get
-    (str oa/rest-api-base "candles")
-    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-     :query-params {"instrument" "EUR_USD"
-                    "count" 2
-                    "granularity" "D"}})
-  (u/json-get
-    (str oa/rest-api-base "candles")
-    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-     :query-params {"instrument" "EUR_USD"
-                    "count" "2" 
-                    "granularity" "D"}})
-  (u/json-get
-    (str oa/rest-api-base "candles")
-    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)
-               :query-params {"instrument" "EUR_USD"
-                              "count" "2"
-                              "granularity" "D"}}})
+(with-open [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :get (str oa/streaming-api-base "prices")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"
+                                                 :accountId oa/account-no})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :get (str "https://stream-fxpractice.oanda.com/" "prices")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"
+                                                 :accountId oa/account-no})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :get (str "https://stream-fxpractice.oanda.com/v1/" "prices")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"
+                                                 :accountId "LeemanRolls"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :get (str "https://stream-fxpractice.oanda.com/v1/" "prices")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"
+                                                 :accountId oa/account-no})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                oa/account-no
+                                                "pricing"
+                                                "stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                oa/account-no
+                                                "pricing"
+                                                "stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client)]
+             (let [parts (ref #{})
+                   resp (http/request-stream client
+                                             :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                oa/account-no
+                                                "pricing"
+                                                "stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"}
+                                             (fn [state body]
+                                                 (dosync (alter parts conj (string body)))
+                                                 [body :continue]))]
+                  (println @parts)
+                  ))
+(with-open [client (http/create-client)]
+             (let [parts (ref #{})
+                   resp (http/request-stream client
+                                             :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                oa/account-no
+                                                "pricing"
+                                                "stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"}
+                                             (fn [state body]
+                                                 (dosync (alter parts conj (str body)))
+                                                 [body :continue]))]
+                  (println @parts)
+                  ))
+(with-open [client (http/create-client)]
+             (let [parts (ref #{})
+                   resp (http/request-stream client
+                                             :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                oa/account-no
+                                                "pricing"
+                                                "stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"}
+                                             (fn [state body]
+                                                 (dosync (alter parts conj (http/string body)))
+                                                 [body :continue]))]
+                  (println @parts)
+                  ))
+(let [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                oa/account-no
+                                                "pricing"
+                                                "stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+(with-open [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
 (u/json-get
-    (str oa/rest-api-base "candles")
-    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)
-               :query-params {"instrument" "EUR_USD"
-                              "count" "2"
-                              "granularity" "D"}}})
-(u/json-get
-    (str oa/rest-api-base "candles")
-    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-     :query-params {"instrument" "EUR_USD"
-                              "count" "2"
-                              "granularity" "D"}})
-(u/json-get
-    (str oa/rest-api-base "candles")
-    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-     })
-    (load-file "src/core/utils.clj")
-  (u/json-get
-    (str oa/rest-api-base "accounts")
+    (str
+      "https://stream-fxpractice.oanda.com/v3/"
+      oa/account-no
+      "/pricing"
+      "/stream")
     {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}})
-  (u/json-get
-    (str oa/rest-api-base "candles")
-    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-     })
-(u/json-get
-    (str oa/rest-api-base "candles")
-    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-     :query-params {"instrument" "EUR_USD"
-                              "count" "2"
-                              "granularity" "D"}
-     })
-  (do
+(with-open [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :timeout -1
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client :connection-timeout -1 :request-timeout -1 :idle-in-pool-timeout -1)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+  (with-open [client (http/create-client :connection-timeout -1 :request-timeout -1)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client :connection-timeout -1)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+  (with-open [client (http/create-client :connection-timeout 1000000000000000)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+  (with-open [client (http/create-client :connection-timeout -1)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client :idle-in-pool-timeout -1)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client :keep-alive true)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client :keep-alive true)]
+             (let [resp (http/stream-seq client
+                                         :get "https://stream.twitter.com/1.1/statuses/sample.json")]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client :keep-alive true)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+  (with-open [client (http/create-client :keep-alive true :request-timeout 1000]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client :keep-alive true :request-timeout 1000)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (doseq [s (http/string resp)]
+                         (println s))))
+(with-open [client (http/create-client :keep-alive true :request-timeout 1000)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (when-let [err (http/error resp)]
+                            (println "failed processing request: " err))
+                  (doseq [s (http/string resp)]
+                         (println s))
+                  ))
+  (with-open [client (http/create-client :keep-alive true :request-timeout 10000)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  
+                  (when-let [err (http/error resp)]
+                            (println "failed processing request: " err))
+                  (doseq [s (http/string resp)]
+                         (println s))
+                  ))
+  (with-open [client (http/create-client :keep-alive true :request-timeout 30000)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (when-let [err (http/error resp)]
+                            (println "failed processing request: " err))
+                  (doseq [s (http/string resp)]
+                         (println s))
+                  ))
+  (with-open [client (http/create-client :keep-alive true :request-timeout -1)]
+             (let [resp (http/stream-seq client
+                                         :get (str
+                                                "https://stream-fxpractice.oanda.com/v3/"
+                                                "accounts/"
+                                                oa/account-no
+                                                "/pricing"
+                                                "/stream")
+                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                                         :query {:instruments "EUR_USD"})]
+                  (when-let [err (http/error resp)]
+                            (println "failed processing request: " err))
+                  (doseq [s (http/string resp)]
+                         (println s))
+                  ))
+(do
     (load-file "src/core/types.clj")
     (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
     (load-file "src/core/oanda.clj")
     (load-file "src/core/simple.clj")
     (load-file "src/core/spike.clj")
@@ -491,10 +425,76 @@ rslt
     (load-file "build.boot")
     (ts/unstrument)
     (ts/instrument))
-  (u/json-get
-    (str oa/rest-api-base "candles")
-    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-     :query-params {"instrument" "EUR_USD"
-                              "count" "2"
-                              "granularity" "D"}
-     })
+(do
+    (load-file "src/core/types.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/oanda.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(do
+    (load-file "src/core/types.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/oanda.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+  (def client (http/create-client :keep-alive true :request-timeout -1))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (ds/oanda-price-stream-start client identity "EUR_USD")
+  (def stream (ds/oanda-price-stream-start client identity "EUR_USD"))
+(do
+    (load-file "src/core/types.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/oanda.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+  (def stream (ds/oanda-price-stream-start client identity "EUR_USD"))
+  (def stream (ds/oanda-price-stream-start client println "EUR_USD"))
+(do
+    (load-file "src/core/types.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/oanda.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(do
+    (load-file "src/core/types.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/oanda.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(do
+    (load-file "src/core/types.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/oanda.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+   (ds/oanda-historical "EUR_USD" "5000" "M1")

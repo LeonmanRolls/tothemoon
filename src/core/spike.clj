@@ -40,20 +40,6 @@
 
 (s/def ::_id string?)
 
-(s/def ::formatter 
-  (s/with-gen 
-    #(= (type %) org.joda.time.format.DateTimeFormatter)
-    (fn [] (s/gen #{(f/formatters :date-time-parser)}))))
-
-(s/def ::timestamp 
-  (s/with-gen 
-    (s/and 
-      string?  
-      #(.contains % "T")) 
-    (fn [] 
-      (gen/fmap 
-        #(.toString (c/from-date %)) 
-        (s/gen (s/inst-in #inst "2015" #inst "2016"))))))
 
 (s/def ::ob-price-entry (s/keys :req-un [::Quantity ::Rate])) 
 
@@ -184,18 +170,6 @@
        :obavg (orderbook-entry-avg (:orderbook y))})
     orderbooks))
 
-(s/fdef timestamp->unix 
-        :args (s/cat :timestamp ::timestamp :formatter (s/? ::formatter)) 
-        :ret number?)
-
-(defn timestamp->unix 
-  ([timestamp]
-   (timestamp->unix timestamp (f/formatters :date-time-parser)))
-
-  ([timestamp formatter]
-   (as-> timestamp  x
-         (f/parse formatter x)
-         (c/to-long x))))
 
 (s/fdef unix->timestamp 
         :args (s/cat :timestamp ::unixtimestamp) 
@@ -463,8 +437,6 @@
 
 (comment 
 
-highest-grads (take 10 (sort-by :grad  > gradz))
-
   (let [gradz (as-> (str "https://www.cryptocompare.com/api/data/histoday/?aggregate=1&e=CCCAGG&fsym=ETH&limit=1000&tsym=BTC") x
                     (cnt/get x) 
                     (:body x)
@@ -513,21 +485,5 @@ highest-grads (take 10 (sort-by :grad  > gradz))
          (gen/return %) 
          (gen/elements (keys %)))))
 
-  (s/exercise ::lookup-finding-k 10 {::lookup-finding-k lookup-finding-k-gen})
-
-  (do 
-    (load-file "home.clj") 
-    (ts/unstrument)
-    (ts/instrument))
-
-  (ts/summarize-results 
-    (ts/check 
-      'boot.user/raw->unix
-      {:clojure.spec.test.check/opts {:num-tests 1}}))
-
-  (ts/summarize-results 
-    (ts/check 
-      (ts/checkable-syms) 
-      {:clojure.spec.test.check/opts {:num-tests 1}}))
   )
 

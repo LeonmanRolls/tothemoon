@@ -15,7 +15,6 @@
       [clj-time.coerce :as c]
       [clojure.set :as set]
       [clojure.core.logic :as lgc]
-      [core.types :as tps]
       [core.utils :as u]))
 
 (defn green? [{:keys [open close]}]
@@ -36,25 +35,28 @@
         (- low close)
         (- nextclose close)))
 
+(s/fdef simple-strat
+        :args (s/cat :data (s/coll-of ::u/standard-candle) :opts (s/? keyword?)))
+
 (defn simple-strat
       "Basic strat backtesting price differences after in both directions"
       [data & opts]
       (let [humantime (if opts true false)]
            (reduce
              (fn [x
-                  {nexttime :time nextopen :open nexthigh :high nextlow :low nextclose :close :as y}]
+                  {nexttime :unixtimestamp nextopen :open nexthigh :high nextlow :low nextclose :close :as y}]
                  (cond
                    (contains? x :greens)
-                   (let [{:keys [time open high low close] :as last} (:last x)]
+                   (let [{:keys [unixtimestamp open high low close] :as last} (:last x)]
                         (if (green? last)
                           {:greens (conj (:greens x) {:basetimestamp (if
                                                                        humantime
-                                                                       (u/to-human time)
-                                                                       (long time))
+                                                                       (u/to-human unixtimestamp)
+                                                                       (long unixtimestamp))
                                                       :nexttimestamp (if
                                                                        humantime
                                                                        (u/to-human nexttime)
-                                                                       (long time))
+                                                                       (long nexttime))
 
                                                       :profit (profit-calc open nextlow low nextclose close)
                                                       :prof-calc [(:last x) y]})
@@ -63,27 +65,27 @@
                           {:greens (:greens x)
                            :reds (conj (:reds x) {:basetimestamp (if
                                                                    humantime
-                                                                   (u/to-human time)
-                                                                   (long time))
+                                                                   (u/to-human unixtimestamp)
+                                                                   (long unixtimestamp))
                                                   :nexttimestamp (if
                                                                    humantime
                                                                    (u/to-human nexttime)
-                                                                   (long time))
+                                                                   (long nexttime))
 
                                                   :profit (profit-calc-red nexthigh high close nextclose)
                                                   :prof-calc [(:last x) y]})
                            :last y}))
                    :else
-                   (let [{:keys [time open high low close]} x]
+                   (let [{:keys [unixtimestamp open high low close]} x]
                         (if (green? x)
                           {:greens [{:basetimestamp (if
                                                       humantime
-                                                      (u/to-human time)
-                                                      (long time))
+                                                      (u/to-human unixtimestamp)
+                                                      (long unixtimestamp))
                                      :nexttimestamp (if
                                                       humantime
                                                       (u/to-human nexttime)
-                                                      (long time))
+                                                      (long nexttime))
                                      :profit (profit-calc open nextlow low nextclose close)
                                      :prof-calc [x y]}]
                            :reds []
@@ -91,12 +93,12 @@
                           {:greens []
                            :reds [{:basetimestamp (if
                                                     humantime
-                                                    (u/to-human time)
-                                                    (long time))
+                                                    (u/to-human unixtimestamp)
+                                                    (long unixtimestamp))
                                    :nexttimestamp (if
                                                     humantime
                                                     (u/to-human nexttime)
-                                                    (long time))
+                                                    (long nexttime))
                                    :profit (profit-calc-red nexthigh high close nextclose)
                                    :prof-calc [x y]}]
                            :last y}))))

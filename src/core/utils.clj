@@ -2,41 +2,52 @@
     (:require
       [clj-http.client :as cnt]
       [clojure.data.json :as jsn]
-      [core.types :as tps]
       [clojure.spec :as s]
       [clojure.spec.gen :as gen]
       [clojure.spec.test :as ts :refer [check]]
       [clojure.spec.gen :as gen]
+      [clj-time.format :as f]
       [clj-time.coerce :as c]))
-
-(def cryptocompare-syms #{"MCN" "FRN" "SDP" "DGORE" "HYP" "PAK" "2BACCO" "CPC" "NEOS" "GRN" "TWLV" "MND" "RIPO" "VTA" "HAL" "RCX" "ENRG" "1337" "NUBIS" "LANA" "BEN" "2015" "ZRC" "IOC" "CJ" "CDX" "BST" "SQL" "VPRC" "NRS" "BTCRY" "STEPS" "CNL" "LQD" "DT" "ADZ" "HALLO" "1CR" "DASH" "EQUAL" "MST" "BYC" "BSTY" "XT" "NTC" "XHI" "SOLE" "MINT" "TRIG" "CRW" "LAB" "BAY" "RISE" "RZR" "GEN" "CACH" "CLINT" "WBB" "UIS" "BTCL" "SNRG" "REP" "MOIN" "QTL" "ISL" "XBOT" "ANS" "NEU" "SC" "MOOND" "CYP" "START" "OK" "GP" "BCR" "NRB" "MC" "EDRC" "GAY" "BOTS" "611" "EQM" "VRC" "GRS" "SH" "CRBIT" "KEY" "MIL" "ARG" "RT2" "OC" "GOON" "LXC" "MSC" "GB" "DGD" "ROYAL" "BLC" "LSD" "GAP" "CRX" "FTP" "1ST" "RDD" "ADCN" "LTB" "CHILD" "NXTI" "TAGR" "NEBU" "XPM" "MUE" "AERO" "CRE" "NYAN" "FIRE" "MRP" "UTIL" "NZC" "COC" "UNC" "NAUT" "CRACK" "CMC" "DIME" "CC" "CHOOF" "BLK" "FCT" "TEAM" "FLT" "SBD" "SWEET" "WOLF" "BM" "MAPC" "HZ" "PYC" "ZOOM" "ALF" "42" "XNX" "TELL" "ERC" "TRON" "SWIFT" "NOTE" "DKC" "ANTI" "CKC" "SRC" "AMP" "007" "GIVE" "EMIGR" "TRUST" "MYR" "EKN" "EXCL" "CLR" "CALC" "YOC" "PSEUD" "GRT" "GPU" "DOT" "UNB" "C2" "CBX" "QTZ" "LYC" "XRE" "CTC" "DTC" "ERB" "CHASH" "AMC" "BOB" "SKB" "LC" "LEA" "DB" "NKC" "MI" "XCR" "XMG" "LYB" "ELE" "CRC" "AEC" "WC" "LTC" "QRK" "PKB" "XWT" "DCNT" "TOR" "CHA" "FRC" "CURE" "CIN" "LDOGE" "NSR" "SYNC" "EAGS" "TRI" "SHLD" "SAK" "NANAS" "BNCR" "GLX" "CAM" "VTR" "GMC" "CYT" "SFE" "CARBON" "ZED" "SBC" "AIB" "DEUR" "SCT" "CIRC" "BCN" "NMC" "BITB" "XTC" "TMC" "STO" "QBK" "BCX" "VRM" "AEON" "CSC" "KMD" "VTC" "ALN" "NAV" "LBC" "PEERPLAYS" "ZNY" "JBS" "ROS" "BTC" "VIA" "BURST" "MG" "AND" "XAI" "DLISK" "NKT" "CLUB" "LTH" "UNAT" "DBG" "IBANK" "BYTES" "GSY" "EDC" "EXP" "SPC" "KGC" "XDN" "XUP" "BLU" "ETH" "BTG" "GROW" "GCC" "CINNI" "MMC" "AIR" "EC" "VIP" "STR*" "TEK" "XXX" "GCR" "DGDC" "SLG" "KOBO" "SAT2" "LGBTQ" "UNITY" "BET" "UNIQ" "XCE" "MOON" "FFC" "ASN" "XID" "HODL" "GLOBE" "MAX" "GRC" "SLS" "OCTO" "MNM" "JUDGE" "BTE" "SCRPT" "TRK" "FSC2" "RMS" "VLT" "XPH" "TDFB" "STEEM" "DEM" "PSY" "RUST" "MEME" "CON" "JKC" "BLOCKPAY" "HKG" "ELC" "PXL" "ZCC" "ORB" "RCN" "STHR" "BAC" "XC" "OBITS" "SWING" "DGC" "THC" "FLAP" "MONETA" "XPY" "NTRN" "VAPOR" "APC" "ORLY" "MONA" "NUM" "DSB" "J" "WGC" "JOBS" "CLV" "OPAL" "SPOTS" "BOOM" "ARCH" "MED" "BQC" "TES" "EAC" "KUBO" "SXC" "SSD" "HTC" "PWR" "PINK" "CUBE" "CRYPT" "XVG" "BUK" "VPN" "EVENT" "INV" "SMLY" "PDC" "ACOIN" "INCP" "CRAFT" "GSM" "FOREX" "SEN" "PBC" "BTX" "EMC2" "HILL" "HVC" "UTH" "LSK" "BUCKS" "SUPER" "VTX" "KRAK" "STS" "RYC" "FC2" "LEMON" "DIGS" "XBS" "TX" "SPRTS" "OMNI" "NEC" "MPRO" "BBCC" "OMC" "RPC" "XWC" "BLOCK" "SLING" "ARDR" "XMS" "CF" "GRID" "LFC" "ANC" "CFC" "N7" "COOL" "TCR" "PIZZA" "SDC" "PRE" "TTC" "PRIME" "KARM" "VERSA" "ETC" "DGB" "NAN" "XRP" "X2" "BRK" "TOT" "DISK" "WDC" "TRA" "SMAC" "GDC" "MUDRA" "NBT" "MDC" "JIF" "FLY" "FCN" "EXB" "CHESS" "DVC" "MARV" "BTMI" "2FLAV" "PRM" "DNET" "CLOAK" "PTS" "MIN" "EGO" "BERN" "XRA" "INFX" "REE" "ULTC" "BELA" "SOUL" "LIMX" "VOOT" "GAIA" "XG" "DCR" "HNC" "FX" "JPC" "CAP" "LUX" "VEC2" "SMSR" "GIG" "RING" "GRM" "DRZ" "XAU" "M1" "GBT" "RBIT" "SCRT" "GIZ" "TODAY" "KAT" "TAG" "ZET2" "DROP" "COX" "SPHR" "XAUR" "ZYD" "RBT" "FCS" "BRONZ" "SCN" "SCOT" "QSLV" "B3" "POLY" "INCH" "OMA" "ANTC" "AC" "MMNXT" "SPM" "TUR" "MRS" "COV" "SIGU" "HBN" "TIA" "GHC" "WAY" "CHIP" "DMD" "DES" "FRK" "DIEM" "TAM" "SUP" "PXC" "DRKT" "CANN" "UNIT" "XZC" "CNMT" "CYG" "CTO" "QORA" "GLYPH" "SPX" "GLD" "OLYMP" "BTD" "XMR" "2GIVE" "XDE2" "CAT" "PRC" "LAZ" "TRUMP" "FONZ" "CRNK" "DCC" "KTK" "ENE" "COVAL" "UFO" "RRT" "GRAV" "SMC" "DLC" "FLO" "EGG" "CXC" "ION" "LK7" "GMX" "HMP" "KRB" "PHS" "BTA" "EXIT" "SPORT" "HVCO" "STRAT" "LOG" "LTCD" "RDN" "TKN" "VIOR" "UBIQ" "CSH" "REV" "RIC" "EGC" "BIOS" "HIRE" "BITUSD" "GML" "ICN" "BITCNY" "FRAC" "ACP" "FAIR" "CYC" "MN" "DOGE" "MZC" "NOBL" "AUR" "CASH" "FIBRE" "MARS" "OSC" "FRWC" "BOST" "BUZZ" "EVIL" "CRAIG" "KORE" "SOON" "CESC" "LTCX" "DANK" "KRC" "LKY" "AGS" "GREXIT" "GHS" "XDB" "GLC" "SHF" "GOTX" "ICB" "VIRAL" "NEVA" "PSI" "MAID" "BITS" "PSB" "CLUD" "RBR" "CGA" "VOX" "SLM" "GNJ" "XDP" "MMXIV" "BON" "NBL" "BITZ" "XLB" "GPL" "404" "XFC" "STR" "EZC" "NAS2" "TIT" "FJC" "WINGS" "CLAM" "BTCR" "ZNE" "XQN" "CRAB" "DCK" "BTM" "USDE" "COIN" "XST" "XNA" "MYST" "DSH" "NXS" "XCP" "SNS" "GEO" "DBTC" "SLR" "NVC" "CNC" "TENNET" "ARM" "TRC" "RBY" "XBC" "PIO" "I0C" "ZUR" "BCY" "NKA" "SPACE" "AXR" "32BIT" "FLDC" "HYPER" "BIGUP" "GUE" "EMD" "SANDG" "SPR" "MNE" "POST" "IXC" "NXTTY" "BHC" "WEX" "WAVES" "EDGE" "BTS" "ZEIT" "BSC" "GAME" "NET" "SYS" "IVZ" "KNC" "CCN" "ATM" "SONG" "TAB" "UNO" "STA" "STV" "MWC" "LTBC" "ZET" "HUGE" "DCS." "VMC" "MT" "XCO" "CAIX" "YBC" "RADS" "XEM" "BTQ" "BXT" "LGD" "HEAT" "OLDSF" "COMM" "NLC" "WMC" "GHOUL" "ROOT" "EXE" "METAL" "NODE" "BEATS" "CRAVE" "MRY" "CREVA" "SSTC" "FLX" "XPD" "MOJO" "MARYJ" "MEC" "ARI" "ETHS" "AMS" "VOYA" "SJCX" "SILK" "LIR" "SEC" "CV2" "SYNX" "SIB" "SOIL" "SAR" "DBIC" "TGC" "GBRC" "BLITZ" "DOPE" "BTB" "BLRY" "DOGED" "LYKKE" "POINTS" "U" "CAB" "XDQ" "SPEC" "RBIES" "GAM" "MTR" "ICASH" "SPA" "UTC" "GEMZ" "XVC" "XSI" "FTC" "EMC" "AXIOM" "LTS" "HEDG" "BS" "ENTER" "BBR" "VTY" "ADC" "DPAY" "PEC" "FUZZ" "KR" "UNF" "PUTIN" "BIT16" "POT" "SNGLS" "EPY" "PNK" "CMT" "NMB" "NXT" "FSN" "GSX" "808" "IFC" "OBS" "BFX" "BTCD" "BRAIN" "DUB" "BNT" "VDO" "YAC" "PULSE" "ABY" "ZEC" "BOLI" "MYC" "ADN" "SPT" "YOVI" "RUBIT" "EBS" "HCC" "ARB" "PTC" "ATOM" "FUTC" "QCN" "NXE" "SWARM" "CETI" "NETC" "ANNC" "888" "DRKC" "DRACO" "GRAM" "APEX" "AM" "KDC" "SFR" "XPOKE" "STAR" "HUC" "8BIT" "CELL" "EFL" "TAK" "FST" "SHREK" "SHADE" "EKO" "XCN" "FIT" "PXI" "SSV" "PINKX" "MINE" "XPB" "PIGGY" "URO" "XSEED" "NLG" "JWL" "XPO" "MNC" "PPC" "WARP" "BSD" "XCASH" "XJO" "AMBER"})
-
-(s/def ::cryptocomapre-sym cryptocompare-syms)
-
-(s/def ::fiat-sym #{"USD" "GBP" "EUR"})
-
-(s/def ::timescale #{"histominute" "histohour" "histoday"})
 
 (s/def ::url (s/with-gen
                (s/and string? #(.contains % "://"))
                (fn [] (s/gen #{"https://www.cryptocompare.com/api/data/coinlist/"}))))
 
-(s/fdef cryptocompare-url-gen
-        :args (s/cat :fsym ::cryptocomapre-sym :tsym ::fiat-sym
-                     :timescale ::timescale :limit #(> 1001 %  0))
-        :ret ::url)
+(s/def ::unixtimestamp
+  (s/with-gen
+    (s/and number? #(> 1577580878000 % 0))
+    (fn [] (s/gen #{157758087000}))))
 
-(defn cryptocompare-url-gen [fsym tsym timescale limit]
-      (str
-        "https://www.cryptocompare.com/api/data/"
-        timescale
-        "/?e=CCCAGG"
-        "&fsym=" fsym
-        "&tsym=" tsym
-        "&limit=" limit))
+(def cmc-syms #{"bitcoin" "ethereum" "ripple" "litecoin" "monero" "ethereum-classic" "dash" "augur" "maidsafecoin" "waves" "nem" "steem" "dogecoin" "factom" "digixdao" "lisk" "gulden" "stellar" "bitshares" "shadowcoin" "peerplays" "iconomi" "ardor" "gamecredits" "bytecoin-bcn" "storjcoin-x" "xaurum" "antshares" "emercoin" "counterparty" "singulardtv" "tether" "siacoin" "nxt" "synereo" "bitcrystals" "stratis" "peercoin" "agoras-tokens" "ybcoin" "iocoin" "vcash" "bitcoindark" "namecoin" "syscoin" "rubycoin" "global-currency-reserve" "zcash" "potcoin" "nav-coin" "digibyte" "blackcoin" "yocoin" "solarcoin" "omni" "gridcoin" "supernet-unity" "decred" "scotcoin" "steem-dollars" "fuelcoin" "sarcoin" "nautiluscoin" "vpncoin" "faircoin" "expanse" "curecoin" "fedoracoin" "earthcoin" "swiscoin" "monacoin" "clams" "auroracoin" "startcoin" "digitalnote" "primecoin" "nexus" "burst" "asiadigicoin" "breakout-stake" "reddcoin" "radium" "vertcoin" "worldcoin" "vericoin" "feathercoin" "hitcoin" "qora" "blocknet" "boolberry" "quark" "i0coin" "dnotes" "hicoin" "mmnxt" "nubits" "darknet" "goldcoin" "library-credit" "novacoin" "breakout" "boostcoin" "mintcoin" "bitbay" "obits" "virtacoin" "gambit" "play" "diamond" "safe-exchange-coin" "adzcoin" "aeon" "project-decorum" "bilshares" "megacoin" "blockpay" "zetacoin" "triggers" "zeitcoin" "casinocoin" "europecoin" "stealthcoin" "viacoin" "nushares" "wild-beast-block" "florincoin" "infinitecoin" "riecoin" "cloakcoin" "zcoin" "unobtanium" "zccoin" "rise" "myriad" "pesobit" "silk" "salus" "ambercoin" "applecoin" "voxels" "digitalcoin" "circuits-of-value" "evergreencoin" "foldingcoin" "vootcoin" "bitmark" "bitcny" "next-horizon" "okcash" "cannabiscoin" "anoncoin" "verge" "unioncoin" "energycoin" "noblecoin" "cryptonite" "britcoin" "orbitcoin" "gems" "pinkcoin" "coinmarketscoin" "neoscoin" "einsteinium" "electronic-gulden" "smileycoin" "shift" "pepe-cash" "huntercoin" "geocoin" "tagcoin" "audiocoin" "jewels" "diem" "ltbcoin" "mazacoin" "levocoin" "hempcoin-hmp" "securecoin" "fantomcoin" "crowncoin" "trumpcoin" "1credit" "spreadcoin" "dubaicoin" "stabilityshares" "bitcoin-plus" "gycoin" "stress" "vtorrent" "ixcoin" "sync" "maxcoin" "woodcoin" "capricoin" "skynet-asset" "sibcoin" "bellacoin" "bitstar" "mooncoin" "magi" "coin2-1" "mineum" "synergy" "pangea-poker" "creditbit" "groestlcoin" "bitswift" "bitusd" "netcoin" "swing" "veriumreserve" "quatloo" "krypton" "hempcoin" "bytecent" "whitecoin" "qibuck" "joincoin" "dashcoin" "bitsend" "dopecoin" "cryptogenic-bullion" "uro" "bitbean" "applebyte" "trustplus" "rimbit" "sterlingcoin" "blitzcash" "cryptographic-anomaly" "incakoin" "tickets" "dotcoin" "xiaomicoin" "monetaryunit" "titcoin" "pipcoin" "rubies" "cannacoin" "syndicate" "pakcoin" "terracoin" "nxtventure" "cryptofund" "coin" "canada-ecoin" "devcoin" "elcoin-el" "billarycoin" "debune" "the-viral-exchange" "eccoin" "goldpieces" "truckcoin" "dimecoin" "teslacoin" "bluecoin" "dt-token" "deutsche-emark" "pesetacoin" "korecoin" "sphere" "parkbyte" "hodlcoin" "hyper" "sativacoin" "transfercoin" "bitbtc" "1337" "tao" "cryptcoin" "cryptojacks" "postcoin" "unbreakablecoin" "bata" "piggycoin" "sexcoin" "artex-coin" "wexcoin" "secretcoin" "goldblocks" "fluttercoin" "moin" "karbowanec" "metalcoin" "sling" "mojocoin" "arcticcoin" "blakecoin" "hobonickels" "grantcoin" "memetic" "influxcoin" "exclusivecoin" "archcoin" "bottlecaps" "veltor" "franko" "hyperstake" "tekcoin" "newbium" "universal-currency" "vip-tokens" "soilcoin" "gpu-coin" "bitseeds" "mastertradercoin" "globalboost-y" "bbqcoin" "ziftrcoin" "x-coin" "nolimitcoin" "digicube" "granitecoin" "francs" "8bit" "gapcoin" "fujicoin" "cryptoescudo" "primechain" "neutron" "steps" "songcoin" "hommalicoin" "apexcoin" "dollarcoin" "gcoin" "ucoin" "alexium" "destiny" "spacecoin" "bios-crypto" "unitus" "joulecoin" "berncash" "beatcoin" "bipcoin" "42-coin" "warp" "prime-xi" "letitride" "rhinocoin-rhc" "firecoin" "allsafe" "insanecoin" "bikercoin" "zonecoin" "sixeleven" "gamebet-coin" "gamerholiccoin" "bolivarcoin" "chronos" "genstake" "zayedcoin" "crevacoin" "evil-coin" "islacoin" "anarchistsprime" "litebar" "jobscoin" "impulsecoin" "guccionecoin" "bantam" "agrolifecoin" "emirates-gold-coin" "sydpak" "808coin" "xp" "cannabis-industry-coin" "unrealcoin" "powercoin" "world-gold-coin" "mudracoin" "trmb" "kilocoin" "ion" "bitshares-music" "jinn" "instantdex" "ico-openledger" "neucoin" "htmlcoin" "xcurrency" "asiacoin" "2give" "colossuscoin-v2" "btsr" "btctalkcoin" "librexcoin" "ultracoin" "leafcoin" "flycoin" "coinomat" "mediterraneancoin" "pandacoin-pnd" "liquid" "rare-pepe-party" "bigup" "kobocoin" "nxttycoin" "bitcointx" "sooncoin" "litedoge" "paycoin2" "sprouts" "the-cypherfunks" "tilecoin" "yacoin" "lottocoin" "wayguide" "swagbucks" "martexcoin" "putincoin" "quazarcoin" "checkcoin" "quotient" "trollcoin" "reecoin" "supercoin" "sproutsextreme" "globalcoin" "bitsilver" "gaia" "plncoin" "triangles" "ratecoin" "smartcoin" "bitbar" "ufo-coin" "arbit" "qubitcoin" "bitz" "nyancoin" "bitgold" "hamradiocoin" "viral" "datacoin" "satoshimadness" "mindcoin" "amsterdamcoin" "freicoin" "aricoin" "tigercoin" "cashout" "russiacoin" "petrodollar" "redcoin" "cypher" "emerald" "aurumcoin" "octocoin" "tittiecoin" "cagecoin" "crypto" "guncoin" "bunnycoin" "fastcoin" "beavercoin" "argentum" "philosopher-stones" "bumbacoin" "coexistcoin" "revolvercoin" "hundredcoin" "phoenixcoin" "biteur" "bitcoin-scrypt" "mgw" "cubits" "uniqredit" "halcyon" "bitzeny" "antibitcoin" "debitcoin" "flavorcoin" "vaperscoin" "kittehcoin" "leacoin" "ronpaulcoin" "prototanium" "dobbscoin" "captcoin" "spots" "icash" "mangocoinz" "dappster" "atomic-coin" "paycon" "cybercoin" "evotion" "wmcoin" "osmiumcoin" "breakcoin" "zurcoin" "ego" "metal-music-coin" "mmbtcd" "floz" "chesscoin" "pospro" "blazecoin" "vcoin" "bitcloud" "topcoin" "bitcoin-21" "popularcoin" "lanacoin" "guarany" "high-voltage" "acoin" "independent-money-system" "unicoin" "digitalprice" "b3coin" "jin-coin" "newyorkcoin" "elementrem" "parallelcoin" "orlycoin" "fuzzballs" "elcoin" "corgicoin" "nevacoin" "pulse" "machinecoin" "posex" "px" "helleniccoin" "c-bit" "mustangcoin" "cabbage" "unfed" "xonecoin" "comet" "eurocoin" "dpay" "tagrcoin" "virtualcoin" "bitquark" "revenu" "chaincoin" "selfiecoin" "cryptbit" "photon" "money" "cashcoin" "shilling" "bittokens" "bowscoin" "tajcoin" "ponzicoin" "stronghands" "antilitecoin" "litecred" "save-and-gain" "imperialcoin" "number7" "p7coin" "batcoin" "swaptoken" "crtcoin" "enigma" "californium" "digital-credits" "pizzacoin" "khancoin" "ernus" "23-skidoo" "satoshicard" "horiemoncard" "royalcoin-2" "nxttyacci" "forevercoin" "pluton" "e-dinar-coin" "bfx" "leocoin" "techshares" "clubcoin" "maskcoin" "wowecoin" "dynamiccoin" "asset-backed-coin" "heat-ledger" "the-dao" "edrcoin" "index-coin" "omicron" "mind-gene" "first-blood" "alpacoin" "npccoin" "gaycoin" "biglifecoin" "international-diamond" "uncoin" "tbcoin" "happy-creator-coin" "caliphcoin" "first-bitcoin" "invisiblecoin" "deltacredits" "gbcgoldcoin" "taopay" "timekoin" "futurepoints" "lecoin" "neptunecoin" "alphabet-coin-fund" "rhodiumcoin" "lomocoin" "bitland" "eclipse" "digitalfund" "enecoin" "kolschcoin" "sharkcoin" "bagcoin" "revcoin" "clinton" "president-johnson" "woodshares" "cthulhu-offerings" "gotfomo" "peacecoin" "cartercoin" "xaucoin" "shellpay" "advanced-internet-blocks" "royalcoin" "president-trump" "upcoin" "eggcoin" "futcoin" "rcoin" "goldmaxcoin" "cbd-crystals" "chncoin" "cleverbot" "bitalphacoin" "ocow" "trickycoin" "frankywillcoin" "psilocybin" "bitcoinfast" "rublebit" "kcoin" "local-family-owned" "richcoin" "digital-bullion-gold" "gameleaguecoin" "fedorashare" "pabyosicoin" "denarius" "flaxscript" "braincoin" "asiccoin" "avatarcoin" "xab" "motocoin" "todaycoin" "quebecoin" "cycling-coin" "linkedcoin" "dubstep" "operand" "opescoin" "mobilecash" "lazaruscoin" "sportscoin" "darklisk" "superstaketoken" "skeincoin" "president-clinton" "ugain" "lathaan" "fitcoin" "vegascoin" "sakuracoin" "paypeer" "moneta2" "digieuro" "prismchain" "pokechain" "teamup" "aces" "cashme" "bitmoon" "golfcoin" "nucleustokens" "valorbit" "superturbostake" "thecreed" "fireflycoin" "x2" "soulcoin" "safecoin" "pokecoin" "tellurion" "victoriouscoin" "ganjacoin-v2" "choofcoin" "xpay" "nutcoin" "paccoin"})
+
+(s/def ::coinmarketcap-sym cmc-syms)
+
+(s/def ::price double?)
+
+(s/def ::open double?)
+(s/def ::close double?)
+(s/def ::high double?)
+(s/def ::low double?)
+
+(s/def ::standard-candle (s/keys :req-un [::open ::close ::high ::low ::unixtimestamp]))
+
+(s/def ::formatter
+  (s/with-gen
+    #(= (type %) org.joda.time.format.DateTimeFormatter)
+    (fn [] (s/gen #{(f/formatters :date-time-parser)}))))
+
+(s/def ::timestamp
+  (s/with-gen
+    (s/and
+      string?
+      #(.contains % "T"))
+    (fn []
+        (gen/fmap
+          #(.toString (c/from-date %))
+          (s/gen (s/inst-in #inst "2015" #inst "2016"))))))
 
 (s/fdef json-get
-        :args (s/cat :url ::url)
+        :args (s/cat :url ::url :opts (s/? map?))
         :ret map?)
 
 (defn json-get [url & opts]
@@ -45,10 +56,10 @@
             (jsn/read-str x :key-fn keyword)))
 
 (s/fdef to-human
-        :args (s/cat :unix :tps/unixtimestamp))
+        :args (s/cat :unix ::unixtimestamp))
 
 (defn to-human [unix]
-      (.toString (c/from-long (* 1000 (long unix)))))
+      (.toString (c/from-long (long unix))))
 
 (defn map->mapofcol [damap]
       (into {} (map (fn [x] [(first x) [(last x)]]) damap)))
@@ -68,4 +79,25 @@
               (vector? (val (first x))) (series-insert x y)
               :else (series-insert (map->mapofcol x) y)))
         collofmap))
+
+(s/fdef average
+        ::args (s/cat :numbers (s/? (s/coll-of number?))))
+
+(defn average
+      [& numbers]
+      (/ (apply + numbers) (count numbers)))
+
+(s/fdef timestamp->unix
+        :args (s/cat :timestamp ::timestamp :formatter (s/? ::formatter))
+        :ret number?)
+
+(defn timestamp->unix
+      ([timestamp]
+        (timestamp->unix timestamp (f/formatters :date-time-parser)))
+
+      ([timestamp formatter]
+        (as-> timestamp  x
+              (f/parse formatter x)
+              (c/to-long x))))
+
 

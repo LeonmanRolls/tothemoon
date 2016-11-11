@@ -7,10 +7,12 @@
     [org.clojure/data.json "0.2.6"]
     [clojurewerkz/envision "0.1.0-SNAPSHOT"]
     [incanter "1.5.7"]
+    [http.async.client "0.5.2"]
     [clj-time "0.12.0"]]
   :source-paths #{"src"})
 
 (require
+  '[http.async.client :as http]
   '[clojure.spec :as s]
   '[clojure.spec.gen :as gen]
   '[clojure.spec.test :as ts :refer [check]]
@@ -20,6 +22,7 @@
   '[core.spike :as sp]
   '[core.types :as tps]
   '[core.oanda :as oa]
+  '[core.datasources :as ds]
   '[core.marketcap :as cmc]
   '[core.simple :as smp])
 
@@ -33,25 +36,50 @@
 
 (comment
 
-  {:query-params {:a "a"}}
+  (def client (http/create-client :keep-alive true :request-timeout -1))
 
-  (u/json-get
-    (str oa/rest-api-base "candles")
-    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-     :query-params {"instrument" "EUR_USD"
-                              "count" "2"
-                              "granularity" "D"}
-     })
+  (def stream (ds/oanda-price-stream-start client println "EUR_USD"))
 
+  (http/close client)
 
+   (ds/oanda-historical "EUR_USD" "5000" "M1")
 
-  (u/json-get
-    (str oa/rest-api-base "accounts")
-    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}})
+  (def eur-usd-historical (u/json-get
+                            (str oa/rest-api-base "candles")
+                            {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
+                             :query-params {"instrument" "EUR_USD"
+                                            "count" "5000"
+                                            "granularity" "M1"}}))
+
+  (def oanda-standard-candle (map
+                               ds/oanda-candle->standard
+                               (:candles eur-usd-historical)))
+
+  (smp/simple-strat (take-last 4 oanda-standard-candle))
+
+  (pprint
+    (smp/simple-strat (take-last 8 oanda-standard-candle) :human))
+
+  (->>
+    (map
+      :profit
+      (:reds
+        (smp/simple-strat
+          (take-last 5000 oanda-standard-candle))))
+    (reduce +))
+
+  (->>
+    (map
+      :profit
+      (:greens
+        (smp/simple-strat
+          (take-last 5000 oanda-standard-candle))))
+    (reduce +))
 
   (do
     (load-file "src/core/types.clj")
     (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
     (load-file "src/core/oanda.clj")
     (load-file "src/core/simple.clj")
     (load-file "src/core/spike.clj")
