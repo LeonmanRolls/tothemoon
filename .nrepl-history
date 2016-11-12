@@ -1,310 +1,3 @@
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(with-open [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :get (str oa/streaming-api-base "prices")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"
-                                                 :accountId oa/account-no})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :get (str "https://stream-fxpractice.oanda.com/" "prices")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"
-                                                 :accountId oa/account-no})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :get (str "https://stream-fxpractice.oanda.com/v1/" "prices")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"
-                                                 :accountId "LeemanRolls"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :get (str "https://stream-fxpractice.oanda.com/v1/" "prices")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"
-                                                 :accountId oa/account-no})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                oa/account-no
-                                                "pricing"
-                                                "stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                oa/account-no
-                                                "pricing"
-                                                "stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client)]
-             (let [parts (ref #{})
-                   resp (http/request-stream client
-                                             :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                oa/account-no
-                                                "pricing"
-                                                "stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"}
-                                             (fn [state body]
-                                                 (dosync (alter parts conj (string body)))
-                                                 [body :continue]))]
-                  (println @parts)
-                  ))
-(with-open [client (http/create-client)]
-             (let [parts (ref #{})
-                   resp (http/request-stream client
-                                             :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                oa/account-no
-                                                "pricing"
-                                                "stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"}
-                                             (fn [state body]
-                                                 (dosync (alter parts conj (str body)))
-                                                 [body :continue]))]
-                  (println @parts)
-                  ))
-(with-open [client (http/create-client)]
-             (let [parts (ref #{})
-                   resp (http/request-stream client
-                                             :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                oa/account-no
-                                                "pricing"
-                                                "stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"}
-                                             (fn [state body]
-                                                 (dosync (alter parts conj (http/string body)))
-                                                 [body :continue]))]
-                  (println @parts)
-                  ))
-(let [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                oa/account-no
-                                                "pricing"
-                                                "stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-(with-open [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(u/json-get
-    (str
-      "https://stream-fxpractice.oanda.com/v3/"
-      oa/account-no
-      "/pricing"
-      "/stream")
-    {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}})
-(with-open [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :timeout -1
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client :connection-timeout -1 :request-timeout -1 :idle-in-pool-timeout -1)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-  (with-open [client (http/create-client :connection-timeout -1 :request-timeout -1)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client :connection-timeout -1)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-  (with-open [client (http/create-client :connection-timeout 1000000000000000)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-  (with-open [client (http/create-client :connection-timeout -1)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client :idle-in-pool-timeout -1)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client :keep-alive true)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
                                                 oa/account-no
                                                 "/pricing"
                                                 "/stream")
@@ -498,3 +191,310 @@
     (ts/unstrument)
     (ts/instrument))
    (ds/oanda-historical "EUR_USD" "5000" "M1")
+(do
+    (load-file "src/core/types.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/oanda.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST
+                          client
+                          (str
+                           ds/rest-api-base-v3
+                           "accounts/"
+                           ds/account-no
+                           "/orders"
+                            )
+                          :body "{\n  \"order\": {\n    \"units\": \"100\", \n    \"instrument\": \"EUR_USD\", \n    \"timeInForce\": \"FOK\", \n    \"type\": \"MARKET\", \n    \"positionFill\": \"DEFAULT\"\n  }\n}")]
+                  ;; do something with resp
+                  (println resp)
+                  ))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST
+                          client
+                          (str
+                           ds/rest-api-base-v3
+                           "accounts/"
+                           ds/account-no
+                           "/orders"
+                            )
+                          :body "{\n  \"order\": {\n    \"units\": \"100\", \n    \"instrument\": \"EUR_USD\", \n    \"timeInForce\": \"FOK\", \n    \"type\": \"MARKET\", \n    \"positionFill\": \"DEFAULT\"\n  }\n}")]
+                  ;; do something with resp
+                  (http/await resp)
+                  (println (http/string resp))
+                  ))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                          (str
+                           ds/rest-api-base-v3
+                           "accounts/"
+                           ds/account-no
+                           "/orders"
+                            )
+                                   :headers {:Authorization (str "Bearer " oanda-api-key)}
+                          :body "{ \"order\": {  \"units\": \"100\",  \"instrument\": \"EUR_USD\",  \"timeInForce\": \"FOK\",  \"type\": \"MARKET\",  \"positionFill\": \"DEFAULT\"}}")]
+                  ;; do something with resp
+                  (http/await resp)
+                  (println (http/string resp))
+                  ))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str
+                                     ds/rest-api-base-v3
+                                     "accounts/"
+                                     ds/account-no
+                                     "/orders"
+                                     )
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)}
+                                   :body "{ \"order\": {  \"units\": \"100\",  \"instrument\": \"EUR_USD\",  \"timeInForce\": \"FOK\",  \"type\": \"MARKET\",  \"positionFill\": \"DEFAULT\"}}")]
+                  ;; do something with resp
+                  (http/await resp)
+                  (println (http/string resp))
+                  ))
+(do
+    (load-file "src/core/types.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/oanda.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str
+                                     ds/rest-api-base-v3
+                                     "accounts/"
+                                     ds/account-no
+                                     "/orders"
+                                     )
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)}
+                                   :body "{ \"order\": {  \"units\": \"100\",  \"instrument\": \"EUR_USD\",  \"timeInForce\": \"FOK\",  \"type\": \"MARKET\",  \"positionFill\": \"DEFAULT\"}}")]
+                  ;; do something with resp
+                  (http/await resp)
+                  (println (http/string resp))
+                  ))
+(require
+  '[http.async.client :as http]
+  '[clojure.spec :as s]
+  '[clojure.spec.gen :as gen]
+  '[clojure.spec.test :as ts :refer [check]]
+  '[clojure.spec.gen :as gen]
+  '[clojure.core.reducers :as rd]
+  '[core.utils :as u]
+  '[core.spike :as sp]
+  '[core.types :as tps]
+  '[core.oanda :as oa]
+  '[clojure.data.json :as jsn]
+  '[core.datasources :as ds]
+  '[core.marketcap :as cmc]
+  '[core.simple :as smp])
+(jsn/write-str {:order {:units 100 :instrument "EUR_USD" :timeInForce "FOK" :type "MARKET" :positionFill "Default"}})
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str
+                                     ds/rest-api-base-v3
+                                     "accounts/"
+                                     ds/account-no
+                                     "/orders"
+                                     )
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)}
+                                   :body (jsn/write-str {:order {:units 100
+                                                                 :instrument "EUR_USD"
+                                                                 :timeInForce "FOK"
+                                                                 :type "MARKET"
+                                                                 :positionFill "Default"}}))]
+                  ;; do something with resp
+                  (http/await resp)
+                  (println (http/string resp))
+                  ))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str
+                                     ds/rest-api-base-v3
+                                     "accounts/"
+                                     ds/account-no
+                                     "/orders"
+                                     )
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                             :Content-type "application/json"}
+                                   :body (jsn/write-str {:order {:units 100
+                                                                 :instrument "EUR_USD"
+                                                                 :timeInForce "FOK"
+                                                                 :type "MARKET"
+                                                                 :positionFill "Default"}}))]
+                  ;; do something with resp
+                  (http/await resp)
+                  (println (http/string resp))
+                  ))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str
+                                     ds/rest-api-base-v3
+                                     "accounts/"
+                                     ds/account-no
+                                     "/orders"
+                                     )
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                             :Content-type "application/json"}
+                                   :body (jsn/write-str {:order {:units 10
+                                                                 :instrument "EUR_USD"
+                                                                 :timeInForce "FOK"
+                                                                 :type "MARKET"
+                                                                 :positionFill "Default"}}))]
+                  ;; do something with resp
+                  (http/await resp)
+                  (println (http/string resp))
+                  ))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str
+                                     ds/rest-api-base-v3
+                                     "accounts/"
+                                     ds/account-no
+                                     "/orders"
+                                     )
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                             :Content-type "application/json"}
+                                   :body (jsn/write-str {:order {:units "10" 
+                                                                 :instrument "EUR_USD"
+                                                                 :timeInForce "FOK"
+                                                                 :type "MARKET"
+                                                                 :positionFill "Default"}}))]
+                  ;; do something with resp
+                  (http/await resp)
+                  (println (http/string resp))
+                  ))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str
+                                     ds/rest-api-base-v3
+                                     "accounts/"
+                                     ds/account-no
+                                     "/orders"
+                                     )
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                             :Content-type "application/json"}
+                                   :body (jsn/write-str {:order {:units "10"
+                                                                 :instrument "EUR_USD"
+                                                                 :timeInForce "FOK"
+                                                                 :type "MARKET"
+                                                                 :positionFill "DEFAULT"}}))]
+                  ;; do something with resp
+                  (http/await resp)
+                  (println (http/string resp))
+                  ))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                             :Content-type "application/json"}
+                                   :body (jsn/write-str {:order {:units "10"
+                                                                 :instrument "EUR_USD"
+                                                                 :timeInForce "FOK"
+                                                                 :type "MARKET"
+                                                                 :positionFill "DEFAULT"}}))]
+                  (http/await resp)
+                  (println (http/string resp))))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                             :Content-type "application/json"}
+                                   :body (jsn/write-str {:order {:units "-10"
+                                                                 :instrument "EUR_USD"
+                                                                 :timeInForce "FOK"
+                                                                 :type "MARKET"
+                                                                 :positionFill "DEFAULT"}}))]
+                  (http/await resp)
+                  (println (http/string resp))))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                             :Content-type "application/json"}
+                                   :body (jsn/write-str {:order {:units "-10"
+                                                                 :instrument "EUR_USD"
+                                                                 :timeInForce "FOK"
+                                                                 :type "MARKET"
+                                                                 :positionFill "DEFAULT"}}))]
+                  (http/await resp)
+                  (println (http/string resp))))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                             :Content-type "application/json"}
+                                   :body (jsn/write-str {:order {:units "-10"
+                                                                 :instrument "EUR_USD"
+                                                                 :timeInForce "FOK"
+                                                                 :type "MARKET"
+                                                                 :positionFill "DEFAULT"}}))]
+                  (http/await resp)
+                  (println (http/string resp))))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                             :Content-type "application/json"}
+                                   :body (jsn/write-str {:order {:units "-10"
+                                                                 :instrument "EUR_USD"
+                                                                 :timeInForce "FOK"
+                                                                 :type "MARKET"
+                                                                 :positionFill "DEFAULT"}}))]
+                  (http/await resp)
+                  (println (http/string resp))))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                             :Content-type "application/json"}
+                                   :body (jsn/write-str {:order {:units "10"
+                                                                 :instrument "EUR_USD"
+                                                                 :timeInForce "FOK"
+                                                                 :type "MARKET"
+                                                                 :positionFill "DEFAULT"}}))]
+                  (http/await resp)
+                  (println (http/string resp))))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                             :Content-type "application/json"}
+                                   :body (jsn/write-str {:order {:units "10"
+                                                                 :instrument "EUR_USD"
+                                                                 :timeInForce "FOK"
+                                                                 :type "MARKET"
+                                                                 :positionFill "DEFAULT"
+                                                                 :stopLossOnFill {:price 1.08700
+                                                                                  :timeInForce "GTC"}}}))]
+                  (http/await resp)
+                  (println (http/string resp))))
+(with-open [client (http/create-client)]
+             (let [resp (http/POST client
+                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
+                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                             :Content-type "application/json"}
+                                   :body (jsn/write-str {:order {:units "10"
+                                                                 :instrument "EUR_USD"
+                                                                 :timeInForce "FOK"
+                                                                 :type "MARKET"
+                                                                 :positionFill "DEFAULT"
+                                                                 :stopLossOnFill {:price "1.08700" 
+                                                                                  :timeInForce "GTC"}}}))]
+                  (http/await resp)
+                  (println (http/string resp))))
+ {:hi "hi" nil} 
+ {:hi "hi" (when false 1)}
+  (merge {:a 1} nil)
+  (merge {:a 1} (when false {:b 2}))
+  (merge {:a 1} (when true {:b 2}))
+  (= true '())

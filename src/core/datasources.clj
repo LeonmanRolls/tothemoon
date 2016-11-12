@@ -22,6 +22,8 @@
 
 (def rest-api-base "https://api-fxpractice.oanda.com/v1/")
 
+(def rest-api-base-v3 "https://api-fxpractice.oanda.com/v3/")
+
 (def streaming-api-base "https://stream-fxpractice.oanda.com/v1/")
 
 (s/def ::cryptocomapre-sym cryptocompare-syms)
@@ -100,5 +102,28 @@
          :query-params {"instrument" instrument
                         "count" count
                         "granularity" granularity}}))
+
+(defn oanda-open-order
+      "EUR_USD 200"
+      [instrument units & stoploss]
+      (with-open [client (http/create-client)]
+                 (let [resp (http/POST client
+                                       (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
+                                       :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                                 :Content-type "application/json"}
+                                       :body (jsn/write-str {:order (merge
+                                                                      {:units units
+                                                                       :instrument instrument
+                                                                       :timeInForce "FOK"
+                                                                       :type "MARKET"
+                                                                       :positionFill "DEFAULT"
+                                                                       (when stoploss
+                                                                             {:stopLossOnFill {:price (first stoploss)
+                                                                                               :timeInForce "GTC"}})})}))]
+                      (http/await resp)
+                      (println (http/string resp)))))
+
+
+
 
 

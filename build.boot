@@ -22,6 +22,7 @@
   '[core.spike :as sp]
   '[core.types :as tps]
   '[core.oanda :as oa]
+  '[clojure.data.json :as jsn]
   '[core.datasources :as ds]
   '[core.marketcap :as cmc]
   '[core.simple :as smp])
@@ -34,47 +35,15 @@
                  (println "hi hi")
                  (next-task fileset))))
 
+(def open-orders (atom []))
+
 (comment
 
   (def client (http/create-client :keep-alive true :request-timeout -1))
-
   (def stream (ds/oanda-price-stream-start client println "EUR_USD"))
-
   (http/close client)
 
-   (ds/oanda-historical "EUR_USD" "5000" "M1")
 
-  (def eur-usd-historical (u/json-get
-                            (str oa/rest-api-base "candles")
-                            {:headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                             :query-params {"instrument" "EUR_USD"
-                                            "count" "5000"
-                                            "granularity" "M1"}}))
-
-  (def oanda-standard-candle (map
-                               ds/oanda-candle->standard
-                               (:candles eur-usd-historical)))
-
-  (smp/simple-strat (take-last 4 oanda-standard-candle))
-
-  (pprint
-    (smp/simple-strat (take-last 8 oanda-standard-candle) :human))
-
-  (->>
-    (map
-      :profit
-      (:reds
-        (smp/simple-strat
-          (take-last 5000 oanda-standard-candle))))
-    (reduce +))
-
-  (->>
-    (map
-      :profit
-      (:greens
-        (smp/simple-strat
-          (take-last 5000 oanda-standard-candle))))
-    (reduce +))
 
   (do
     (load-file "src/core/types.clj")
