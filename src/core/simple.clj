@@ -105,11 +105,17 @@
              data)))
 
 (defn simple-strat-profit-calc [simple-strat-data]
-      (->>
-        simple-strat-data
-        :greens
-        (map :profit)
-        (reduce +)))
+      (+
+        (->>
+          simple-strat-data
+          :greens
+          (map :profit)
+          (reduce +))
+        (->>
+          simple-strat-data
+          :reds
+          (map :profit)
+          (reduce +))))
 
 
 (comment
@@ -126,12 +132,7 @@
                #(update-in % [:time] long)
                (:Data resp)))
 
-  (let [plot (ich/candle-stick-plot
-               :data (ic/to-dataset timez)
-               :date :time)]
 
-       (ic/view plot)
-       )
 
   (ic/view
     (ich/candle-stick-plot

@@ -1,6 +1,7 @@
 (ns core.datasources
     (:require
       [http.async.client :as http]
+      [clojure.data.json :as jsn]
       [clojure.spec :as s]
       [clojure.spec.gen :as gen]
       [clojure.spec.test :as ts :refer [check]]
@@ -62,6 +63,13 @@
         "&tsym=" tsym
         "&limit=" limit))
 
+(defn cryptocompare-hist [fsym tsym timescale limit]
+      (as-> (cryptocompare-url-gen fsym tsym timescale limit) x
+            (u/json-get x)
+            (:Data x)
+            (u/update-all-vals x [:time] long)
+            (u/rename-all-keys x :time :unixtimestamp)))
+
 ;Oanda---
 (s/fdef oanda-candle->standard
   :args (s/cat :oanda-candle ::oanda-candle)
@@ -108,22 +116,24 @@
       [instrument units & stoploss]
       (with-open [client (http/create-client)]
                  (let [resp (http/POST client
-                                       (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
-                                       :headers {:Authorization (str "Bearer " ds/oanda-api-key)
+                                       (str rest-api-base-v3 "accounts/" account-no "/orders")
+                                       :headers {:Authorization (str "Bearer " oanda-api-key)
                                                  :Content-type "application/json"}
                                        :body (jsn/write-str {:order (merge
                                                                       {:units units
                                                                        :instrument instrument
                                                                        :timeInForce "FOK"
                                                                        :type "MARKET"
-                                                                       :positionFill "DEFAULT"
-                                                                       (when stoploss
-                                                                             {:stopLossOnFill {:price (first stoploss)
-                                                                                               :timeInForce "GTC"}})})}))]
+                                                                       :positionFill "DEFAULT"}
+                                                                      (when stoploss
+                                                                            {:stopLossOnFill {:price (first stoploss)
+                                                                                              :timeInForce "GTC"}}))}))]
                       (http/await resp)
                       (println (http/string resp)))))
 
-
-
-
+(defn oanda-hist->standard-candle [candles]
+      (->
+        candles
+        (u/update-all-vals [:time] u/timestamp->unix)
+        (u/rename-all-keys :time :unixtimestamp)))
 

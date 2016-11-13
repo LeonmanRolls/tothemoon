@@ -1,287 +1,28 @@
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client :keep-alive true)]
-             (let [resp (http/stream-seq client
-                                         :get "https://stream.twitter.com/1.1/statuses/sample.json")]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client :keep-alive true)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-  (with-open [client (http/create-client :keep-alive true :request-timeout 1000]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client :keep-alive true :request-timeout 1000)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (doseq [s (http/string resp)]
-                         (println s))))
-(with-open [client (http/create-client :keep-alive true :request-timeout 1000)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (when-let [err (http/error resp)]
-                            (println "failed processing request: " err))
-                  (doseq [s (http/string resp)]
-                         (println s))
-                  ))
-  (with-open [client (http/create-client :keep-alive true :request-timeout 10000)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  
-                  (when-let [err (http/error resp)]
-                            (println "failed processing request: " err))
-                  (doseq [s (http/string resp)]
-                         (println s))
-                  ))
-  (with-open [client (http/create-client :keep-alive true :request-timeout 30000)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (when-let [err (http/error resp)]
-                            (println "failed processing request: " err))
-                  (doseq [s (http/string resp)]
-                         (println s))
-                  ))
-  (with-open [client (http/create-client :keep-alive true :request-timeout -1)]
-             (let [resp (http/stream-seq client
-                                         :get (str
-                                                "https://stream-fxpractice.oanda.com/v3/"
-                                                "accounts/"
-                                                oa/account-no
-                                                "/pricing"
-                                                "/stream")
-                                         :headers {:Authorization (str "Bearer " oa/oanda-api-key)}
-                                         :query {:instruments "EUR_USD"})]
-                  (when-let [err (http/error resp)]
-                            (println "failed processing request: " err))
-                  (doseq [s (http/string resp)]
-                         (println s))
-                  ))
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (def client (http/create-client :keep-alive true :request-timeout -1))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (ds/oanda-price-stream-start client identity "EUR_USD")
-  (def stream (ds/oanda-price-stream-start client identity "EUR_USD"))
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (def stream (ds/oanda-price-stream-start client identity "EUR_USD"))
-  (def stream (ds/oanda-price-stream-start client println "EUR_USD"))
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-   (ds/oanda-historical "EUR_USD" "5000" "M1")
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST
-                          client
-                          (str
-                           ds/rest-api-base-v3
-                           "accounts/"
-                           ds/account-no
-                           "/orders"
-                            )
-                          :body "{\n  \"order\": {\n    \"units\": \"100\", \n    \"instrument\": \"EUR_USD\", \n    \"timeInForce\": \"FOK\", \n    \"type\": \"MARKET\", \n    \"positionFill\": \"DEFAULT\"\n  }\n}")]
-                  ;; do something with resp
-                  (println resp)
-                  ))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST
-                          client
-                          (str
-                           ds/rest-api-base-v3
-                           "accounts/"
-                           ds/account-no
-                           "/orders"
-                            )
-                          :body "{\n  \"order\": {\n    \"units\": \"100\", \n    \"instrument\": \"EUR_USD\", \n    \"timeInForce\": \"FOK\", \n    \"type\": \"MARKET\", \n    \"positionFill\": \"DEFAULT\"\n  }\n}")]
-                  ;; do something with resp
-                  (http/await resp)
-                  (println (http/string resp))
-                  ))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                          (str
-                           ds/rest-api-base-v3
-                           "accounts/"
-                           ds/account-no
-                           "/orders"
-                            )
-                                   :headers {:Authorization (str "Bearer " oanda-api-key)}
-                          :body "{ \"order\": {  \"units\": \"100\",  \"instrument\": \"EUR_USD\",  \"timeInForce\": \"FOK\",  \"type\": \"MARKET\",  \"positionFill\": \"DEFAULT\"}}")]
-                  ;; do something with resp
-                  (http/await resp)
-                  (println (http/string resp))
-                  ))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str
-                                     ds/rest-api-base-v3
-                                     "accounts/"
-                                     ds/account-no
-                                     "/orders"
-                                     )
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)}
-                                   :body "{ \"order\": {  \"units\": \"100\",  \"instrument\": \"EUR_USD\",  \"timeInForce\": \"FOK\",  \"type\": \"MARKET\",  \"positionFill\": \"DEFAULT\"}}")]
-                  ;; do something with resp
-                  (http/await resp)
-                  (println (http/string resp))
-                  ))
-(do
-    (load-file "src/core/types.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/oanda.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str
-                                     ds/rest-api-base-v3
-                                     "accounts/"
-                                     ds/account-no
-                                     "/orders"
-                                     )
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)}
-                                   :body "{ \"order\": {  \"units\": \"100\",  \"instrument\": \"EUR_USD\",  \"timeInForce\": \"FOK\",  \"type\": \"MARKET\",  \"positionFill\": \"DEFAULT\"}}")]
-                  ;; do something with resp
-                  (http/await resp)
-                  (println (http/string resp))
-                  ))
+   [:unixtimestamp]
+   u/to-human
+   )
+(smp/simple-strat
+      (take-last 10 crypto-hist))
+(smp/simple-strat
+      (take-last 10 crypto-hist)
+      :human)
+(pprint
+    (smp/simple-strat-profit-calc
+      (smp/simple-strat
+        (take-last 10 crypto-hist)
+        :human)))
+(pprint
+    (smp/simple-strat
+      (take-last 10 crypto-hist)
+      :human))
+(let [plot (ich/candle-stick-plot
+               :data (ic/to-dataset (take-last 10 crypto-hist))
+               :date :unixtimestamp)]
+       (ic/view plot))
+(let [plot (ich/candle-stick-plot
+               :data (ic/to-dataset (take-last 10 crypto-hist))
+               :date :unixtimestamp)]
+       (ic/view plot))
 (require
   '[http.async.client :as http]
   '[clojure.spec :as s]
@@ -290,211 +31,470 @@
   '[clojure.spec.gen :as gen]
   '[clojure.core.reducers :as rd]
   '[core.utils :as u]
+  '[core.visual :as vs]
   '[core.spike :as sp]
-  '[core.types :as tps]
-  '[core.oanda :as oa]
   '[clojure.data.json :as jsn]
   '[core.datasources :as ds]
   '[core.marketcap :as cmc]
-  '[core.simple :as smp])
-(jsn/write-str {:order {:units 100 :instrument "EUR_USD" :timeInForce "FOK" :type "MARKET" :positionFill "Default"}})
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str
-                                     ds/rest-api-base-v3
-                                     "accounts/"
-                                     ds/account-no
-                                     "/orders"
-                                     )
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)}
-                                   :body (jsn/write-str {:order {:units 100
-                                                                 :instrument "EUR_USD"
-                                                                 :timeInForce "FOK"
-                                                                 :type "MARKET"
-                                                                 :positionFill "Default"}}))]
-                  ;; do something with resp
-                  (http/await resp)
-                  (println (http/string resp))
-                  ))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str
-                                     ds/rest-api-base-v3
-                                     "accounts/"
-                                     ds/account-no
-                                     "/orders"
-                                     )
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
-                                             :Content-type "application/json"}
-                                   :body (jsn/write-str {:order {:units 100
-                                                                 :instrument "EUR_USD"
-                                                                 :timeInForce "FOK"
-                                                                 :type "MARKET"
-                                                                 :positionFill "Default"}}))]
-                  ;; do something with resp
-                  (http/await resp)
-                  (println (http/string resp))
-                  ))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str
-                                     ds/rest-api-base-v3
-                                     "accounts/"
-                                     ds/account-no
-                                     "/orders"
-                                     )
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
-                                             :Content-type "application/json"}
-                                   :body (jsn/write-str {:order {:units 10
-                                                                 :instrument "EUR_USD"
-                                                                 :timeInForce "FOK"
-                                                                 :type "MARKET"
-                                                                 :positionFill "Default"}}))]
-                  ;; do something with resp
-                  (http/await resp)
-                  (println (http/string resp))
-                  ))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str
-                                     ds/rest-api-base-v3
-                                     "accounts/"
-                                     ds/account-no
-                                     "/orders"
-                                     )
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
-                                             :Content-type "application/json"}
-                                   :body (jsn/write-str {:order {:units "10" 
-                                                                 :instrument "EUR_USD"
-                                                                 :timeInForce "FOK"
-                                                                 :type "MARKET"
-                                                                 :positionFill "Default"}}))]
-                  ;; do something with resp
-                  (http/await resp)
-                  (println (http/string resp))
-                  ))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str
-                                     ds/rest-api-base-v3
-                                     "accounts/"
-                                     ds/account-no
-                                     "/orders"
-                                     )
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
-                                             :Content-type "application/json"}
-                                   :body (jsn/write-str {:order {:units "10"
-                                                                 :instrument "EUR_USD"
-                                                                 :timeInForce "FOK"
-                                                                 :type "MARKET"
-                                                                 :positionFill "DEFAULT"}}))]
-                  ;; do something with resp
-                  (http/await resp)
-                  (println (http/string resp))
-                  ))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
-                                             :Content-type "application/json"}
-                                   :body (jsn/write-str {:order {:units "10"
-                                                                 :instrument "EUR_USD"
-                                                                 :timeInForce "FOK"
-                                                                 :type "MARKET"
-                                                                 :positionFill "DEFAULT"}}))]
-                  (http/await resp)
-                  (println (http/string resp))))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
-                                             :Content-type "application/json"}
-                                   :body (jsn/write-str {:order {:units "-10"
-                                                                 :instrument "EUR_USD"
-                                                                 :timeInForce "FOK"
-                                                                 :type "MARKET"
-                                                                 :positionFill "DEFAULT"}}))]
-                  (http/await resp)
-                  (println (http/string resp))))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
-                                             :Content-type "application/json"}
-                                   :body (jsn/write-str {:order {:units "-10"
-                                                                 :instrument "EUR_USD"
-                                                                 :timeInForce "FOK"
-                                                                 :type "MARKET"
-                                                                 :positionFill "DEFAULT"}}))]
-                  (http/await resp)
-                  (println (http/string resp))))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
-                                             :Content-type "application/json"}
-                                   :body (jsn/write-str {:order {:units "-10"
-                                                                 :instrument "EUR_USD"
-                                                                 :timeInForce "FOK"
-                                                                 :type "MARKET"
-                                                                 :positionFill "DEFAULT"}}))]
-                  (http/await resp)
-                  (println (http/string resp))))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
-                                             :Content-type "application/json"}
-                                   :body (jsn/write-str {:order {:units "-10"
-                                                                 :instrument "EUR_USD"
-                                                                 :timeInForce "FOK"
-                                                                 :type "MARKET"
-                                                                 :positionFill "DEFAULT"}}))]
-                  (http/await resp)
-                  (println (http/string resp))))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
-                                             :Content-type "application/json"}
-                                   :body (jsn/write-str {:order {:units "10"
-                                                                 :instrument "EUR_USD"
-                                                                 :timeInForce "FOK"
-                                                                 :type "MARKET"
-                                                                 :positionFill "DEFAULT"}}))]
-                  (http/await resp)
-                  (println (http/string resp))))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
-                                             :Content-type "application/json"}
-                                   :body (jsn/write-str {:order {:units "10"
-                                                                 :instrument "EUR_USD"
-                                                                 :timeInForce "FOK"
-                                                                 :type "MARKET"
-                                                                 :positionFill "DEFAULT"
-                                                                 :stopLossOnFill {:price 1.08700
-                                                                                  :timeInForce "GTC"}}}))]
-                  (http/await resp)
-                  (println (http/string resp))))
-(with-open [client (http/create-client)]
-             (let [resp (http/POST client
-                                   (str ds/rest-api-base-v3 "accounts/" ds/account-no "/orders")
-                                   :headers {:Authorization (str "Bearer " ds/oanda-api-key)
-                                             :Content-type "application/json"}
-                                   :body (jsn/write-str {:order {:units "10"
-                                                                 :instrument "EUR_USD"
-                                                                 :timeInForce "FOK"
-                                                                 :type "MARKET"
-                                                                 :positionFill "DEFAULT"
-                                                                 :stopLossOnFill {:price "1.08700" 
-                                                                                  :timeInForce "GTC"}}}))]
-                  (http/await resp)
-                  (println (http/string resp))))
- {:hi "hi" nil} 
- {:hi "hi" (when false 1)}
-  (merge {:a 1} nil)
-  (merge {:a 1} (when false {:b 2}))
-  (merge {:a 1} (when true {:b 2}))
-  (= true '())
+  '[core.simple :as smp]
+  '[incanter.core :as ic]
+  '[incanter.stats :as is]
+  '[incanter.charts :as ich]
+  '[incanter.datasets :as id])
+(require
+  '[http.async.client :as http]
+  '[clojure.spec :as s]
+  '[clojure.spec.gen :as gen]
+  '[clojure.spec.test :as ts :refer [check]]
+  '[clojure.spec.gen :as gen]
+  '[clojure.core.reducers :as rd]
+  '[core.utils :as u]
+  '[core.visual :as vs]
+  '[core.spike :as sp]
+  '[clojure.data.json :as jsn]
+  '[core.datasources :as ds]
+  '[core.marketcap :as cmc]
+  '[core.simple :as smp]
+  '[incanter.core :as ic]
+  '[incanter.stats :as is]
+  '[incanter.charts :as ich]
+  '[incanter.datasets :as id])
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+  (vs/plot-standard-candles crypto-hist)
+  (vs/plot-standard-candles (take-last 10 crypto-hist))
+(pprint
+    (smp/simple-strat
+      (take-last 10 crypto-hist)
+      :human))
+(as-> (take-last 10 crypto-hist) x
+       (:greens x) 
+        
+        )
+(as-> (take-last 10 crypto-hist) x
+       (:greens x) 
+        
+        )
+(take-last 10 crypto-hist)
+(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
+        (:greens x)
+        )
+(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a y)))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        )
+(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a profit)))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        )
+(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a (select-keys y :profit :basetimestamp))))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        )
+(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a (select-keys y [:profit :basetimestamp]))))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        )
+(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a
+                                             (->
+                                               (select-keys y [:profit :basetimestamp])
+                                               (update-in % [:basetimestamp] u/to-human)
+                                               )
+                                             
+                                             )))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        )
+(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a
+                                             (->
+                                               (select-keys y [:profit :basetimestamp])
+                                               (update-in [:basetimestamp] u/to-human)
+                                               )
+                                             )))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        )
+(as-> (smp/simple-strat (take-last 100 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a
+                                             (->
+                                               (select-keys y [:profit :basetimestamp])
+                                               (update-in [:basetimestamp] u/to-human)))))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        )
+(as-> (smp/simple-strat (take-last 100 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a
+                                             (->
+                                               (select-keys y [:profit :basetimestamp])
+                                               (update-in [:basetimestamp] u/to-human)))))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        (filter #(<= 4 (count x)) x)
+        )
+(as-> (smp/simple-strat (take-last 100 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a
+                                             (->
+                                               (select-keys y [:profit :basetimestamp])
+                                               (update-in [:basetimestamp] u/to-human)))))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        (filter #(<= 4 (count %)) x)
+        )
+(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a
+                                             (->
+                                               (select-keys y [:profit :basetimestamp])
+                                               (update-in [:basetimestamp] u/to-human)))))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        (filter #(<= 4 (count %)) x)
+        )
+(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a
+                                             (->
+                                               (select-keys y [:profit :basetimestamp])
+                                               (update-in [:basetimestamp] u/to-human)))))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        (filter #(<= 6 (count %)) x)
+        )
+(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a
+                                             (->
+                                               (select-keys y [:profit :basetimestamp])
+                                               (update-in [:basetimestamp] u/to-human)))))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        (filter #(<= 7 (count %)) x)
+        )
+(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a
+                                             (->
+                                               (select-keys y [:profit :basetimestamp])
+                                               (update-in [:basetimestamp] u/to-human)))))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        (filter #(<= 8 (count %)) x)
+        )
+(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a
+                                             (->
+                                               (select-keys y [:profit :basetimestamp])
+                                               (update-in [:basetimestamp] u/to-human)))))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        (filter #(<= 9 (count %)) x)
+        )
+(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a
+                                             (->
+                                               (select-keys y [:profit :basetimestamp])
+                                               (update-in [:basetimestamp] u/to-human)))))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        (filter #(<= 11 (count %)) x)
+   
+)
+crypto-hist
+(filter
+   #(> (timestamp->unix "2014-08-21T00:00:00.000Z") % (timestamp->unix "2014-09-30T00:00:00.000Z"))
+   (take-last 1000 crypto-hist)
+    )
+(filter
+   #(> (u/timestamp->unix "2014-08-21T00:00:00.000Z") % (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
+   (take-last 1000 crypto-hist)
+    )
+(filter
+   #(> (u/timestamp->unix "2014-08-21T00:00:00.000Z") (:unixtimestamp %) (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
+   (take-last 1000 crypto-hist)
+    )
+(u/timestamp->unix "2014-08-21T00:00:00.000Z")
+(filter
+   #(> (u/timestamp->unix "2014-08-21T00:00:00.000Z") 
+       (* 1000 (:unixtimestamp %)) 
+       (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
+   (take-last 1000 crypto-hist)
+    )
+(u/timestamp->unix "2014-08-21T00:00:00.000Z")
+(> (u/timestamp->unix "2014-08-21T00:00:00.000Z") 
+     (* 1000 1478995200)  
+     (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
+(u/timestamp->unix "2014-09-30T00:00:00.000Z")
+(> (u/timestamp->unix "2014-08-21T00:00:00.000Z")
+     (* 1000 1412033200000)
+     (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
+(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
+     (* 1000 1412033200000)
+     (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
+(u/timestamp->unix "2014-08-21T00:00:00.000Z")
+(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
+     (* 1000 1412033200000)
+     )
+  (< 1 2 3)
+i(u/timestamp->unix "2014-09-30T00:00:00.000Z")
+(u/timestamp->unix "2014-09-30T00:00:00.000Z")
+(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
+     (* 1000 1412033200000)
+     (u/timestamp->unix "2014-09-30T00:00:00.000Z")
+     )
+(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
+     (* 1000 1412033200000)
+     1412035200000
+     )
+(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
+     (* 1000 1412033200000)
+     1412035200000
+     )
+ 1412035200000
+(u/timestamp->unix "2014-08-21T00:00:00.000Z")
+(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
+     (* 1000 1412033200)
+     1412035200000
+     )
+(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
+     (* 1000 1412033200)
+     (u/timestamp->unix "2014-09-30T00:00:00.000Z")
+     )
+(take-last 1000 crypto-hist)
+(filter
+   #(> (u/timestamp->unix "2014-08-21T00:00:00.000Z")
+       (* 1000 (:unixtimestamp %))
+       (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
+   (take-last 1000 crypto-hist)
+    )
+  (last (take-last 1000 crypto-hist))
+(filter
+   #(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
+       (* 1000 (:unixtimestamp %))
+       (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
+   (take-last 1000 crypto-hist)
+    )
+(u/candles-between 
+    "2014-08-21T00:00:00.000Z"
+    "2014-09-30T00:00:00.000Z"
+    crypto-hist)
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(u/candles-between
+    "2014-08-21T00:00:00.000Z"
+    "2014-09-30T00:00:00.000Z"
+    crypto-hist)
+(->
+    (u/candles-between
+      "2014-08-21T00:00:00.000Z"
+      "2014-09-30T00:00:00.000Z"
+      crypto-hist)
+    (vs/plot-standard-candles)
+    )
+(->
+    (u/candles-between
+      "2014-08-21T00:00:00.000Z"
+      "2014-09-30T00:00:00.000Z"
+      crypto-hist)
+    (vs/plot-standard-candles)
+    )
+(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a
+                                             (->
+                                               (select-keys y [:profit :basetimestamp])
+                                               (update-in [:basetimestamp] u/to-human)))))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        (filter #(<= 6 (count %)) x)
+        )

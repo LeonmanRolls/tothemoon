@@ -55,11 +55,19 @@
             (:body x)
             (jsn/read-str x :key-fn keyword)))
 
+(defn digit-count [no]
+      (int (+ 1 (Math/floor (Math/log10 no)))))
+
 (s/fdef to-human
         :args (s/cat :unix ::unixtimestamp))
 
 (defn to-human [unix]
-      (.toString (c/from-long (long unix))))
+      (let [ts-length (digit-count unix)
+            convert (fn [x] (.toString (c/from-long (long x))))]
+           (cond
+             (>= 10 ts-length) (convert (* 1000 unix))
+             (< 10 ts-length) (convert unix)
+             :else (convert unix))))
 
 (defn map->mapofcol [damap]
       (into {} (map (fn [x] [(first x) [(last x)]]) damap)))
@@ -99,5 +107,20 @@
         (as-> timestamp  x
               (f/parse formatter x)
               (c/to-long x))))
+
+(defn update-all-vals [data keyvec fn]
+      (map #(update-in % keyvec fn) data))
+
+(defn rename-all-keys [data from to]
+      (map #(clojure.set/rename-keys % {from to}) data))
+
+(defn candles-between
+      "2014-08-21T00:00:00.000Z - 2014-09-30T00:00:00.000Z"
+      [oldest newest candles]
+      (filter
+        #(< (timestamp->unix oldest)
+            (* 1000 (:unixtimestamp %))
+            (timestamp->unix newest))
+        candles))
 
 
