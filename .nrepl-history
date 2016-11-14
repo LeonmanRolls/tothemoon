@@ -1,254 +1,3 @@
-   [:unixtimestamp]
-   u/to-human
-   )
-(smp/simple-strat
-      (take-last 10 crypto-hist))
-(smp/simple-strat
-      (take-last 10 crypto-hist)
-      :human)
-(pprint
-    (smp/simple-strat-profit-calc
-      (smp/simple-strat
-        (take-last 10 crypto-hist)
-        :human)))
-(pprint
-    (smp/simple-strat
-      (take-last 10 crypto-hist)
-      :human))
-(let [plot (ich/candle-stick-plot
-               :data (ic/to-dataset (take-last 10 crypto-hist))
-               :date :unixtimestamp)]
-       (ic/view plot))
-(let [plot (ich/candle-stick-plot
-               :data (ic/to-dataset (take-last 10 crypto-hist))
-               :date :unixtimestamp)]
-       (ic/view plot))
-(require
-  '[http.async.client :as http]
-  '[clojure.spec :as s]
-  '[clojure.spec.gen :as gen]
-  '[clojure.spec.test :as ts :refer [check]]
-  '[clojure.spec.gen :as gen]
-  '[clojure.core.reducers :as rd]
-  '[core.utils :as u]
-  '[core.visual :as vs]
-  '[core.spike :as sp]
-  '[clojure.data.json :as jsn]
-  '[core.datasources :as ds]
-  '[core.marketcap :as cmc]
-  '[core.simple :as smp]
-  '[incanter.core :as ic]
-  '[incanter.stats :as is]
-  '[incanter.charts :as ich]
-  '[incanter.datasets :as id])
-(require
-  '[http.async.client :as http]
-  '[clojure.spec :as s]
-  '[clojure.spec.gen :as gen]
-  '[clojure.spec.test :as ts :refer [check]]
-  '[clojure.spec.gen :as gen]
-  '[clojure.core.reducers :as rd]
-  '[core.utils :as u]
-  '[core.visual :as vs]
-  '[core.spike :as sp]
-  '[clojure.data.json :as jsn]
-  '[core.datasources :as ds]
-  '[core.marketcap :as cmc]
-  '[core.simple :as smp]
-  '[incanter.core :as ic]
-  '[incanter.stats :as is]
-  '[incanter.charts :as ich]
-  '[incanter.datasets :as id])
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (vs/plot-standard-candles crypto-hist)
-  (vs/plot-standard-candles (take-last 10 crypto-hist))
-(pprint
-    (smp/simple-strat
-      (take-last 10 crypto-hist)
-      :human))
-(as-> (take-last 10 crypto-hist) x
-       (:greens x) 
-        
-        )
-(as-> (take-last 10 crypto-hist) x
-       (:greens x) 
-        
-        )
-(take-last 10 crypto-hist)
-(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
-        (:greens x)
-        )
-(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a y)))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        )
-(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a profit)))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        )
-(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a (select-keys y :profit :basetimestamp))))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        )
-(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a (select-keys y [:profit :basetimestamp]))))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        )
-(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in % [:basetimestamp] u/to-human)
-                                               )
-                                             
-                                             )))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        )
-(as-> (smp/simple-strat (take-last 10 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in [:basetimestamp] u/to-human)
-                                               )
-                                             )))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        )
-(as-> (smp/simple-strat (take-last 100 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in [:basetimestamp] u/to-human)))))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        )
-(as-> (smp/simple-strat (take-last 100 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in [:basetimestamp] u/to-human)))))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        (filter #(<= 4 (count x)) x)
-        )
-(as-> (smp/simple-strat (take-last 100 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in [:basetimestamp] u/to-human)))))
                 (< 0 profit) (conj x [])
                 :else x))
           [[]]
@@ -498,3 +247,254 @@ i(u/timestamp->unix "2014-09-30T00:00:00.000Z")
           x)
         (filter #(<= 6 (count %)) x)
         )
+(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
+        (:greens x)
+        (reduce
+          (fn [x {:keys [profit] :as y}]
+              (cond
+                (> 0 profit) (update-in
+                               x
+                               [(- (count x) 1)]
+                               (fn [a] (conj a
+                                             (->
+                                               (select-keys y [:profit :basetimestamp])
+                                               (update-in [:basetimestamp] u/to-human)))))
+                (< 0 profit) (conj x [])
+                :else x))
+          [[]]
+          x)
+        (filter #(<= 6 (count %)) x)
+        )
+    (load-file "src/core/simple.clj")
+(:greens 
+      (smp/simple-strat crypto-hist))
+    (load-file "src/core/simple.clj")
+(smp/profit-chains
+    (:greens (smp/simple-strat crypto-hist))
+    5)
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(map
+    u/first-and-last
+    (smp/profit-chains (:greens (smp/simple-strat crypto-hist)) 5))
+(->>
+    (smp/profit-chains (:greens (smp/simple-strat crypto-hist)) 5)
+    (map u/first-and-last)
+    (map
+      (fn [x]
+          (->
+            (u/candles-between
+              (-> x first :basetimestamp)
+              (-> x last :basetimestamp)
+              crypto-hist)
+            (vs/plot-standard-candles)
+            )
+          ))
+    )
+(->>
+    (smp/profit-chains (:reds (smp/simple-strat crypto-hist)) 5)
+    (map u/first-and-last)
+    (map
+      (fn [x]
+          (->
+            (u/candles-between
+              (-> x first :basetimestamp)
+              (-> x last :basetimestamp)
+              crypto-hist)
+            (vs/plot-standard-candles)
+            )
+          ))
+    )
+  (plot-chains crytpo-hist :greens 10)
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+  (plot-chains crytpo-hist :greens 10)
+  (vs/plot-chains crytpo-hist :greens 10)
+crytpo-hist
+  (vs/plot-chains crypto-hist :greens 10)
+    (u/json-get "https://api.kraken.com/0/public/Time") 
+(u/json-get
+    "https://api.kraken.com/0/public/OHLC"
+    {:query-params {:pair "XBTUSD" :interval "60"}})
+(def rslt (u/json-get
+              "https://api.kraken.com/0/public/OHLC"
+              {:query-params {:pair "XBTUSD" :interval "60"}}))
+rslt
+  (keys rslt)
+  (keys (:result rslt))
+(:XXBTZUSD (:result rslt))
+  (first (:XXBTZUSD (:result rslt)))
+  (def rslt (u/json-get
+              "https://api.kraken.com/0/public/OHLC"
+              {:query-params {:pair "XBTUSD" :interval "1440"}}))
+rslt
+  (first (:XXBTZUSD (:result rslt)))
+(:XXBTZUSD (:result rslt))
+  (kraken-hist "XBTUSD" 1440)
+    (load-file "src/core/datasources.clj")
+  (kraken-hist "XBTUSD" 1440)
+    (load-file "src/core/datasources.clj")
+  (ds/kraken-hist "XBTUSD" 1440)
+  (first (:XXBTZUSD (:result rslt)))
+(let [[time open high low close vwap volume count] (first (:XXBTZUSD (:result rslt)))]
+       {:unixtimestamp (* 1000 time)
+        :open open
+        :high high
+        :low low
+        :close close})
+(let [[time open high low close vwap volume count] (first (:XXBTZUSD (:result rslt)))]
+       {:unixtimestamp (* 1000 time)
+        :open (read-string open) 
+        :high high
+        :low low
+        :close close})
+(let [[time open high low close vwap volume count] (first (:XXBTZUSD (:result rslt)))]
+       {:unixtimestamp (* 1000 time)
+        :open (read-string open)
+        :high (read-string high)
+        :low (read-string low)
+        :close (read-string close)})
+    (load-file "src/core/datasources.clj")
+  (kraken-hist->standard (:XXBTZUSD (:result rslt))) 
+  (ds/kraken-hist->standard (:XXBTZUSD (:result rslt)))
+  (def stnd (ds/kraken-hist->standard (:XXBTZUSD (:result rslt)))) 
+stnd
+  (take-last 10 stnd)
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (vs/plot-standard-candles  (take-last 10 stnd))
+  (vs/plot-standard-candles  (take-last 15 stnd))
+(take-last 10 stnd)
+(smp/simple-strat-profit-calc
+    (smp/simple-strat
+      (take-last 15 stnd)
+      :human))
+(smp/simple-strat-profit-calc
+    (smp/simple-strat
+      (take-last 20 stnd)
+      :human))
+(smp/simple-strat-profit-calc
+    (smp/simple-strat
+      (take-last 30 stnd)
+      :human))
+(smp/simple-strat-profit-calc
+    (smp/simple-strat
+      (take-last 40 stnd)
+      :human))
+(smp/simple-strat-profit-calc
+    (smp/simple-strat
+      (take-last 50 stnd)
+      :human))
+  (count stnd) 
+(smp/simple-strat-profit-calc
+    (smp/simple-strat
+      (take-last 60 stnd)
+      :human))
+(smp/simple-strat-profit-calc
+    (smp/simple-strat
+      (take-last 90 stnd)
+      :human))
+(smp/simple-strat-profit-calc
+    (smp/simple-strat
+      (take-last 120 stnd)
+      :human))
+(smp/simple-strat-profit-calc
+    (smp/simple-strat
+      (take-last 90 stnd)
+      :human))
+(smp/simple-strat-profit-calc
+    (smp/simple-strat
+      (take-last 120 stnd)
+      :human))
+(smp/simple-strat-profit-calc
+    (smp/simple-strat
+      stnd
+      :human))
+  (count stnd)
+  (count crypto-hist)
+(smp/simple-strat-profit-calc
+      (smp/simple-strat
+        (take-last 10 crypto-hist)
+        :human))
+(smp/simple-strat-profit-calc
+      (smp/simple-strat
+        (take-last 720 crypto-hist)
+        :human))
+(smp/simple-strat-profit-calc
+    (smp/simple-strat
+      stnd
+      :human))
+  (first stnd)
+ (u/to-human (:unixtimestamp (first stnd)))  
+  (u/to-human (:unixtimestamp (first (take-last 720 crypto-hist))))
+(json-get
+    (str "https://www.cryptocompare.com/api/data/" "histoday" "/?e=Kraken" "&fsym=" "BTC" "&tsym=" "USD" "&limit=" "720")
+    )
+(u/json-get
+    (str "https://www.cryptocompare.com/api/data/" "histoday" "/?e=Kraken" "&fsym=" "BTC" "&tsym=" "USD" "&limit=" "720")
+    )
+    (load-file "src/core/datasources.clj")
+(ds/cryptocompare "BTC" "USD" "histoday" 1000 "Kraken"
+    )
+(ds/cryptocompare-hist "BTC" "USD" "histoday" 1000 "Kraken"
+    )
+(ds/cryptocompare-hist "BTC" "USD" "histoday" 1000)
+  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000)
+  (when false 1)
+  (if nil true false)
+    (load-file "src/core/datasources.clj")
+  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000)
+    (load-file "src/core/datasources.clj")
+  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000)
+  (if fasle "hi")
+  (if false "hi")
+    (load-file "src/core/datasources.clj")
+  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000)
+    (load-file "src/core/datasources.clj")
+  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000)
+  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000 "Kraken")

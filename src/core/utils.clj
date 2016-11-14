@@ -123,4 +123,6 @@
             (timestamp->unix newest))
         candles))
 
+(defn first-and-last [coll]
+      [(first coll) (last coll)])
 

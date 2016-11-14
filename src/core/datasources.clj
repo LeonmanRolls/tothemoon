@@ -27,6 +27,8 @@
 
 (def streaming-api-base "https://stream-fxpractice.oanda.com/v1/")
 
+(def kraken-api-base "api.kraken.com")
+
 (s/def ::cryptocomapre-sym cryptocompare-syms)
 
 (s/def ::fiat-sym #{"USD" "GBP" "EUR"})
@@ -54,17 +56,19 @@
                      :timescale ::timescale :limit #(> 1001 %  0))
         :ret ::u/url)
 
-(defn cryptocompare-url-gen [fsym tsym timescale limit]
+(defn cryptocompare-url-gen [fsym tsym timescale limit & exchange]
+      (println exchange)
+      (println (if (first exchange) (str "/?e=" (first exchange)) "/?e=CCCAGG"))
       (str
         "https://www.cryptocompare.com/api/data/"
         timescale
-        "/?e=CCCAGG"
+        (if (first exchange) (str "/?e=" (first exchange)) "/?e=CCCAGG")
         "&fsym=" fsym
         "&tsym=" tsym
         "&limit=" limit))
 
-(defn cryptocompare-hist [fsym tsym timescale limit]
-      (as-> (cryptocompare-url-gen fsym tsym timescale limit) x
+(defn cryptocompare-hist [fsym tsym timescale limit & exchange]
+      (as-> (cryptocompare-url-gen fsym tsym timescale limit (when exchange (first exchange))) x
             (u/json-get x)
             (:Data x)
             (u/update-all-vals x [:time] long)
@@ -136,4 +140,23 @@
         candles
         (u/update-all-vals [:time] u/timestamp->unix)
         (u/rename-all-keys :time :unixtimestamp)))
+
+;Kraken---
+(defn kraken-hist
+      "XBTUSD 1440"
+      [curr-pair interval]
+      (:result (u/json-get
+                 "https://api.kraken.com/0/public/OHLC"
+                 {:query-params {:pair curr-pair :interval interval}})))
+
+(defn kraken-hist->standard [kraken-candles]
+      (map
+        (fn [[time open high low close vwap volume count]]
+            {:unixtimestamp (* 1000 time)
+             :open (read-string open)
+             :high (read-string high)
+             :low (read-string low)
+             :close (read-string close)})
+        kraken-candles))
+
 

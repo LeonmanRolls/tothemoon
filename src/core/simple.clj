@@ -117,32 +117,27 @@
           (map :profit)
           (reduce +))))
 
+(defn profit-chains [profits chain-length]
+      (as-> profits x
+            (reduce
+              (fn [x {:keys [profit] :as y}]
+                  (cond
+                    (> 0 profit) (update-in
+                                   x
+                                   [(- (count x) 1)]
+                                   (fn [a] (conj a
+                                                 (->
+                                                   (select-keys y [:profit :basetimestamp])
+                                                   (update-in [:basetimestamp] u/to-human)))))
+                    (< 0 profit) (conj x [])
+                    :else x))
+              [[]]
+              x)
+            (filter #(<= chain-length (count %)) x)))
 
 (comment
 
-  (simple-strat-profit-calc
-    (simple-strat (:Data resp)))
-
-  ;Strategy data for adding to chart
-  (def ss (simple-strat (:Data resp)))
-
-  (first (:greens ss))
-
-  (def timez (map
-               #(update-in % [:time] long)
-               (:Data resp)))
-
-
-
-  (ic/view
-    (ich/candle-stick-plot
-      :data (ic/to-dataset timez)
-      :date :time))
-
   (map #(ich/add-pointer plot (:unixtimestamp %) (:price %)))
-
-
-
 
   (as-> (nth big-daddy-data 11) x
         (:data x)

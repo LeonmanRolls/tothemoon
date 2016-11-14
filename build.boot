@@ -72,7 +72,7 @@
 
   (smp/simple-strat-profit-calc
       (smp/simple-strat
-        (take-last 10 crypto-hist)
+        (take-last 720 crypto-hist)
         :human))
 
  (u/update-all-vals
@@ -80,36 +80,43 @@
    [:unixtimestamp]
    u/to-human)
 
-  ;Turn this into a funciton
-  (as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in [:basetimestamp] u/to-human)))))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        (filter #(<= 6 (count %)) x)
-        )
+  (def rslt (u/json-get
+              "https://api.kraken.com/0/public/OHLC"
+              {:query-params {:pair "XBTUSD" :interval "1440"}}))
 
+  (def stnd (ds/kraken-hist->standard (:XXBTZUSD (:result rslt))))
 
-  (->
-    (u/candles-between
-      "2014-08-21T00:00:00.000Z"
-      "2014-09-30T00:00:00.000Z"
-      crypto-hist)
-    (vs/plot-standard-candles)
+  (vs/plot-standard-candles (take-last 15 stnd))
+
+  (smp/simple-strat-profit-calc
+    (smp/simple-strat
+      stnd
+      :human))
+
+  (u/to-human (:unixtimestamp (first stnd)))
+
+  (u/to-human (:unixtimestamp (first (take-last 720 crypto-hist))))
+
+  (smp/simple-strat-profit-calc
+      (smp/simple-strat
+        (take-last 720 crypto-hist)
+        :human))
+
+  (u/json-get
+    (str "https://www.cryptocompare.com/api/data/" "histoday" "/?e=Kraken" "&fsym=" "BTC" "&tsym=" "USD" "&limit=" "720")
     )
 
-  ;Get first and last elements from list
+  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000 "Kraken")
+
+  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000 nil)
+
+  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000)
+
+  (when false 1)
+
+  (if false "hi")
+
+  (if nil true false)
 
   (do
     (load-file "src/core/visual.clj")
