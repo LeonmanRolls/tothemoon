@@ -2,7 +2,6 @@
     (:require
       [clojure.spec :as s]
       [clj-time.coerce :as c]
-      [core.types :as tps]
       [core.utils :as u]))
 
 (def marketcap 10000000)
@@ -34,7 +33,7 @@
              (str "Not enough data for: " id))))
 
 (s/fdef coinmarketcap-data-by-id
-        :args (s/cat :curr-id ::tps/coinmarketcap-sym))
+        :args (s/cat :curr-id ::u/coinmarketcap-sym))
 
 (defn coinmarketcap-data-by-id [curr-id]
       {:id curr-id

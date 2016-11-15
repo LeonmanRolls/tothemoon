@@ -126,3 +126,15 @@
 (defn first-and-last [coll]
       [(first coll) (last coll)])
 
+(defn green? [{:keys [open close]}]
+      (> close open))
+
+(defn percentage-change [old new & opts]
+      (let [basic (* (/ (- new old) old) 100)]
+           (println basic)
+           (if opts
+             (if (> basic 0)
+               (/ (+ 100 basic) 100)
+               (- 1 (Math/abs (/ basic 100))))
+             basic)))
+

@@ -16,6 +16,7 @@
       [clj-time.format :as f]
       [clj-time.coerce :as c]
       [clojure.set :as set]
+      [core.utils :as u]
       [clojure.core.logic :as lgc]))
 
 (def server-ip "http://139.59.226.3:3001")
@@ -62,7 +63,7 @@
 (s/def ::askavgs (s/coll-of ::askavg))
 
 ;Should make sure these are in sequential order
-(s/def ::timeseries (s/coll-of ::timestamp))
+(s/def ::timeseries (s/coll-of ::u/timestamp))
 
 
 (s/def ::unixtimeseries (s/coll-of ::unixtimestamp))
@@ -87,7 +88,7 @@
 
 (s/def ::Id number?)
 
-(s/def ::TimeStamp ::timestamp)
+(s/def ::TimeStamp ::u/timestamp)
 
 (s/def ::Price number?)
 
@@ -192,7 +193,7 @@
        :unixtimeseries (cons 
                          (-> 
                            (:timestamp y) 
-                           (timestamp->unix (f/formatters :date-time-parser))) 
+                           (u/timestamp->unix (f/formatters :date-time-parser)))
                          (:timeseries x))}) 
     {:bidavgs '() 
      :askavgs '() 
@@ -258,7 +259,7 @@
                     othercurrency (-> x :args :othercurrency)]
                 (coll= 
                   (map 
-                    timestamp->unix 
+                    u/timestamp->unix
                     (map :TimeStamp (price-history-raw basecurrency othercurrency)))
                   (:unixtimeseries ret)))))
 
@@ -266,7 +267,7 @@
   (as-> (price-history-raw basecurrency othercurrency) x
         (reduce 
           (fn [y z]
-            {:unixtimeseries (cons (timestamp->unix (:TimeStamp z)) (:unixtimeseries y))
+            {:unixtimeseries (cons (u/timestamp->unix (:TimeStamp z)) (:unixtimeseries y))
              :priceseries (cons (:Price z) (:priceseries y))}) 
           {:unixtimeseries '()
            :priceseries '()}
@@ -286,7 +287,7 @@
              :unixtimeseries (cons 
                                (-> 
                                  (:timestamp y) 
-                                 (timestamp->unix (f/formatters :date-time-parser))) 
+                                 (u/timestamp->unix (f/formatters :date-time-parser)))
                                (:timeseries x))}) 
           {:bidavgs '() 
            :askavgs '() 
@@ -308,7 +309,7 @@
 
 (defn colltimestamp->unix [datacoll]
   (map 
-    #(update-in % [:TimeStamp] timestamp->unix) 
+    #(update-in % [:TimeStamp] u/timestamp->unix)
     datacoll))
 
 (s/fdef grad-calc
@@ -387,7 +388,7 @@
   (->> 
     (map 
       (fn [x]
-        (update-in x [timestampkey] timestamp->unix))
+        (update-in x [timestampkey] u/timestamp->unix))
       raw)
     (map #(set/rename-keys % {timestampkey :unixtimestamp})) 
     (sort-by :unixtimestamp)))

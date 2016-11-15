@@ -1,500 +1,500 @@
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        (filter #(<= 4 (count %)) x)
-        )
-(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in [:basetimestamp] u/to-human)))))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        (filter #(<= 4 (count %)) x)
-        )
-(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in [:basetimestamp] u/to-human)))))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        (filter #(<= 6 (count %)) x)
-        )
-(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in [:basetimestamp] u/to-human)))))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        (filter #(<= 7 (count %)) x)
-        )
-(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in [:basetimestamp] u/to-human)))))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        (filter #(<= 8 (count %)) x)
-        )
-(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in [:basetimestamp] u/to-human)))))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        (filter #(<= 9 (count %)) x)
-        )
-(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in [:basetimestamp] u/to-human)))))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        (filter #(<= 11 (count %)) x)
-   
-)
-crypto-hist
-(filter
-   #(> (timestamp->unix "2014-08-21T00:00:00.000Z") % (timestamp->unix "2014-09-30T00:00:00.000Z"))
-   (take-last 1000 crypto-hist)
-    )
-(filter
-   #(> (u/timestamp->unix "2014-08-21T00:00:00.000Z") % (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
-   (take-last 1000 crypto-hist)
-    )
-(filter
-   #(> (u/timestamp->unix "2014-08-21T00:00:00.000Z") (:unixtimestamp %) (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
-   (take-last 1000 crypto-hist)
-    )
-(u/timestamp->unix "2014-08-21T00:00:00.000Z")
-(filter
-   #(> (u/timestamp->unix "2014-08-21T00:00:00.000Z") 
-       (* 1000 (:unixtimestamp %)) 
-       (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
-   (take-last 1000 crypto-hist)
-    )
-(u/timestamp->unix "2014-08-21T00:00:00.000Z")
-(> (u/timestamp->unix "2014-08-21T00:00:00.000Z") 
-     (* 1000 1478995200)  
-     (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
-(u/timestamp->unix "2014-09-30T00:00:00.000Z")
-(> (u/timestamp->unix "2014-08-21T00:00:00.000Z")
-     (* 1000 1412033200000)
-     (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
-(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
-     (* 1000 1412033200000)
-     (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
-(u/timestamp->unix "2014-08-21T00:00:00.000Z")
-(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
-     (* 1000 1412033200000)
-     )
-  (< 1 2 3)
-i(u/timestamp->unix "2014-09-30T00:00:00.000Z")
-(u/timestamp->unix "2014-09-30T00:00:00.000Z")
-(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
-     (* 1000 1412033200000)
-     (u/timestamp->unix "2014-09-30T00:00:00.000Z")
-     )
-(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
-     (* 1000 1412033200000)
-     1412035200000
-     )
-(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
-     (* 1000 1412033200000)
-     1412035200000
-     )
- 1412035200000
-(u/timestamp->unix "2014-08-21T00:00:00.000Z")
-(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
-     (* 1000 1412033200)
-     1412035200000
-     )
-(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
-     (* 1000 1412033200)
-     (u/timestamp->unix "2014-09-30T00:00:00.000Z")
-     )
-(take-last 1000 crypto-hist)
-(filter
-   #(> (u/timestamp->unix "2014-08-21T00:00:00.000Z")
-       (* 1000 (:unixtimestamp %))
-       (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
-   (take-last 1000 crypto-hist)
-    )
-  (last (take-last 1000 crypto-hist))
-(filter
-   #(< (u/timestamp->unix "2014-08-21T00:00:00.000Z")
-       (* 1000 (:unixtimestamp %))
-       (u/timestamp->unix "2014-09-30T00:00:00.000Z"))
-   (take-last 1000 crypto-hist)
-    )
-(u/candles-between 
-    "2014-08-21T00:00:00.000Z"
-    "2014-09-30T00:00:00.000Z"
-    crypto-hist)
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
+                                      (cond
+                                        (u/green? y) (->
+                                                       (update-in x [:buy-or-sell] (fn [_] "buy"))
+                                                       (update-in [:order-price] (fn [_] close))
+                                                       (update-in [:stop-loss] (fn [_] low))
+                                                       (update-in [:open-date] (fn [_] unixtimestamp)))
+                                        (not (u/green? y)) (->
+                                                             (update-in x [:buy-or-sell] (fn [_] "sell"))
+                                                             (update-in [:order-price] (fn [_] close))
+                                                             (update-in [:stop-loss] (fn [_] high))
+                                                             (update-in [:open-date] (fn [_] unixtimestamp)))))))
+         {:open-date nil
+          :stop-loss nil
+          :buy-or-sell nil
+          :order-price nil
+          :account 1000
+          :history []}
+         (take-last 5000 oanda-min)))
+(let [clear-fn (fn [deets-map]
+                     (->
+                       (update-in deets-map [:open-date] (fn [_] nil))
+                       (update-in [:stop-loss] (fn [_] nil))
+                       (update-in [:buy-or-sell] (fn [_] nil))
+                       (update-in [:order-price] (fn [_] nil))))]
+       (reduce
+         (fn [{:keys [stop-loss buy-or-sell order-price account history] :as x}
+              {:keys [unixtimestamp open high low close] :as y}]
+             (cond
+               (= buy-or-sell "buy") (do
+                                       (println "buy")
+                                       (if
+                                         (u/green? y)
+                                         (cond
+                                           (< low stop-loss) (->
+                                                               (update-in x [:account]
+                                                                          (fn [acc]
+                                                                              (* acc
+                                                                                 (u/percentage-change order-price stop-loss :spicy))))
+                                                               clear-fn)
+                                           :else (->
+                                                   (update-in x [:stop-loss] (fn [_] low))))
+                                         (cond
+                                           (< low stop-loss) (->
+                                                               (update-in x [:account]
+                                                                          (fn [acc]
+                                                                              (* acc
+                                                                                 (u/percentage-change order-price stop-loss :spicy))))
+                                                               clear-fn)
+                                           :else (->
+                                                   (update-in x [:account]
+                                                              (fn [acc]
+                                                                  (* acc
+                                                                     (u/percentage-change order-price close :spicy))))
+                                                   clear-fn))))
+               (= buy-or-sell "sell") (if
+                                        (not (u/green? y))
+                                        (cond
+                                          (> high stop-loss) (->
+                                                               (update-in x [:account]
+                                                                          (fn [acc]
+                                                                              (* acc
+                                                                                 (u/percentage-change stop-loss order-price :spicy))))
+                                                               clear-fn)
+                                          :else (->
+                                                  (update-in x [:stop-loss] (fn [_] high))))
+                                        (cond
+                                          (> high stop-loss) (->
+                                                               (update-in x [:account]
+                                                                          (fn [acc]
+                                                                              (* acc
+                                                                                 (u/percentage-change stop-loss order-price :spicy))))
+                                                               clear-fn)
+                                          :else (->
+                                                  (update-in x [:account]
+                                                             (fn [acc]
+                                                                 (* acc
+                                                                    (u/percentage-change order-price close :spicy))))
+                                                  clear-fn)))
+               (= buy-or-sell nil)  (do
+                                      (println "not buy or sell")
+                                      (cond
+                                        (u/green? y) (->
+                                                       (update-in x [:buy-or-sell] (fn [_] "buy"))
+                                                       (update-in [:order-price] (fn [_] close))
+                                                       (update-in [:stop-loss] (fn [_] low))
+                                                       (update-in [:open-date] (fn [_] unixtimestamp)))
+                                        (not (u/green? y)) (->
+                                                             (update-in x [:buy-or-sell] (fn [_] "sell"))
+                                                             (update-in [:order-price] (fn [_] close))
+                                                             (update-in [:stop-loss] (fn [_] high))
+                                                             (update-in [:open-date] (fn [_] unixtimestamp)))))))
+         {:open-date nil
+          :stop-loss nil
+          :buy-or-sell nil
+          :order-price nil
+          :account 1000
+          :history []}
+         (take-last 4000 oanda-min)))
     (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(u/candles-between
-    "2014-08-21T00:00:00.000Z"
-    "2014-09-30T00:00:00.000Z"
-    crypto-hist)
-(->
-    (u/candles-between
-      "2014-08-21T00:00:00.000Z"
-      "2014-09-30T00:00:00.000Z"
-      crypto-hist)
-    (vs/plot-standard-candles)
-    )
-(->
-    (u/candles-between
-      "2014-08-21T00:00:00.000Z"
-      "2014-09-30T00:00:00.000Z"
-      crypto-hist)
-    (vs/plot-standard-candles)
-    )
-(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in [:basetimestamp] u/to-human)))))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        (filter #(<= 6 (count %)) x)
-        )
-(as-> (smp/simple-strat (take-last 1000 crypto-hist)) x
-        (:greens x)
-        (reduce
-          (fn [x {:keys [profit] :as y}]
-              (cond
-                (> 0 profit) (update-in
-                               x
-                               [(- (count x) 1)]
-                               (fn [a] (conj a
-                                             (->
-                                               (select-keys y [:profit :basetimestamp])
-                                               (update-in [:basetimestamp] u/to-human)))))
-                (< 0 profit) (conj x [])
-                :else x))
-          [[]]
-          x)
-        (filter #(<= 6 (count %)) x)
-        )
-    (load-file "src/core/simple.clj")
-(:greens 
-      (smp/simple-strat crypto-hist))
-    (load-file "src/core/simple.clj")
-(smp/profit-chains
-    (:greens (smp/simple-strat crypto-hist))
-    5)
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(map
-    u/first-and-last
-    (smp/profit-chains (:greens (smp/simple-strat crypto-hist)) 5))
-(->>
-    (smp/profit-chains (:greens (smp/simple-strat crypto-hist)) 5)
-    (map u/first-and-last)
-    (map
-      (fn [x]
-          (->
-            (u/candles-between
-              (-> x first :basetimestamp)
-              (-> x last :basetimestamp)
-              crypto-hist)
-            (vs/plot-standard-candles)
-            )
-          ))
-    )
-(->>
-    (smp/profit-chains (:reds (smp/simple-strat crypto-hist)) 5)
-    (map u/first-and-last)
-    (map
-      (fn [x]
-          (->
-            (u/candles-between
-              (-> x first :basetimestamp)
-              (-> x last :basetimestamp)
-              crypto-hist)
-            (vs/plot-standard-candles)
-            )
-          ))
-    )
-  (plot-chains crytpo-hist :greens 10)
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (plot-chains crytpo-hist :greens 10)
-  (vs/plot-chains crytpo-hist :greens 10)
-crytpo-hist
-  (vs/plot-chains crypto-hist :greens 10)
-    (u/json-get "https://api.kraken.com/0/public/Time") 
-(u/json-get
-    "https://api.kraken.com/0/public/OHLC"
-    {:query-params {:pair "XBTUSD" :interval "60"}})
-(def rslt (u/json-get
-              "https://api.kraken.com/0/public/OHLC"
-              {:query-params {:pair "XBTUSD" :interval "60"}}))
-rslt
-  (keys rslt)
-  (keys (:result rslt))
-(:XXBTZUSD (:result rslt))
-  (first (:XXBTZUSD (:result rslt)))
-  (def rslt (u/json-get
-              "https://api.kraken.com/0/public/OHLC"
-              {:query-params {:pair "XBTUSD" :interval "1440"}}))
-rslt
-  (first (:XXBTZUSD (:result rslt)))
-(:XXBTZUSD (:result rslt))
-  (kraken-hist "XBTUSD" 1440)
-    (load-file "src/core/datasources.clj")
-  (kraken-hist "XBTUSD" 1440)
-    (load-file "src/core/datasources.clj")
-  (ds/kraken-hist "XBTUSD" 1440)
-  (first (:XXBTZUSD (:result rslt)))
-(let [[time open high low close vwap volume count] (first (:XXBTZUSD (:result rslt)))]
-       {:unixtimestamp (* 1000 time)
-        :open open
-        :high high
-        :low low
-        :close close})
-(let [[time open high low close vwap volume count] (first (:XXBTZUSD (:result rslt)))]
-       {:unixtimestamp (* 1000 time)
-        :open (read-string open) 
-        :high high
-        :low low
-        :close close})
-(let [[time open high low close vwap volume count] (first (:XXBTZUSD (:result rslt)))]
-       {:unixtimestamp (* 1000 time)
-        :open (read-string open)
-        :high (read-string high)
-        :low (read-string low)
-        :close (read-string close)})
-    (load-file "src/core/datasources.clj")
-  (kraken-hist->standard (:XXBTZUSD (:result rslt))) 
-  (ds/kraken-hist->standard (:XXBTZUSD (:result rslt)))
-  (def stnd (ds/kraken-hist->standard (:XXBTZUSD (:result rslt)))) 
-stnd
-  (take-last 10 stnd)
 /home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (vs/plot-standard-candles  (take-last 10 stnd))
-  (vs/plot-standard-candles  (take-last 15 stnd))
-(take-last 10 stnd)
-(smp/simple-strat-profit-calc
-    (smp/simple-strat
-      (take-last 15 stnd)
-      :human))
-(smp/simple-strat-profit-calc
-    (smp/simple-strat
-      (take-last 20 stnd)
-      :human))
-(smp/simple-strat-profit-calc
-    (smp/simple-strat
-      (take-last 30 stnd)
-      :human))
-(smp/simple-strat-profit-calc
-    (smp/simple-strat
-      (take-last 40 stnd)
-      :human))
-(smp/simple-strat-profit-calc
-    (smp/simple-strat
-      (take-last 50 stnd)
-      :human))
-  (count stnd) 
-(smp/simple-strat-profit-calc
-    (smp/simple-strat
-      (take-last 60 stnd)
-      :human))
-(smp/simple-strat-profit-calc
-    (smp/simple-strat
-      (take-last 90 stnd)
-      :human))
-(smp/simple-strat-profit-calc
-    (smp/simple-strat
-      (take-last 120 stnd)
-      :human))
-(smp/simple-strat-profit-calc
-    (smp/simple-strat
-      (take-last 90 stnd)
-      :human))
-(smp/simple-strat-profit-calc
-    (smp/simple-strat
-      (take-last 120 stnd)
-      :human))
-(smp/simple-strat-profit-calc
-    (smp/simple-strat
-      stnd
-      :human))
-  (count stnd)
-  (count crypto-hist)
-(smp/simple-strat-profit-calc
-      (smp/simple-strat
-        (take-last 10 crypto-hist)
-        :human))
-(smp/simple-strat-profit-calc
-      (smp/simple-strat
-        (take-last 720 crypto-hist)
-        :human))
-(smp/simple-strat-profit-calc
-    (smp/simple-strat
-      stnd
-      :human))
-  (first stnd)
- (u/to-human (:unixtimestamp (first stnd)))  
-  (u/to-human (:unixtimestamp (first (take-last 720 crypto-hist))))
-(json-get
-    (str "https://www.cryptocompare.com/api/data/" "histoday" "/?e=Kraken" "&fsym=" "BTC" "&tsym=" "USD" "&limit=" "720")
-    )
-(u/json-get
-    (str "https://www.cryptocompare.com/api/data/" "histoday" "/?e=Kraken" "&fsym=" "BTC" "&tsym=" "USD" "&limit=" "720")
-    )
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "5S"))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S10"))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc oanda-min)
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S10"))
+  (smp/simple-strat-perc oanda-min)
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S20"))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S15"))
+  (smp/simple-strat-perc oanda-min)
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S30"))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat-perc oanda-min)
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M1"))
+  (smp/simple-strat-perc oanda-min)
+  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "5000" "M2"))
+  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "5000" "M10"))
+  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "5000" "M30"))
+  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "5000" "H1"))
+  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "5000" "D"))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "5000" "W"))
+  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "100" "W"))
+  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "100" "M"))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "D"))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat-perc (take-last 30 oanda-min))
+  (smp/simple-strat-perc (take-last 60 oanda-min))
+  (smp/simple-strat-perc (take-last 90 oanda-min))
+  (smp/simple-strat-perc (take-last 120 oanda-min))
+  (smp/simple-strat-perc (take-last 360 oanda-min))
+  (smp/simple-strat-perc (take-last 720 oanda-min))
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+  (smp/simple-strat-perc (take-last 3000 oanda-min))
+  (smp/simple-strat-perc (take-last 4000 oanda-min))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (smp/simple-strat-perc (take-last 4000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+  (smp/simple-strat-perc (take-last 2000 oanda-min))
+  (smp/simple-strat-perc (take-last 3000 oanda-min))
+  (smp/simple-strat-perc (take-last 4000 oanda-min))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+  (smp/simple-strat-perc (take-last 2000 oanda-min))
+  (smp/simple-strat-perc (take-last 3000 oanda-min))
+  (smp/simple-strat-perc (take-last 4000 oanda-min))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+  (smp/simple-strat-perc (take-last 500 oanda-min))
+  (smp/simple-strat-perc (take-last 1500 oanda-min))
+  (smp/simple-strat-perc (take-last 2000 oanda-min))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (smp/simple-strat-perc (take-last 500 oanda-min))
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+  (smp/simple-strat-perc (take-last 1100 oanda-min))
+  (smp/simple-strat-perc (take-last 900 oanda-min))
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+  (smp/simple-strat-perc (take-last 1100 oanda-min))
+  (smp/simple-strat-perc (take-last 2100 oanda-min))
+  (smp/simple-strat-perc (take-last 3000 oanda-min))
+  (smp/simple-strat-perc (take-last 4000 oanda-min))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S10"))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S15"))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S30"))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M1"))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (smp/simple-strat-perc (take-last 200 oanda-min))
+  (smp/simple-strat-perc (take-last 300 oanda-min))
+  (smp/simple-strat-perc (take-last 500 oanda-min))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (smp/simple-strat-perc (take-last 50 oanda-min))
+  (take-last 1 oanda-min)
+  (u/to-human (:unixtimestamp (first (take-last 1 oanda-min))))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (u/to-human (:unixtimestamp (first (take-last 1 oanda-min))))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (smp/simple-strat-perc (take-last 200 oanda-min))
+  (smp/simple-strat-perc (take-last 500 oanda-min))
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 10 oanda-min))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 50 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 50 oanda-min))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (smp/simple-strat-perc (take-last 50 oanda-min))
+  (u/to-human (:unixtimestamp (first (take-last 1 oanda-min))))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 50 oanda-min))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (smp/simple-strat-perc (take-last 500 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 5 oanda-min))
+  (smp/simple-strat-perc (take-last 10 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 10 oanda-min))
+  (smp/simple-strat-perc (take-last 50 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 50 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 50 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 50 oanda-min))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 50 oanda-min))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat-perc (take-last 50 oanda-min))
+  (smp/simple-strat-perc (take-last 500 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat-perc (take-last 100 oanda-min))
     (load-file "src/core/datasources.clj")
-(ds/cryptocompare "BTC" "USD" "histoday" 1000 "Kraken"
-    )
-(ds/cryptocompare-hist "BTC" "USD" "histoday" 1000 "Kraken"
-    )
-(ds/cryptocompare-hist "BTC" "USD" "histoday" 1000)
-  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000)
-  (when false 1)
-  (if nil true false)
+(require
+  '[http.async.client :as http]
+  '[clojure.spec :as s]
+  '[clojure.spec.gen :as gen]
+  '[clojure.spec.test :as ts :refer [check]]
+  '[clojure.spec.gen :as gen]
+  '[clojure.core.reducers :as rd]
+  '[core.utils :as u]
+  '[core.visual :as vs]
+  '[core.spike :as sp]
+  '[clojure.data.json :as jsn]
+  '[core.datasources :as ds]
+  '[core.marketcap :as cmc]
+  '[core.simple :as smp]
+  '[incanter.core :as ic]
+  '[incanter.stats :as is]
+  '[incanter.charts :as ich]
+  '[incanter.datasets :as id]
+  '[clojure.core.async :as casy :refer [go >! >!! <! <!!]])
+(set-env!
+  :dependencies
+  '[[org.clojure/clojure "1.9.0-alpha10"]
+    [org.clojure/core.async "0.2.395"]
+    [org.clojure/test.check "0.9.0" :scope "test"]
+    [org.clojure/core.logic "0.8.11"]
+    [clj-http "2.2.0"]
+    [org.clojure/data.json "0.2.6"]
+    [clojurewerkz/envision "0.1.0-SNAPSHOT"]
+    [incanter "1.5.7"]
+    [http.async.client "0.5.2"]
+    [clj-time "0.12.0"]]
+  :source-paths #{"src"})
+require
+  '[http.async.client :as http]
+  '[clojure.spec :as s]
+  '[clojure.spec.gen :as gen]
+  '[clojure.spec.test :as ts :refer [check]]
+  '[clojure.spec.gen :as gen]
+  '[clojure.core.reducers :as rd]
+  '[core.utils :as u]
+  '[core.visual :as vs]
+  '[core.spike :as sp]
+  '[clojure.data.json :as jsn]
+  '[core.datasources :as ds]
+  '[core.marketcap :as cmc]
+  '[core.simple :as smp]
+  '[incanter.core :as ic]
+  '[incanter.stats :as is]
+  '[incanter.charts :as ich]
+  '[incanter.datasets :as id]
+  '[clojure.core.async :as casy :refer [go >! >!! <! <!!]])
+(require
+  '[http.async.client :as http]
+  '[clojure.spec :as s]
+  '[clojure.spec.gen :as gen]
+  '[clojure.spec.test :as ts :refer [check]]
+  '[clojure.spec.gen :as gen]
+  '[clojure.core.reducers :as rd]
+  '[core.utils :as u]
+  '[core.visual :as vs]
+  '[core.spike :as sp]
+  '[clojure.data.json :as jsn]
+  '[core.datasources :as ds]
+  '[core.marketcap :as cmc]
+  '[core.simple :as smp]
+  '[incanter.core :as ic]
+  '[incanter.stats :as is]
+  '[incanter.charts :as ich]
+  '[incanter.datasets :as id]
+  '[clojure.core.async :as casy :refer [go >! >!! <! <!!]])
+(require
+  '[http.async.client :as http]
+  '[clojure.spec :as s]
+  '[clojure.spec.gen :as gen]
+  '[clojure.spec.test :as ts :refer [check]]
+  '[clojure.spec.gen :as gen]
+  '[clojure.core.reducers :as rd]
+  '[core.utils :as u]
+  '[core.visual :as vs]
+  '[core.spike :as sp]
+  '[clojure.data.json :as jsn]
+  '[core.datasources :as ds]
+  '[core.marketcap :as cmc]
+  '[core.simple :as smp]
+  '[incanter.core :as ic]
+  '[incanter.stats :as is]
+  '[incanter.charts :as ich]
+  '[incanter.datasets :as id]
+  '[clojure.core.async :as casy :refer [go >! >!! <! <!!]])
+(require
+  '[http.async.client :as http]
+  '[clojure.spec :as s]
+  '[clojure.spec.gen :as gen]
+  '[clojure.spec.test :as ts :refer [check]]
+  '[clojure.spec.gen :as gen]
+  '[clojure.core.reducers :as rd]
+  '[core.utils :as u]
+  '[core.visual :as vs]
+  '[core.spike :as sp]
+  '[clojure.data.json :as jsn]
+  '[core.datasources :as ds]
+  '[core.marketcap :as cmc]
+  '[core.simple :as smp]
+  '[incanter.core :as ic]
+  '[incanter.stats :as is]
+  '[incanter.charts :as ich]
+  '[incanter.datasets :as id]
+  '[clojure.core.async :as casy :refer :all])
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
     (load-file "src/core/datasources.clj")
-  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000)
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+  (do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
     (load-file "src/core/datasources.clj")
-  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000)
-  (if fasle "hi")
-  (if false "hi")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+  (do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
     (load-file "src/core/datasources.clj")
-  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000)
-    (load-file "src/core/datasources.clj")
-  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000)
-  (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000 "Kraken")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(let [client (http/create-client :keep-alive true :request-timeout -1)
+        c (chan)]
+       (ds/oanda-price-stream-chan client "EUR_USD" c)
+       (go (println (<! c)))
+       )
+l
+(+ 2 3)
+(let [client (http/create-client :keep-alive true :request-timeout -1)
+        c (chan)]
+       (ds/oanda-price-stream-chan client "EUR_USD" c)
+       
+       (go 
+       (while true 
+              (println (<! c))))
+       )
+(+ 22)
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat (take-last 100 oanda-min))
+  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+oanda-min
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+oanda-min
+(ds/oanda-historical "EUR_USD" "5000" "S5")
+(<!! (ds/oanda-historical "EUR_USD" "5000" "S5"))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (def client (http/create-client :keep-alive true :request-timeout -1))
+  (def c (chan))
+       (ds/oanda-price-stream-chan client "EUR_USD" c)
+(go
+         (while true
+                (println (<! c))))
+  (http/close client)
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (def client (http/create-client :keep-alive true :request-timeout -1))
+  (def c (chan))
+       (ds/oanda-price-stream-chan client "EUR_USD" c)
+(go
+         (while true
+                (let [->clj (jsn/read-str (<! c) :key-fn keyword)]
+                     (println ->clj)
+                     )
+                ))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (http/close client)
+  (def client (http/create-client :keep-alive true :request-timeout -1))
+  (def c (chan))
+       (ds/oanda-price-stream-chan client "EUR_USD" c)
+(go
+         (while true
+                (let [{:keys [asks bids]} (jsn/read-str (<! c) :key-fn keyword)
+                      currask (:price (first asks))
+                      currbid (:price (first bids))]
+                     (println currask)
+                     )
+                ))
+  (http/close client)
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (def client (http/create-client :keep-alive true :request-timeout -1))
+  (def c (chan))
+       (ds/oanda-price-stream-chan client "EUR_USD" c)
+(go
+         (while true
+                (let [{:keys [asks bids] :as raw} (jsn/read-str (<! c) :key-fn keyword)
+                      currask (:price (first asks))
+                      currbid (:price (first bids))]
+                     (println raw)
+                     (println currask)
+                     )
+                ))
+  (println "sadfdas" "sadfasdf" )
+  (def client (http/create-client :keep-alive true :request-timeout -1))
+  (http/close client)
+  (def client (http/create-client :keep-alive true :request-timeout -1))
+  (def c (chan))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+       (ds/oanda-price-stream-chan client "EUR_USD" c)
+(go
+         (while true
+                (let [{:keys [asks bids] :as raw} (jsn/read-str (<! c) :key-fn keyword)
+                      currask (:price (first asks))
+                      currbid (:price (first bids))]
+                     (println raw)
+                     (println "currask: " currask)
+                     (println "currbid: " currbid)
+                     )
+                ))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (http/close client)
+(ds/oanda-historical "EUR_USD" "5000" "S5")
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (<!! oanda-min)
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+oanda-min
+  (<!! oanda-min)
