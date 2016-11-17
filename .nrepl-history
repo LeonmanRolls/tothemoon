@@ -1,373 +1,195 @@
-                                      (cond
-                                        (u/green? y) (->
-                                                       (update-in x [:buy-or-sell] (fn [_] "buy"))
-                                                       (update-in [:order-price] (fn [_] close))
-                                                       (update-in [:stop-loss] (fn [_] low))
-                                                       (update-in [:open-date] (fn [_] unixtimestamp)))
-                                        (not (u/green? y)) (->
-                                                             (update-in x [:buy-or-sell] (fn [_] "sell"))
-                                                             (update-in [:order-price] (fn [_] close))
-                                                             (update-in [:stop-loss] (fn [_] high))
-                                                             (update-in [:open-date] (fn [_] unixtimestamp)))))))
-         {:open-date nil
-          :stop-loss nil
-          :buy-or-sell nil
-          :order-price nil
-          :account 1000
-          :history []}
-         (take-last 5000 oanda-min)))
-(let [clear-fn (fn [deets-map]
-                     (->
-                       (update-in deets-map [:open-date] (fn [_] nil))
-                       (update-in [:stop-loss] (fn [_] nil))
-                       (update-in [:buy-or-sell] (fn [_] nil))
-                       (update-in [:order-price] (fn [_] nil))))]
-       (reduce
-         (fn [{:keys [stop-loss buy-or-sell order-price account history] :as x}
-              {:keys [unixtimestamp open high low close] :as y}]
-             (cond
-               (= buy-or-sell "buy") (do
-                                       (println "buy")
-                                       (if
-                                         (u/green? y)
-                                         (cond
-                                           (< low stop-loss) (->
-                                                               (update-in x [:account]
-                                                                          (fn [acc]
-                                                                              (* acc
-                                                                                 (u/percentage-change order-price stop-loss :spicy))))
-                                                               clear-fn)
-                                           :else (->
-                                                   (update-in x [:stop-loss] (fn [_] low))))
-                                         (cond
-                                           (< low stop-loss) (->
-                                                               (update-in x [:account]
-                                                                          (fn [acc]
-                                                                              (* acc
-                                                                                 (u/percentage-change order-price stop-loss :spicy))))
-                                                               clear-fn)
-                                           :else (->
-                                                   (update-in x [:account]
-                                                              (fn [acc]
-                                                                  (* acc
-                                                                     (u/percentage-change order-price close :spicy))))
-                                                   clear-fn))))
-               (= buy-or-sell "sell") (if
-                                        (not (u/green? y))
-                                        (cond
-                                          (> high stop-loss) (->
-                                                               (update-in x [:account]
-                                                                          (fn [acc]
-                                                                              (* acc
-                                                                                 (u/percentage-change stop-loss order-price :spicy))))
-                                                               clear-fn)
-                                          :else (->
-                                                  (update-in x [:stop-loss] (fn [_] high))))
-                                        (cond
-                                          (> high stop-loss) (->
-                                                               (update-in x [:account]
-                                                                          (fn [acc]
-                                                                              (* acc
-                                                                                 (u/percentage-change stop-loss order-price :spicy))))
-                                                               clear-fn)
-                                          :else (->
-                                                  (update-in x [:account]
-                                                             (fn [acc]
-                                                                 (* acc
-                                                                    (u/percentage-change order-price close :spicy))))
-                                                  clear-fn)))
-               (= buy-or-sell nil)  (do
-                                      (println "not buy or sell")
-                                      (cond
-                                        (u/green? y) (->
-                                                       (update-in x [:buy-or-sell] (fn [_] "buy"))
-                                                       (update-in [:order-price] (fn [_] close))
-                                                       (update-in [:stop-loss] (fn [_] low))
-                                                       (update-in [:open-date] (fn [_] unixtimestamp)))
-                                        (not (u/green? y)) (->
-                                                             (update-in x [:buy-or-sell] (fn [_] "sell"))
-                                                             (update-in [:order-price] (fn [_] close))
-                                                             (update-in [:stop-loss] (fn [_] high))
-                                                             (update-in [:open-date] (fn [_] unixtimestamp)))))))
-         {:open-date nil
-          :stop-loss nil
-          :buy-or-sell nil
-          :order-price nil
-          :account 1000
-          :history []}
-         (take-last 4000 oanda-min)))
-    (load-file "src/core/simple.clj")
+  (http/close client)
+(ds/oanda-historical "EUR_USD" "5000" "S5")
 /home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "5S"))
+  (<!! oanda-min)
   (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S10"))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc oanda-min)
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S10"))
-  (smp/simple-strat-perc oanda-min)
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S20"))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S15"))
-  (smp/simple-strat-perc oanda-min)
+oanda-min
+  (<!! oanda-min)
+(defn oanda-open-order-cas [chan instrument units & stoploss]
+      (go
+        (with-open [client (http/create-client)]
+                   (let [resp (http/POST client
+                                         (str rest-api-base-v3 "accounts/" account-no "/orders")
+                                         :headers {:Authorization (str "Bearer " oanda-api-key)
+                                                   :Content-type "application/json"}
+                                         :body (jsn/write-str {:order (merge
+                                                                        {:units units
+                                                                         :instrument instrument
+                                                                         :timeInForce "FOK"
+                                                                         :type "MARKET"
+                                                                         :positionFill "DEFAULT"}
+                                                                        (when stoploss
+                                                                              {:stopLossOnFill {:price (first stoploss)
+                                                                                                :timeInForce "GTC"}}))}))]
+                        (http/await resp)
+                        (>! chan (http/string resp))))))
+    (load-file "src/core/datasources.clj")
+  (def c (chan))
+    (load-file "src/core/datasources.clj")
+(go
+     (ds/oanda-open-order-cas c "EUR_USD" 200)
+     (println (<! c))
+    )
+  (def c (chan))
+     (ds/oanda-open-order-cas c "EUR_USD" 200)
+    (load-file "src/core/datasources.clj")
+(go
+     (ds/oanda-open-order-cas c "EUR_USD" 200)
+     (println (<! c))
+    )
+(go
+     (ds/oanda-open-order-cas c "EUR_USD" "200")
+     (println (<! c))
+    )
+l
+(go
+     (ds/oanda-open-order-cas c "EUR_USD" "200")
+     (println (<! c))
+    )
+(go
+     (ds/oanda-open-order-cas c "EUR_USD" "200")
+     (println (<! c))
+    )
+(go
+     (ds/oanda-open-order-cas c "EUR_USD" "-200")
+     (println (<! c))
+    )
   (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S30"))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc oanda-min)
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
   (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M1"))
-  (smp/simple-strat-perc oanda-min)
-  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "5000" "M2"))
-  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "5000" "M10"))
-  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "5000" "M30"))
-  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "5000" "H1"))
-  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "5000" "D"))
 /home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "5000" "W"))
-  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "100" "W"))
-  (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" "100" "M"))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
   (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "D"))
 /home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc (take-last 30 oanda-min))
-  (smp/simple-strat-perc (take-last 60 oanda-min))
-  (smp/simple-strat-perc (take-last 90 oanda-min))
-  (smp/simple-strat-perc (take-last 120 oanda-min))
-  (smp/simple-strat-perc (take-last 360 oanda-min))
-  (smp/simple-strat-perc (take-last 720 oanda-min))
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
-  (smp/simple-strat-perc (take-last 3000 oanda-min))
-  (smp/simple-strat-perc (take-last 4000 oanda-min))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (smp/simple-strat-perc (take-last 4000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
   (smp/simple-strat-perc (take-last 2000 oanda-min))
-  (smp/simple-strat-perc (take-last 3000 oanda-min))
-  (smp/simple-strat-perc (take-last 4000 oanda-min))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
-  (smp/simple-strat-perc (take-last 2000 oanda-min))
-  (smp/simple-strat-perc (take-last 3000 oanda-min))
-  (smp/simple-strat-perc (take-last 4000 oanda-min))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
-  (smp/simple-strat-perc (take-last 500 oanda-min))
-  (smp/simple-strat-perc (take-last 1500 oanda-min))
-  (smp/simple-strat-perc (take-last 2000 oanda-min))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (smp/simple-strat-perc (take-last 500 oanda-min))
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
-  (smp/simple-strat-perc (take-last 1100 oanda-min))
-  (smp/simple-strat-perc (take-last 900 oanda-min))
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
-  (smp/simple-strat-perc (take-last 1100 oanda-min))
-  (smp/simple-strat-perc (take-last 2100 oanda-min))
-  (smp/simple-strat-perc (take-last 3000 oanda-min))
-  (smp/simple-strat-perc (take-last 4000 oanda-min))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S10"))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S15"))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
   (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S30"))
   (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M1"))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (smp/simple-strat-perc (take-last 200 oanda-min))
-  (smp/simple-strat-perc (take-last 300 oanda-min))
-  (smp/simple-strat-perc (take-last 500 oanda-min))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (smp/simple-strat-perc (take-last 50 oanda-min))
-  (take-last 1 oanda-min)
-  (u/to-human (:unixtimestamp (first (take-last 1 oanda-min))))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (u/to-human (:unixtimestamp (first (take-last 1 oanda-min))))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (smp/simple-strat-perc (take-last 200 oanda-min))
-  (smp/simple-strat-perc (take-last 500 oanda-min))
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 10 oanda-min))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 50 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 50 oanda-min))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (smp/simple-strat-perc (take-last 50 oanda-min))
-  (u/to-human (:unixtimestamp (first (take-last 1 oanda-min))))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 50 oanda-min))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (smp/simple-strat-perc (take-last 500 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 5 oanda-min))
-  (smp/simple-strat-perc (take-last 10 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 10 oanda-min))
-  (smp/simple-strat-perc (take-last 50 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 50 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 50 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 50 oanda-min))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 50 oanda-min))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S15"))
 /home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc (take-last 50 oanda-min))
-  (smp/simple-strat-perc (take-last 500 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (smp/simple-strat-perc (take-last 5000 oanda-min))
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "1000")
+     (println (<! c)))
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "-1000")
+     (println (<! c)))
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "-1000")
+     (println (<! c)))
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "1000")
+     (println (<! c)))
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "1000")
+     (println (<! c)))
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "-1000")
+     (println (<! c)))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "D"))
+  (smp/simple-strat-perc (take-last 10 oanda-min))
+  (smp/simple-strat-perc (take-last 30 oanda-min))
+  (smp/simple-strat-profit-calc (smp/simple-strat (take-last 30 oanda-min))) 
 /home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat-perc (take-last 30 oanda-min))
   (smp/simple-strat-perc (take-last 100 oanda-min))
+  (smp/simple-strat-profit-calc (smp/simple-strat (take-last 100 oanda-min)))
+  (smp/simple-strat-perc (take-last 1000 oanda-min))
+  (smp/simple-strat-profit-calc (smp/simple-strat (take-last 1000 oanda-min)))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat-perc (take-last 4000 oanda-min))
+  (smp/simple-strat-profit-calc (smp/simple-strat (take-last 4000 oanda-min)))
+  (vs/plot-standard-candles (take-last 20 oanda-min))
+  (vs/plot-standard-candles (take-last 200 oanda-min))
+    (load-file "src/core/simple.clj")
+  (smp/simple-strat-no-stop-update (take-last 4000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "D"))
+  (smp/simple-strat-no-stop-update (take-last 10 oanda-min))
+  (smp/simple-strat-no-stop-update (take-last 20 oanda-min))
+  (vs/plot-standard-candles (take-last 10 oanda-min))
+  (vs/plot-standard-candles (take-last 100 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "1H"))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
+  (smp/simple-strat-no-stop-update (take-last 20 oanda-min))
+  (smp/simple-strat-no-stop-update (take-last 40 oanda-min))
+  (smp/simple-strat-no-stop-update (take-last 100 oanda-min))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat-no-stop-update (take-last 200 oanda-min))
+  (smp/simple-strat-no-stop-update (take-last 300 oanda-min))
+  (smp/simple-strat-no-stop-update (take-last 500 oanda-min))
+  (smp/simple-strat-no-stop-update (take-last 1000 oanda-min))
+  (smp/simple-strat-no-stop-update (take-last 5000 oanda-min))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (vs/plot-standard-candles (subvec oanda-min 4990 5000))
+oanda-min
+  (vs/plot-standard-candles (subvec (vec oanda-min) 4990 5000))
+  (let [section (subvec oanda-min 4990 5000)]
+       (smp/simple-strat-perc section)
+       (vs/plot-standard-candles section))
+  (let [section (subvec (vec oanda-min) 4990 5000)]
+       (smp/simple-strat-perc section)
+       (vs/plot-standard-candles section))
+  (let [section (subvec (vec oanda-min) 4990 5000)]
+       (vs/plot-standard-candles section)
+       (smp/simple-strat-perc section))
+  (let [section (subvec (vec oanda-min) 4970 4990)]
+       (vs/plot-standard-candles section)
+       (smp/simple-strat-perc section))
+  (smp/simple-strat-perc-green (subvec oanda-min 4990 5000))
+    (load-file "src/core/utils.clj")
+  (smp/simple-strat-perc-green (subvec oanda-min 4990 5000))
+    (load-file "src/core/simple.clj")
+  (smp/simple-strat-perc-green (subvec oanda-min 4990 5000))
+  (smp/simple-strat-perc-green (take-last 10 oanda-min))
+ 
+  (smp/simple-strat-perc-green (take-last 20 oanda-min))
+  (smp/simple-strat-perc-green (take-last 30 oanda-min))
+  (smp/simple-strat-perc-green (take-last 40 oanda-min))
+  (smp/simple-strat-perc-green (take-last 50 oanda-min))
+  (smp/simple-strat-perc-green (take-last 60 oanda-min))
+  (smp/simple-strat-perc-green (take-last 70 oanda-min))
+  (smp/simple-strat-perc-green (take-last 80 oanda-min))
+  (smp/simple-strat-perc-green (take-last 100 oanda-min))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat-perc-green (take-last 200 oanda-min))
+  (smp/simple-strat-perc-green (take-last 300 oanda-min))
+  (smp/simple-strat-perc-green (take-last 500 oanda-min))
+  (smp/simple-strat-perc-green (take-last 1000 oanda-min))
+  (smp/simple-strat-perc-green (take-last 2000 oanda-min))
+  (smp/simple-strat-perc-green (take-last 3000 oanda-min))
+  (smp/simple-strat-perc-green (take-last 4000 oanda-min))
+  (smp/simple-strat-perc-green (take-last 5000 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "D"))
+  (smp/simple-strat-perc-green (take-last 20 oanda-min))
+  (smp/simple-strat-perc-green (take-last 40 oanda-min))
+  (smp/simple-strat-perc-green (take-last 100 oanda-min))
+  (smp/simple-strat-perc-green (take-last 500 oanda-min))
+  (smp/simple-strat-perc-green (take-last 1000 oanda-min))
+  (smp/simple-strat-perc-green (take-last 2000 oanda-min))
+  (smp/simple-strat-perc-green (take-last 5000 oanda-min))
+  (smp/simple-strat-perc-green (take-last 365 oanda-min))
+  (smp/simple-strat-perc-green (take-last 720 oanda-min))
+  (smp/simple-strat-perc-green (take-last 20 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "1H"))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
+  (smp/simple-strat-perc (take-last 20 oanda-min))
+  (smp/simple-strat-perc (take-last 10 oanda-min))
+  (smp/simple-strat-perc (take-last 20 oanda-min))
+  (smp/simple-strat-perc (take-last 30 oanda-min))
+  (smp/simple-strat-perc (take-last 40 oanda-min))
+  (smp/simple-strat-perc (take-last 50 oanda-min))
+  (smp/simple-strat-perc (take-last 60 oanda-min))
+  (smp/simple-strat-perc (take-last 70 oanda-min))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (smp/simple-strat-perc (take-last 20 oanda-min))
+  (smp/simple-strat-perc (take-last 30 oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
+  (smp/simple-strat-perc (take-last 27 oanda-min))
     (load-file "src/core/datasources.clj")
-(require
-  '[http.async.client :as http]
-  '[clojure.spec :as s]
-  '[clojure.spec.gen :as gen]
-  '[clojure.spec.test :as ts :refer [check]]
-  '[clojure.spec.gen :as gen]
-  '[clojure.core.reducers :as rd]
-  '[core.utils :as u]
-  '[core.visual :as vs]
-  '[core.spike :as sp]
-  '[clojure.data.json :as jsn]
-  '[core.datasources :as ds]
-  '[core.marketcap :as cmc]
-  '[core.simple :as smp]
-  '[incanter.core :as ic]
-  '[incanter.stats :as is]
-  '[incanter.charts :as ich]
-  '[incanter.datasets :as id]
-  '[clojure.core.async :as casy :refer [go >! >!! <! <!!]])
-(set-env!
-  :dependencies
-  '[[org.clojure/clojure "1.9.0-alpha10"]
-    [org.clojure/core.async "0.2.395"]
-    [org.clojure/test.check "0.9.0" :scope "test"]
-    [org.clojure/core.logic "0.8.11"]
-    [clj-http "2.2.0"]
-    [org.clojure/data.json "0.2.6"]
-    [clojurewerkz/envision "0.1.0-SNAPSHOT"]
-    [incanter "1.5.7"]
-    [http.async.client "0.5.2"]
-    [clj-time "0.12.0"]]
-  :source-paths #{"src"})
-require
-  '[http.async.client :as http]
-  '[clojure.spec :as s]
-  '[clojure.spec.gen :as gen]
-  '[clojure.spec.test :as ts :refer [check]]
-  '[clojure.spec.gen :as gen]
-  '[clojure.core.reducers :as rd]
-  '[core.utils :as u]
-  '[core.visual :as vs]
-  '[core.spike :as sp]
-  '[clojure.data.json :as jsn]
-  '[core.datasources :as ds]
-  '[core.marketcap :as cmc]
-  '[core.simple :as smp]
-  '[incanter.core :as ic]
-  '[incanter.stats :as is]
-  '[incanter.charts :as ich]
-  '[incanter.datasets :as id]
-  '[clojure.core.async :as casy :refer [go >! >!! <! <!!]])
-(require
-  '[http.async.client :as http]
-  '[clojure.spec :as s]
-  '[clojure.spec.gen :as gen]
-  '[clojure.spec.test :as ts :refer [check]]
-  '[clojure.spec.gen :as gen]
-  '[clojure.core.reducers :as rd]
-  '[core.utils :as u]
-  '[core.visual :as vs]
-  '[core.spike :as sp]
-  '[clojure.data.json :as jsn]
-  '[core.datasources :as ds]
-  '[core.marketcap :as cmc]
-  '[core.simple :as smp]
-  '[incanter.core :as ic]
-  '[incanter.stats :as is]
-  '[incanter.charts :as ich]
-  '[incanter.datasets :as id]
-  '[clojure.core.async :as casy :refer [go >! >!! <! <!!]])
-(require
-  '[http.async.client :as http]
-  '[clojure.spec :as s]
-  '[clojure.spec.gen :as gen]
-  '[clojure.spec.test :as ts :refer [check]]
-  '[clojure.spec.gen :as gen]
-  '[clojure.core.reducers :as rd]
-  '[core.utils :as u]
-  '[core.visual :as vs]
-  '[core.spike :as sp]
-  '[clojure.data.json :as jsn]
-  '[core.datasources :as ds]
-  '[core.marketcap :as cmc]
-  '[core.simple :as smp]
-  '[incanter.core :as ic]
-  '[incanter.stats :as is]
-  '[incanter.charts :as ich]
-  '[incanter.datasets :as id]
-  '[clojure.core.async :as casy :refer [go >! >!! <! <!!]])
-(require
-  '[http.async.client :as http]
-  '[clojure.spec :as s]
-  '[clojure.spec.gen :as gen]
-  '[clojure.spec.test :as ts :refer [check]]
-  '[clojure.spec.gen :as gen]
-  '[clojure.core.reducers :as rd]
-  '[core.utils :as u]
-  '[core.visual :as vs]
-  '[core.spike :as sp]
-  '[clojure.data.json :as jsn]
-  '[core.datasources :as ds]
-  '[core.marketcap :as cmc]
-  '[core.simple :as smp]
-  '[incanter.core :as ic]
-  '[incanter.stats :as is]
-  '[incanter.charts :as ich]
-  '[incanter.datasets :as id]
-  '[clojure.core.async :as casy :refer :all])
+  (ds/oanda-historical-raw "EUR_USD" "H1")
+  (ds/oanda-historical-raw "EUR_USD" "5000" "H1")
+  (def oanda-raw (ds/oanda-historical-raw "EUR_USD" "5000" "H1"))
+oanda-raw
 (do
     (load-file "src/core/visual.clj")
     (load-file "src/core/utils.clj")
@@ -378,7 +200,11 @@ require
     (load-file "build.boot")
     (ts/unstrument)
     (ts/instrument))
-  (do
+  (first oanda-raw)
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (:time (first oanda-raw))
+  (pr/weekday? (:time (first oanda-raw))) 
+(do
     (load-file "src/core/visual.clj")
     (load-file "src/core/utils.clj")
     (load-file "src/core/datasources.clj")
@@ -388,7 +214,11 @@ require
     (load-file "build.boot")
     (ts/unstrument)
     (ts/instrument))
-  (do
+  (t/date-time (:time (first oanda-raw)))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (first oanda-min)
+  (:unixtimestamp (first oanda-min)) 
+(do
     (load-file "src/core/visual.clj")
     (load-file "src/core/utils.clj")
     (load-file "src/core/datasources.clj")
@@ -398,103 +228,273 @@ require
     (load-file "build.boot")
     (ts/unstrument)
     (ts/instrument))
-(let [client (http/create-client :keep-alive true :request-timeout -1)
-        c (chan)]
-       (ds/oanda-price-stream-chan client "EUR_USD" c)
-       (go (println (<! c)))
+  (:unixtimestamp (first oanda-min))
+  (c/from-long (:unixtimestamp (first oanda-min))) 
+  (pr/weekday? (c/from-long (:unixtimestamp (first oanda-min)))) 
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (pr/monday? (c/from-long (:unixtimestamp (first oanda-min))))
+  (pr/tuesday? (c/from-long (:unixtimestamp (first oanda-min))))
+  (pr/wednesday? (c/from-long (:unixtimestamp (first oanda-min))))
+  (pr/thursday? (c/from-long (:unixtimestamp (first oanda-min))))
+(defn mid-week? [unixtime]
+        (or
+          (pr/tuesday? (c/from-long unixtime))
+          (pr/wednesday? (c/from-long unixtime))
+          (pr/thursday? (c/from-long unixtime))))
+/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
+  (mid-week? (c/from-long (:unixtimestamp (first oanda-min))))
+  (mid-week? (c/from-long (:unixtimestamp (nth oanda-min 0))))
+  (mid-week? (c/from-long (:unixtimestamp (nth oanda-min 1))))
+  (mid-week? (c/from-long (:unixtimestamp (nth oanda-min 2))))
+  (mid-week? (c/from-long (:unixtimestamp (nth oanda-min 3))))
+  (mid-week? (:unixtimestamp (nth oanda-min 0)))
+  (mid-week? (:unixtimestamp (nth oanda-min 1)))
+  (mid-week? (:unixtimestamp (nth oanda-min 2)))
+  (mid-week? (:unixtimestamp (nth oanda-min 3)))
+(:unixtimestamp (nth oanda-min 3))
+  (mid-week? (:unixtimestamp (nth oanda-min 100)))
+(nth oanda-min 100)
+  (mid-week? (:unixtimestamp (nth oanda-min 140)))
+(nth oanda-min 140)
+  (mid-week? (:unixtimestamp (nth oanda-min 160)))
+(conj [2] 1)
+(recuce
+   (fn [x y]
+       (cond
+        (mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))  
+        :else (conj x [])  
+         )
        )
-l
-(+ 2 3)
-(let [client (http/create-client :keep-alive true :request-timeout -1)
-        c (chan)]
-       (ds/oanda-price-stream-chan client "EUR_USD" c)
-       
-       (go 
-       (while true 
-              (println (<! c))))
+   [[]]
+   oanda-min)
+(reduce
+   (fn [x y]
+       (cond
+        (mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+        :else (conj x [])
+         )
        )
-(+ 22)
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+   [[]]
+   oanda-min)
+  (type oanda-min)
+(reduce
+    (fn [x y]
+        (cond
+          (mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+          :else (conj x [])
+          )
+        )
+    [[]]
+    (vec oanda-min))
+(reduce
+    (fn [x y]
+        (cond
+          (mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+          :else (conj x [])
+          )
+        )
+    [[]]
+    (vec oanda-min))
+(reduce
+    (fn [x y]
+        (cond
+          (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+          :else (conj x [])
+          )
+        )
+    [[]]
+    (vec oanda-min))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
+(reduce
+    (fn [x y]
+        (cond
+          (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+          :else (conj x [])
+          )
+        )
+    [[]]
+    (vec oanda-min))
+(->>
+    (reduce
+      (fn [x y]
+          (cond
+            (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+            :else (conj x [])))
+      [[]]
+      (vec oanda-min))
+    (filter empty?))
+(->>
+    (reduce
+      (fn [x y]
+          (cond
+            (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+            :else (conj x [])))
+      [[]]
+      (vec oanda-min))
+    (filter (not empty?)))
+(->>
+    (reduce
+      (fn [x y]
+          (cond
+            (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+            :else (conj x [])))
+      [[]]
+      (vec oanda-min))
+    (filter #(not (empty? %))))
+(def tue-thu (->>
+                 (reduce
+                   (fn [x y]
+                       (cond
+                         (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+                         :else (conj x [])))
+                   [[]]
+                   (vec oanda-min))
+                 (filter #(not (empty? %)))))
+tue-thu
+  (last tue-thu)
+  (last (drop-last tue-thu))
+  (smp/simple-strat-perc (last (drop-last tue-thu)))
+  (smp/simple-strat-perc (last tue-thu))
+  (map smp/simple-strat-perc tue-thu)
+(map 
+    :account 
+  (map smp/simple-strat-perc tue-thu)  
+    )
+(apply 
+    u/average
+  (map
+    :account
+  (map smp/simple-strat-perc tue-thu)
+    )  
+    )
+(map
+    :account
+  (map smp/simple-strat-no-stop-update tue-thu)
+    )
+tue-thy
+tue-thu
+   (count tue-thu)
+  (nth tue-thu 42)
 /home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
+  (nth tue-thu 41)
+  (smp/simple-strat-perc (nth tue-thu 41))
+  (smp/simple-strat-perc (take 24 (nth tue-thu 41)))
+  (smp/simple-strat-perc (take 48 (nth tue-thu 41)))
+  (smp/simple-strat-perc (take 24 (nth tue-thu 41)))
+  (smp/simple-strat-perc (take 48 (nth tue-thu 41)))
+  (vs/plot-standard-candles (take 48 (nth tue-thu 41)))
+    (load-file "src/core/simple.clj")
+  (smp/simple-strat-perc (take 48 (nth tue-thu 41)))
 /home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat (take-last 100 oanda-min))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-oanda-min
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-oanda-min
-(ds/oanda-historical "EUR_USD" "5000" "S5")
-(<!! (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (:history (smp/simple-strat-perc (take 48 (nth tue-thu 41))))
+    (load-file "src/core/simple.clj")
+  (:history (smp/simple-strat-perc (take 48 (nth tue-thu 41))))
+  (pprint (:history (smp/simple-strat-perc (take 48 (nth tue-thu 41)))))
+(def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
+                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479346762}
+                       {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479346763}])
+  (def green->red [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
+                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479346762}
+                       {:open 1.3 :high 1.5 :low 1.15 :close 1.2 :unixtimestamp 1479346763}])
+  (def red-stop-out [{:open 1 :high 1.1 :low 0.7 :close 0.8 :unixtimestamp 1479346761}
+                     {:open 0.8 :high 0.9 :low 0.6 :close 0.7 :unixtimestamp 1479346762}
+                     {:open 0.7 :high 1 :low 0.5 :close 0.6 :unixtimestamp 1479346763}])
+  (def red->green [{:open 1 :high 1.1 :low 0.7 :close 0.8 :unixtimestamp 1479346761}
+                     {:open 0.8 :high 0.9 :low 0.6 :close 0.7 :unixtimestamp 1479346762}
+                     {:open 0.7 :high 0.75 :low 0.5 :close 0.6 :unixtimestamp 1479346763}])
+  (vs/plot-standard-candles green-stop-out)
+  (vs/plot-standard-candles (subvec (vec oanda-min) 4990 5000))
+  (vs/plot-standard-candles green-stop-out)
+  (def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
+                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479346762}
+                       {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479346763}])
+  (vs/plot-standard-candles green-stop-out)
+  (def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479347761}
+                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479348762}
+                       {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479349763}])
+  (vs/plot-standard-candles green-stop-out)
+  (def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479347761}
+                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479358762}
+                       {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479369763}])
+  (vs/plot-standard-candles green-stop-out)
+  (def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479347761}
+                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479358762}
+                       {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479369763}])
+  (vs/plot-standard-candles green-stop-out)
+ (u/percentage-change 1 2)
+  (is (= 100 (u/percentage-change 1 2)))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+  (is (= 100 (u/percentage-change 1 2)))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+  (is (= 100 (u/percentage-change 1 2)))
+  (is (= 50 (u/percentage-change 2 1)))
+(u/percentage-change 2 1)
+  (is (= -50 (u/percentage-change 2 1)))
 /home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (def client (http/create-client :keep-alive true :request-timeout -1))
-  (def c (chan))
-       (ds/oanda-price-stream-chan client "EUR_USD" c)
-(go
-         (while true
-                (println (<! c))))
-  (http/close client)
+  (u/percentage-change 1 2 :heyhey)
+  (u/percentage-change 1 0.9 :heyhey)
+  (is (= 100 (u/percentage-change 1 2)))
 /home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (def client (http/create-client :keep-alive true :request-timeout -1))
-  (def c (chan))
-       (ds/oanda-price-stream-chan client "EUR_USD" c)
-(go
-         (while true
-                (let [->clj (jsn/read-str (<! c) :key-fn keyword)]
-                     (println ->clj)
-                     )
-                ))
+  (is (= -50 (u/percentage-change 2 1)))
+  (is (= -50 (u/percentage-change 1 2 :heyhey)))
+  (is (= 2 (u/percentage-change 1 2 :heyhey)))
+  (is (= -50 (u/percentage-change 2 1)))
+  (is (= 0.9 (u/percentage-change 1 0.9 :heyhey)))
+  (is (= 100 (u/percentage-change 1 2)))
+  (is (= -50 (u/percentage-change 2 1)))
+  (is (= 2 (u/percentage-change 1 2 :heyhey)))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument))
+  (run-tests 'core.utils)
+  (smp/simple-strat-perc green-stop-out)
 /home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (http/close client)
-  (def client (http/create-client :keep-alive true :request-timeout -1))
-  (def c (chan))
-       (ds/oanda-price-stream-chan client "EUR_USD" c)
-(go
-         (while true
-                (let [{:keys [asks bids]} (jsn/read-str (<! c) :key-fn keyword)
-                      currask (:price (first asks))
-                      currbid (:price (first bids))]
-                     (println currask)
-                     )
-                ))
-  (http/close client)
+  (vs/plot-standard-candles green-stop-out)
+  (u/percentage-change 1.2 1.1)
+  (u/percentage-change 1.2 1.1 :hi)
 /home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (def client (http/create-client :keep-alive true :request-timeout -1))
-  (def c (chan))
-       (ds/oanda-price-stream-chan client "EUR_USD" c)
-(go
-         (while true
-                (let [{:keys [asks bids] :as raw} (jsn/read-str (<! c) :key-fn keyword)
-                      currask (:price (first asks))
-                      currbid (:price (first bids))]
-                     (println raw)
-                     (println currask)
-                     )
-                ))
-  (println "sadfdas" "sadfasdf" )
-  (def client (http/create-client :keep-alive true :request-timeout -1))
-  (http/close client)
-  (def client (http/create-client :keep-alive true :request-timeout -1))
-  (def c (chan))
+  (* 1000 (u/percentage-change 1.2 1.1 :hi))
+  (smp/simple-strat-perc green-stop-out)
 /home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-       (ds/oanda-price-stream-chan client "EUR_USD" c)
-(go
-         (while true
-                (let [{:keys [asks bids] :as raw} (jsn/read-str (<! c) :key-fn keyword)
-                      currask (:price (first asks))
-                      currbid (:price (first bids))]
-                     (println raw)
-                     (println "currask: " currask)
-                     (println "currbid: " currbid)
-                     )
-                ))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (http/close client)
-(ds/oanda-historical "EUR_USD" "5000" "S5")
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (<!! oanda-min)
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-oanda-min
-  (<!! oanda-min)
+  (:account (smp/simple-strat-perc green-stop-out))
+  (* 1000 (u/percentage-change 1.2 1.1 :hi))
+(is
+    (=
+      (* 1000 (u/percentage-change 1.2 1.1 :hi))
+      (:account (smp/simple-strat-perc green-stop-out))))
+  (vs/plot-standard-candles green->red)

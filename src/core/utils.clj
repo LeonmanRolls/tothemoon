@@ -7,6 +7,8 @@
       [clojure.spec.test :as ts :refer [check]]
       [clojure.spec.gen :as gen]
       [clj-time.format :as f]
+      [clj-time.predicates :as pr]
+      [clojure.test :as tst :refer [is with-test]]
       [clj-time.coerce :as c]))
 
 (s/def ::url (s/with-gen
@@ -129,12 +131,26 @@
 (defn green? [{:keys [open close]}]
       (> close open))
 
-(defn percentage-change [old new & opts]
-      (let [basic (* (/ (- new old) old) 100)]
-           (println basic)
-           (if opts
-             (if (> basic 0)
-               (/ (+ 100 basic) 100)
-               (- 1 (Math/abs (/ basic 100))))
-             basic)))
+(with-test
+
+  (defn percentage-change [old new & opts]
+        (let [basic (* (/ (- new old) old) 100)]
+             (if opts
+               (if (> basic 0)
+                 (/ (+ 100 basic) 100)
+                 (- 1 (Math/abs (/ basic 100))))
+               basic)))
+
+  (is (= 100 (percentage-change 1 2)))
+  (is (= -50 (percentage-change 2 1)))
+  (is (= 2 (percentage-change 1 2 :heyhey)))
+  (is (= 0.9 (percentage-change 1 0.9 :heyhey))))
+
+
+(defn mid-week? [unixtime]
+        (or
+          (pr/tuesday? (c/from-long unixtime))
+          (pr/wednesday? (c/from-long unixtime))
+          (pr/thursday? (c/from-long unixtime))))
+
 

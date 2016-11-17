@@ -30,7 +30,11 @@
   '[incanter.stats :as is]
   '[incanter.charts :as ich]
   '[incanter.datasets :as id]
-  '[clojure.core.async :as casy :refer :all])
+  '[clj-time.core :as t]
+  '[clj-time.predicates :as pr]
+  '[clj-time.coerce :as c]
+  '[clojure.test :as tst :refer [is run-tests]]
+  '[clojure.core.async :as casy :refer [<! >! go chan]])
 
 (deftask my-task
          "Does nothing."
@@ -73,12 +77,25 @@
              )
 
 
-
-
-
   (def client (http/create-client :keep-alive true :request-timeout -1))
   (def c (chan))
   (http/close client)
+
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "1000")
+     (println (<! c)))
+
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "-1000")
+     (println (<! c)))
+
+  (go
+    (ds/oanda-open-order-cas c "EUR_USD" "2000")
+    (println (<! c)))
+
+  (go
+    (ds/oanda-open-order-cas c "EUR_USD" "-2000")
+    (println (<! c)))
 
   (let []
 
@@ -99,6 +116,7 @@
 
        )
 
+  (load-file "src/core/datasources.clj")
 
   ;------------------------------------------------------------------------
 
@@ -168,15 +186,84 @@
   (vs/plot-standard-candles (take-last 15 krak-eth-eur))
   (pprint (take-last 15 krak-eth-eur))
 
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
 
-  (<!! oanda-min)
+  (let [section (subvec (vec oanda-min) 4970 4990)]
+       (vs/plot-standard-candles section)
+       (smp/simple-strat-perc section))
 
-  (smp/simple-strat-perc (take-last 100 oanda-min))
 
+  (smp/simple-strat-no-stop-update (take-last 5000 oanda-min))
+  (smp/simple-strat-perc (take-last 27 oanda-min))
+  (vs/plot-standard-candles (subvec (vec oanda-min) 4990 5000))
+
+  (smp/simple-strat-profit-calc (smp/simple-strat (take-last 4000 oanda-min)))
   (u/to-human (:unixtimestamp (first (take-last 1 oanda-min))))
 
+  (def oanda-raw (ds/oanda-historical-raw "EUR_USD" "5000" "H1"))
 
+  (pr/weekday? (:time (first oanda-raw)))
+
+  (t/date-time (:time (first oanda-raw)))
+
+  (pr/thursday? (c/from-long (:unixtimestamp (first oanda-min))))
+
+  (mid-week? (:unixtimestamp (nth oanda-min 160)))
+
+  (def tue-thu (->>
+                 (reduce
+                   (fn [x y]
+                       (cond
+                         (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+                         :else (conj x [])))
+                   [[]]
+                   (vec oanda-min))
+                 (filter #(not (empty? %)))))
+
+  (smp/simple-strat-perc (last tue-thu))
+
+  (apply
+    u/average
+  (map
+    :account
+  (map smp/simple-strat-no-stop-update tue-thu)
+    )
+    )
+
+  ;43
+  (count tue-thu)
+  (nth tue-thu 41)
+  (:history (smp/simple-strat-perc (take 48 (nth tue-thu 41))))
+  (pprint (:history (smp/simple-strat-perc (take 48 (nth tue-thu 41)))))
+  (vs/plot-standard-candles (take 48 (nth tue-thu 41)))
+
+  (type oanda-min)
+
+  (def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479347761}
+                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479358762}
+                       {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479369763}])
+
+  (def green->red [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
+                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
+                       {:open 1.3 :high 1.5 :low 1.15 :close 1.2 :unixtimestamp 1479366763}])
+
+  (def red-stop-out [{:open 1 :high 1.1 :low 0.7 :close 0.8 :unixtimestamp 1479346761}
+                     {:open 0.8 :high 0.9 :low 0.6 :close 0.7 :unixtimestamp 1479356762}
+                     {:open 0.7 :high 1 :low 0.5 :close 0.6 :unixtimestamp 1479366763}])
+
+  (def red->green [{:open 1 :high 1.1 :low 0.7 :close 0.8 :unixtimestamp 1479346761}
+                     {:open 0.8 :high 0.9 :low 0.6 :close 0.7 :unixtimestamp 1479356762}
+                     {:open 0.7 :high 0.75 :low 0.5 :close 0.6 :unixtimestamp 1479366763}])
+
+  (is
+    (=
+      (* 1000 (u/percentage-change 1.2 1.1 :hi))
+      (:account (smp/simple-strat-perc green-stop-out))))
+
+
+  (smp/simple-strat-perc green-stop-out)
+  (vs/plot-standard-candles green->red)
+  (vs/plot-standard-candles (subvec (vec oanda-min) 4990 5000))
 
   (do
     (load-file "src/core/visual.clj")
@@ -188,6 +275,8 @@
     (load-file "build.boot")
     (ts/unstrument)
     (ts/instrument))
+
+  (run-tests 'core.utils)
 
   (ts/summarize-results
     (ts/check
