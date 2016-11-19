@@ -11,6 +11,47 @@
       [clojure.test :as tst :refer [is with-test]]
       [clj-time.coerce :as c]))
 
+(def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479347761}
+                     {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479358762}
+                     {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479369763}])
+
+(def green->red [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
+                 {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
+                 {:open 1.3 :high 1.5 :low 1.15 :close 1.25 :unixtimestamp 1479366763}])
+
+(def red-stop-out [{:open 1 :high 1.1 :low 0.7 :close 0.8 :unixtimestamp 1479346761}
+                   {:open 0.8 :high 0.9 :low 0.6 :close 0.7 :unixtimestamp 1479356762}
+                   {:open 0.7 :high 1 :low 0.5 :close 0.6 :unixtimestamp 1479366763}])
+
+(def red->green [{:open 1 :high 1.1 :low 0.7 :close 0.8 :unixtimestamp 1479346761}
+                 {:open 0.8 :high 0.9 :low 0.6 :close 0.7 :unixtimestamp 1479356762}
+                 {:open 0.7 :high 0.75 :low 0.5 :close 0.72 :unixtimestamp 1479366763}])
+
+(def red-reversal [{:open 1 :high 1.1 :low 0.8 :close 0.9 :unixtimestamp 1479346761}
+                     {:open 0.9 :high 1.2 :low 0.8 :close 1.1 :unixtimestamp 1479356762}
+                     {:open 1.1 :high 1.4 :low 1 :close 1.3 :unixtimestamp 1479366763}
+                     {:open 1.3 :high 1.4 :low 1.1 :close 1.2 :unixtimestamp 1479376763}])
+
+(def green-reversal [{:open 0.9 :high 1.2 :low 0.8 :close 1.1 :unixtimestamp 1479346761}
+                       {:open 1.1 :high 1.2 :low 0.9 :close 1 :unixtimestamp 1479356762}
+                       {:open 1 :high 1.1 :low 0.7 :close 0.8 :unixtimestamp 1479366763}
+                       {:open 0.8 :high 1 :low 0.7 :close 0.9 :unixtimestamp 1479376763}])
+
+(def standard-candles [{:unixtimestamp 1454374800000, :open 1.089515, :low 1.0894949999999999, :high 1.0907200000000001, :close 1.0898400000000001}
+                       {:unixtimestamp 1454378400000, :open 1.0898750000000001, :low 1.08958, :high 1.09038, :close 1.08962}
+                       {:unixtimestamp 1454382000000, :open 1.089595, :low 1.089445, :high 1.090975, :close 1.09055}
+                       {:unixtimestamp 1454385600000, :open 1.090525, :low 1.09022, :high 1.09191, :close 1.0916000000000001}
+                       {:unixtimestamp 1454389200000, :open 1.091625, :low 1.09033, :high 1.09184, :close 1.09036}
+                       {:unixtimestamp 1454392800000, :open 1.090365, :low 1.089565, :high 1.091025, :close 1.09008}])
+
+(def green-half-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.9, :high 1.2, :close 1.1})
+(def green-one-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.9, :high 1.3, :close 1.2})
+(def green-onehalf-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.9, :high 1.4, :close 1.3})
+
+(def red-half-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.8, :high 1.1, :close 0.9})
+(def red-one-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.7, :high 1.1, :close 0.8})
+(def red-onehalf-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.6, :high 1.1, :close 0.7})
+
 (s/def ::url (s/with-gen
                (s/and string? #(.contains % "://"))
                (fn [] (s/gen #{"https://www.cryptocompare.com/api/data/coinlist/"}))))
@@ -152,5 +193,52 @@
           (pr/tuesday? (c/from-long unixtime))
           (pr/wednesday? (c/from-long unixtime))
           (pr/thursday? (c/from-long unixtime))))
+
+(defn vec-remove
+      "remove elem in coll"
+      [coll pos]
+      (vec (concat (subvec coll 0 pos) (subvec coll (inc pos)))))
+
+(defn index-exclude [r ex]
+      "Take all indices execpted ex"
+      (filter #(not (ex %)) (range r)))
+
+(defn dissoc-idx [v & ds]
+      (map v (index-exclude (count v) (into #{} ds))))
+
+(with-test
+
+  (defn body-ratio [{:keys [open low high close] :as candle}]
+        (cond
+          (green? candle) (/ (- close open) (+ (- high close) (- open low)))
+          :red (/ (- open close) (+ (- high open) (- close low)))))
+
+  (is
+    (=
+      (/ 0.1 0.2)
+      (float (body-ratio green-half-ratio))))
+  (is
+    (=
+      (/ 0.2 0.2)
+      (float (body-ratio green-one-ratio))))
+  (is
+    (=
+      (float (/ 0.3 0.2))
+      (float (body-ratio green-onehalf-ratio))))
+
+  (is
+    (=
+      (float (/ 0.1 0.2))
+      (float (body-ratio red-half-ratio))))
+  (is
+    (=
+      (float (/ 0.2 0.2))
+      (float (body-ratio red-one-ratio))))
+  (is
+    (=
+      (float (/ 0.3 0.2))
+      (float (body-ratio red-onehalf-ratio)))))
+
+
 
 

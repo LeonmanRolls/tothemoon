@@ -1,428 +1,456 @@
-  (http/close client)
-(ds/oanda-historical "EUR_USD" "5000" "S5")
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (<!! oanda-min)
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-oanda-min
-  (<!! oanda-min)
-(defn oanda-open-order-cas [chan instrument units & stoploss]
-      (go
-        (with-open [client (http/create-client)]
-                   (let [resp (http/POST client
-                                         (str rest-api-base-v3 "accounts/" account-no "/orders")
-                                         :headers {:Authorization (str "Bearer " oanda-api-key)
-                                                   :Content-type "application/json"}
-                                         :body (jsn/write-str {:order (merge
-                                                                        {:units units
-                                                                         :instrument instrument
-                                                                         :timeInForce "FOK"
-                                                                         :type "MARKET"
-                                                                         :positionFill "DEFAULT"}
-                                                                        (when stoploss
-                                                                              {:stopLossOnFill {:price (first stoploss)
-                                                                                                :timeInForce "GTC"}}))}))]
-                        (http/await resp)
-                        (>! chan (http/string resp))))))
-    (load-file "src/core/datasources.clj")
-  (def c (chan))
-    (load-file "src/core/datasources.clj")
-(go
-     (ds/oanda-open-order-cas c "EUR_USD" 200)
-     (println (<! c))
+    (map #(clojure.string/split % #"T"))
+    (map last)
+    frequencies
+    (sort-by last)
+    reverse
     )
-  (def c (chan))
-     (ds/oanda-open-order-cas c "EUR_USD" 200)
-    (load-file "src/core/datasources.clj")
-(go
-     (ds/oanda-open-order-cas c "EUR_USD" 200)
-     (println (<! c))
-    )
-(go
-     (ds/oanda-open-order-cas c "EUR_USD" "200")
-     (println (<! c))
-    )
-l
-(go
-     (ds/oanda-open-order-cas c "EUR_USD" "200")
-     (println (<! c))
-    )
-(go
-     (ds/oanda-open-order-cas c "EUR_USD" "200")
-     (println (<! c))
-    )
-(go
-     (ds/oanda-open-order-cas c "EUR_USD" "-200")
-     (println (<! c))
-    )
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S30"))
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M1"))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "D"))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc (take-last 2000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S30"))
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S15"))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc (take-last 5000 oanda-min))
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "1000")
-     (println (<! c)))
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "-1000")
-     (println (<! c)))
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "-1000")
-     (println (<! c)))
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "1000")
-     (println (<! c)))
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "1000")
-     (println (<! c)))
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "-1000")
-     (println (<! c)))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "D"))
-  (smp/simple-strat-perc (take-last 10 oanda-min))
-  (smp/simple-strat-perc (take-last 30 oanda-min))
-  (smp/simple-strat-profit-calc (smp/simple-strat (take-last 30 oanda-min))) 
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc (take-last 30 oanda-min))
-  (smp/simple-strat-perc (take-last 100 oanda-min))
-  (smp/simple-strat-profit-calc (smp/simple-strat (take-last 100 oanda-min)))
-  (smp/simple-strat-perc (take-last 1000 oanda-min))
-  (smp/simple-strat-profit-calc (smp/simple-strat (take-last 1000 oanda-min)))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc (take-last 4000 oanda-min))
-  (smp/simple-strat-profit-calc (smp/simple-strat (take-last 4000 oanda-min)))
-  (vs/plot-standard-candles (take-last 20 oanda-min))
-  (vs/plot-standard-candles (take-last 200 oanda-min))
-    (load-file "src/core/simple.clj")
-  (smp/simple-strat-no-stop-update (take-last 4000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "D"))
-  (smp/simple-strat-no-stop-update (take-last 10 oanda-min))
-  (smp/simple-strat-no-stop-update (take-last 20 oanda-min))
-  (vs/plot-standard-candles (take-last 10 oanda-min))
-  (vs/plot-standard-candles (take-last 100 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "1H"))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
-  (smp/simple-strat-no-stop-update (take-last 20 oanda-min))
-  (smp/simple-strat-no-stop-update (take-last 40 oanda-min))
-  (smp/simple-strat-no-stop-update (take-last 100 oanda-min))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-no-stop-update (take-last 200 oanda-min))
-  (smp/simple-strat-no-stop-update (take-last 300 oanda-min))
-  (smp/simple-strat-no-stop-update (take-last 500 oanda-min))
-  (smp/simple-strat-no-stop-update (take-last 1000 oanda-min))
-  (smp/simple-strat-no-stop-update (take-last 5000 oanda-min))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (vs/plot-standard-candles (subvec oanda-min 4990 5000))
-oanda-min
-  (vs/plot-standard-candles (subvec (vec oanda-min) 4990 5000))
-  (let [section (subvec oanda-min 4990 5000)]
-       (smp/simple-strat-perc section)
-       (vs/plot-standard-candles section))
-  (let [section (subvec (vec oanda-min) 4990 5000)]
-       (smp/simple-strat-perc section)
-       (vs/plot-standard-candles section))
-  (let [section (subvec (vec oanda-min) 4990 5000)]
-       (vs/plot-standard-candles section)
-       (smp/simple-strat-perc section))
-  (let [section (subvec (vec oanda-min) 4970 4990)]
-       (vs/plot-standard-candles section)
-       (smp/simple-strat-perc section))
-  (smp/simple-strat-perc-green (subvec oanda-min 4990 5000))
-    (load-file "src/core/utils.clj")
-  (smp/simple-strat-perc-green (subvec oanda-min 4990 5000))
-    (load-file "src/core/simple.clj")
-  (smp/simple-strat-perc-green (subvec oanda-min 4990 5000))
-  (smp/simple-strat-perc-green (take-last 10 oanda-min))
- 
-  (smp/simple-strat-perc-green (take-last 20 oanda-min))
-  (smp/simple-strat-perc-green (take-last 30 oanda-min))
-  (smp/simple-strat-perc-green (take-last 40 oanda-min))
-  (smp/simple-strat-perc-green (take-last 50 oanda-min))
-  (smp/simple-strat-perc-green (take-last 60 oanda-min))
-  (smp/simple-strat-perc-green (take-last 70 oanda-min))
-  (smp/simple-strat-perc-green (take-last 80 oanda-min))
-  (smp/simple-strat-perc-green (take-last 100 oanda-min))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc-green (take-last 200 oanda-min))
-  (smp/simple-strat-perc-green (take-last 300 oanda-min))
-  (smp/simple-strat-perc-green (take-last 500 oanda-min))
-  (smp/simple-strat-perc-green (take-last 1000 oanda-min))
-  (smp/simple-strat-perc-green (take-last 2000 oanda-min))
-  (smp/simple-strat-perc-green (take-last 3000 oanda-min))
-  (smp/simple-strat-perc-green (take-last 4000 oanda-min))
-  (smp/simple-strat-perc-green (take-last 5000 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "D"))
-  (smp/simple-strat-perc-green (take-last 20 oanda-min))
-  (smp/simple-strat-perc-green (take-last 40 oanda-min))
-  (smp/simple-strat-perc-green (take-last 100 oanda-min))
-  (smp/simple-strat-perc-green (take-last 500 oanda-min))
-  (smp/simple-strat-perc-green (take-last 1000 oanda-min))
-  (smp/simple-strat-perc-green (take-last 2000 oanda-min))
-  (smp/simple-strat-perc-green (take-last 5000 oanda-min))
-  (smp/simple-strat-perc-green (take-last 365 oanda-min))
-  (smp/simple-strat-perc-green (take-last 720 oanda-min))
-  (smp/simple-strat-perc-green (take-last 20 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "1H"))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
-  (smp/simple-strat-perc (take-last 20 oanda-min))
-  (smp/simple-strat-perc (take-last 10 oanda-min))
-  (smp/simple-strat-perc (take-last 20 oanda-min))
-  (smp/simple-strat-perc (take-last 30 oanda-min))
-  (smp/simple-strat-perc (take-last 40 oanda-min))
-  (smp/simple-strat-perc (take-last 50 oanda-min))
-  (smp/simple-strat-perc (take-last 60 oanda-min))
-  (smp/simple-strat-perc (take-last 70 oanda-min))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (smp/simple-strat-perc (take-last 20 oanda-min))
-  (smp/simple-strat-perc (take-last 30 oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
-  (smp/simple-strat-perc (take-last 27 oanda-min))
-    (load-file "src/core/datasources.clj")
-  (ds/oanda-historical-raw "EUR_USD" "H1")
-  (ds/oanda-historical-raw "EUR_USD" "5000" "H1")
-  (def oanda-raw (ds/oanda-historical-raw "EUR_USD" "5000" "H1"))
-oanda-raw
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (first oanda-raw)
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (:time (first oanda-raw))
-  (pr/weekday? (:time (first oanda-raw))) 
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (t/date-time (:time (first oanda-raw)))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (first oanda-min)
-  (:unixtimestamp (first oanda-min)) 
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (:unixtimestamp (first oanda-min))
-  (c/from-long (:unixtimestamp (first oanda-min))) 
-  (pr/weekday? (c/from-long (:unixtimestamp (first oanda-min)))) 
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (pr/monday? (c/from-long (:unixtimestamp (first oanda-min))))
-  (pr/tuesday? (c/from-long (:unixtimestamp (first oanda-min))))
-  (pr/wednesday? (c/from-long (:unixtimestamp (first oanda-min))))
-  (pr/thursday? (c/from-long (:unixtimestamp (first oanda-min))))
-(defn mid-week? [unixtime]
-        (or
-          (pr/tuesday? (c/from-long unixtime))
-          (pr/wednesday? (c/from-long unixtime))
-          (pr/thursday? (c/from-long unixtime))))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (mid-week? (c/from-long (:unixtimestamp (first oanda-min))))
-  (mid-week? (c/from-long (:unixtimestamp (nth oanda-min 0))))
-  (mid-week? (c/from-long (:unixtimestamp (nth oanda-min 1))))
-  (mid-week? (c/from-long (:unixtimestamp (nth oanda-min 2))))
-  (mid-week? (c/from-long (:unixtimestamp (nth oanda-min 3))))
-  (mid-week? (:unixtimestamp (nth oanda-min 0)))
-  (mid-week? (:unixtimestamp (nth oanda-min 1)))
-  (mid-week? (:unixtimestamp (nth oanda-min 2)))
-  (mid-week? (:unixtimestamp (nth oanda-min 3)))
-(:unixtimestamp (nth oanda-min 3))
-  (mid-week? (:unixtimestamp (nth oanda-min 100)))
-(nth oanda-min 100)
-  (mid-week? (:unixtimestamp (nth oanda-min 140)))
-(nth oanda-min 140)
-  (mid-week? (:unixtimestamp (nth oanda-min 160)))
-(conj [2] 1)
-(recuce
-   (fn [x y]
-       (cond
-        (mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))  
-        :else (conj x [])  
+(->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+        plot (ich/candle-stick-plot
+               :data (ic/to-dataset data)
+               :date :unixtimestamp)]
+       (ic/view plot))
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+        plot (ich/candle-stick-plot
+               :data (ic/to-dataset data)
+               :date :unixtimestamp)]
+       (ic/to-dataset data)
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+        plot (ich/candle-stick-plot
+               :data (ic/to-dataset data)
+               :date :unixtimestamp)]
+       
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+       ]
+       (ic/to-dataset data)
+  
+)
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+       ]
+       (ic/to-dataset data)
+       (ich/xy-plot :data (ic/to-dataset data))
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+       ]
+       (ic/to-dataset data)
+       (ich/xy-plot (ic/to-dataset data))
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+       ]
+       (ic/to-dataset data)
+       )
+  (let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+       ]
+       (ic/with-data (ic/to-dataset data)
+        (ich/scatter-plot (ic/$ :col-0) (ic/$ :col-1))
          )
        )
-   [[]]
-   oanda-min)
-(reduce
-   (fn [x y]
-       (cond
-        (mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
-        :else (conj x [])
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+       ]
+       (ic/with-data (ic/to-dataset data)
+                     
          )
        )
-   [[]]
-   oanda-min)
-  (type oanda-min)
-(reduce
-    (fn [x y]
-        (cond
-          (mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
-          :else (conj x [])
-          )
-        )
-    [[]]
-    (vec oanda-min))
-(reduce
-    (fn [x y]
-        (cond
-          (mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
-          :else (conj x [])
-          )
-        )
-    [[]]
-    (vec oanda-min))
-(reduce
-    (fn [x y]
-        (cond
-          (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
-          :else (conj x [])
-          )
-        )
-    [[]]
-    (vec oanda-min))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
-(reduce
-    (fn [x y]
-        (cond
-          (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
-          :else (conj x [])
-          )
-        )
-    [[]]
-    (vec oanda-min))
-(->>
-    (reduce
-      (fn [x y]
-          (cond
-            (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
-            :else (conj x [])))
-      [[]]
-      (vec oanda-min))
-    (filter empty?))
-(->>
-    (reduce
-      (fn [x y]
-          (cond
-            (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
-            :else (conj x [])))
-      [[]]
-      (vec oanda-min))
-    (filter (not empty?)))
-(->>
-    (reduce
-      (fn [x y]
-          (cond
-            (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
-            :else (conj x [])))
-      [[]]
-      (vec oanda-min))
-    (filter #(not (empty? %))))
-(def tue-thu (->>
-                 (reduce
-                   (fn [x y]
-                       (cond
-                         (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
-                         :else (conj x [])))
-                   [[]]
-                   (vec oanda-min))
-                 (filter #(not (empty? %)))))
-tue-thu
-  (last tue-thu)
-  (last (drop-last tue-thu))
-  (smp/simple-strat-perc (last (drop-last tue-thu)))
-  (smp/simple-strat-perc (last tue-thu))
-  (map smp/simple-strat-perc tue-thu)
-(map 
-    :account 
-  (map smp/simple-strat-perc tue-thu)  
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+        ]
+       (ic/with-data (ic/to-dataset data)
+                     (ic/$ :col-0)
+                     )
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+        ]
+       (ic/with-data (ic/to-dataset data)
+                     (ic/$ :col-0)
+                     (ic/$ :col-1)
+                     )
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+        ]
+       (ic/with-data (ic/to-dataset data)
+                     (ic/$ :col-0)
+                     (ic/$ :col-1)
+                     (ic/view ic/$data)
+                     )
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+        ]
+       (ic/with-data (ic/to-dataset data)
+                     (ic/$ :col-0)
+                     (ic/$ :col-1)
+                     (ic/view ic/$data)
+                     (ich/line-chart :col-0 :col1)
+                     )
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+        ]
+       (ic/with-data (ic/to-dataset data)
+                     (ic/$ :col-0)
+                     (ic/$ :col-1)
+                     (ic/view ic/$data)
+                     (ic/view (ich/line-chart :col-0 :col1))
+                     
+                     )
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+        ]
+       (ic/with-data (ic/to-dataset data)
+                     (ic/$ :col-0)
+                     (ic/$ :col-1)
+                     (ic/view ic/$data)
+                     (ic/view (ich/line-chart :col-0 :col-1))
+                     )
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+        ]
+       (ic/with-data (ic/to-dataset data)
+                     (ic/$ :col-0)
+                     (ic/$ :col-1)
+                     (ic/view ic/$data)
+                     (ic/view (ich/line-chart :col-0 :col-1))
+                     (ic/view (ic/$order :col-1 :desc))
+                     )
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+        ]
+       data
+       
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by last)
+               reverse)
+        ]
+       (map
+        (fn [x]
+           (update-in x [0] u/timestamp->unix)
+            )
+         data
+         )
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by first)
+               reverse)
+        ]
+       (map
+        (fn [x]
+           (update-in x [0] u/timestamp->unix)
+            )
+         data
+         )
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by first)
+               reverse)
+        ]
+       data
+       
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by first))
+        ]
+       data
+       )
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by first))
+        ]
+       
+       (ic/with-data (ic/to-dataset data)
+                     (ic/$ :col-0)
+                     (ic/$ :col-1)
+                     (ic/view ic/$data)
+                     (ic/view (ich/line-chart :col-0 :col-1))
+                     (ic/view (ic/$order :col-1 :desc))
+                     )
+       )
+  (def losses (smp/simple-strat-profits oanda-min true))
+  (def rslt (smp/create-chains losses))
+rslt
+(def loss-length (map
+                     (fn [{:keys [start end]}]
+                         (- end start))
+                     rslt))
+loss-length
+rslt
+(let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) rslt)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by first))
+        ]
+       (ic/with-data (ic/to-dataset data)
+                     (ic/$ :col-0)
+                     (ic/$ :col-1)
+                     (ic/view ic/$data)
+                     (ic/view (ich/line-chart :col-0 :col-1))
+                     (ic/view (ic/$order :col-1 :desc))
+                     )
+       )
+  (last oanda-min)
+(let [{:keys [open low high close] :as candle} (last oanda-min)]
+       (cond
+         (green? candle) (/ (+ (- high close) (- open low)) (- close open))
+         :red (/ (+ (- high open) (- close low)) (- open close))))
+(let [{:keys [open low high close] :as candle} (last oanda-min)]
+       (cond
+         (u/green? candle) (/ (+ (- high close) (- open low)) (- close open))
+         :red (/ (+ (- high open) (- close low)) (- open close))))
+(last oanda-min)
+(let [{:keys [open low high close] :as candle} {:unixtimestamp 1479470400000,
+                                                  :open 1,
+                                                  :low 0.9,
+                                                  :high 1.2,
+                                                  :close 1.1}]
+       (cond
+         (u/green? candle) (/ (+ (- high close) (- open low)) (- close open))
+         :red (/ (+ (- high open) (- close low)) (- open close))))
+(let [{:keys [open low high close] :as candle} {:unixtimestamp 1479470400000,
+                                                  :open 1,
+                                                  :low 0.9,
+                                                  :high 1.2,
+                                                  :close 1.1}]
+       (cond
+         (u/green? candle) (/ (- close open) (+ (- high close) (- open low)))
+         :red (/ (+ (- open close) (- high open) (- close low)))))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple))
+(u/body-ratio {:unixtimestamp 1479470400000,
+                 :open 1,
+                 :low 0.9,
+                 :high 1.2,
+                 :close 1.1})
+(is
+   (=
+     (/ 0/1 0.2)
+     (u/body-ratio green-half-ratio)
+     
+     ) 
     )
-(apply 
-    u/average
-  (map
-    :account
-  (map smp/simple-strat-perc tue-thu)
-    )  
+(defn green-half-ratio {:unixtimestamp 1479470400000,
+                          :open 1,
+                          :low 0.9,
+                          :high 1.2,
+                          :close 1.1})
+(def green-half-ratio {:unixtimestamp 1479470400000,
+                          :open 1,
+                          :low 0.9,
+                          :high 1.2,
+                          :close 1.1})
+(is
+   (=
+     (/ 0/1 0.2)
+     (u/body-ratio green-half-ratio)
+     )
     )
-(map
-    :account
-  (map smp/simple-strat-no-stop-update tue-thu)
+(is
+   (=
+     (/ 0.1 0.2)
+     (u/body-ratio green-half-ratio)
+     )
     )
-tue-thy
-tue-thu
-   (count tue-thu)
-  (nth tue-thu 42)
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (nth tue-thu 41)
-  (smp/simple-strat-perc (nth tue-thu 41))
-  (smp/simple-strat-perc (take 24 (nth tue-thu 41)))
-  (smp/simple-strat-perc (take 48 (nth tue-thu 41)))
-  (smp/simple-strat-perc (take 24 (nth tue-thu 41)))
-  (smp/simple-strat-perc (take 48 (nth tue-thu 41)))
-  (vs/plot-standard-candles (take 48 (nth tue-thu 41)))
-    (load-file "src/core/simple.clj")
-  (smp/simple-strat-perc (take 48 (nth tue-thu 41)))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (:history (smp/simple-strat-perc (take 48 (nth tue-thu 41))))
-    (load-file "src/core/simple.clj")
-  (:history (smp/simple-strat-perc (take 48 (nth tue-thu 41))))
-  (pprint (:history (smp/simple-strat-perc (take 48 (nth tue-thu 41)))))
-(def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
-                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479346762}
-                       {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479346763}])
-  (def green->red [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
-                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479346762}
-                       {:open 1.3 :high 1.5 :low 1.15 :close 1.2 :unixtimestamp 1479346763}])
-  (def red-stop-out [{:open 1 :high 1.1 :low 0.7 :close 0.8 :unixtimestamp 1479346761}
-                     {:open 0.8 :high 0.9 :low 0.6 :close 0.7 :unixtimestamp 1479346762}
-                     {:open 0.7 :high 1 :low 0.5 :close 0.6 :unixtimestamp 1479346763}])
-  (def red->green [{:open 1 :high 1.1 :low 0.7 :close 0.8 :unixtimestamp 1479346761}
-                     {:open 0.8 :high 0.9 :low 0.6 :close 0.7 :unixtimestamp 1479346762}
-                     {:open 0.7 :high 0.75 :low 0.5 :close 0.6 :unixtimestamp 1479346763}])
-  (vs/plot-standard-candles green-stop-out)
-  (vs/plot-standard-candles (subvec (vec oanda-min) 4990 5000))
-  (vs/plot-standard-candles green-stop-out)
-  (def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
-                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479346762}
-                       {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479346763}])
-  (vs/plot-standard-candles green-stop-out)
-  (def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479347761}
-                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479348762}
-                       {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479349763}])
-  (vs/plot-standard-candles green-stop-out)
-  (def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479347761}
-                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479358762}
-                       {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479369763}])
-  (vs/plot-standard-candles green-stop-out)
-  (def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479347761}
-                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479358762}
-                       {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479369763}])
-  (vs/plot-standard-candles green-stop-out)
- (u/percentage-change 1 2)
-  (is (= 100 (u/percentage-change 1 2)))
+(is
+   (=
+     (/ 0.1 0.2)
+     (format "%.2f" (u/body-ratio green-half-ratio))))
+(is
+   (=
+     (/ 0.1 0.2)
+     (double (u/body-ratio green-half-ratio))))
+(is
+   (=
+     (/ 0.1 0.2)
+     (float (u/body-ratio green-half-ratio))))
+(def green-one-ratio {:unixtimestamp 1479470400000,
+                          :open 1,
+                          :low 0.9,
+                          :high 1.3,
+                          :close 1.2})
+(is
+   (=
+     (/ 0.2 0.2)
+     (float (u/body-ratio green-one-ratio))))
+(def green-onehalf-ratio {:unixtimestamp 1479470400000,
+                          :open 1,
+                          :low 0.9,
+                          :high 1.4,
+                          :close 1.3})
+is
+   (=
+     (/ 0.3 0.2)
+     (float (u/body-ratio green-onehalf-ratio))))
+(is
+   (=
+     (/ 0.3 0.2)
+     (float (u/body-ratio green-onehalf-ratio))))
+(is
+   (=
+     (float (/ 0.3 0.2)) 
+     (float (u/body-ratio green-onehalf-ratio))))
+  (def red-half-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.8, :high 1.1, :close 0.9})
+(is
+   (=
+     (float (/ 0.1 0.2))
+     (float (u/body-ratio red-half-ratio))))
 (do
     (load-file "src/core/visual.clj")
     (load-file "src/core/utils.clj")
@@ -432,8 +460,8 @@ tue-thu
     (load-file "src/core/marketcap.clj")
     (load-file "build.boot")
     (ts/unstrument)
-    (ts/instrument))
-  (is (= 100 (u/percentage-change 1 2)))
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple))
 (do
     (load-file "src/core/visual.clj")
     (load-file "src/core/utils.clj")
@@ -443,58 +471,30 @@ tue-thu
     (load-file "src/core/marketcap.clj")
     (load-file "build.boot")
     (ts/unstrument)
-    (ts/instrument))
-  (is (= 100 (u/percentage-change 1 2)))
-  (is (= 50 (u/percentage-change 2 1)))
-(u/percentage-change 2 1)
-  (is (= -50 (u/percentage-change 2 1)))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (u/percentage-change 1 2 :heyhey)
-  (u/percentage-change 1 0.9 :heyhey)
-  (is (= 100 (u/percentage-change 1 2)))
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (is (= -50 (u/percentage-change 2 1)))
-  (is (= -50 (u/percentage-change 1 2 :heyhey)))
-  (is (= 2 (u/percentage-change 1 2 :heyhey)))
-  (is (= -50 (u/percentage-change 2 1)))
-  (is (= 0.9 (u/percentage-change 1 0.9 :heyhey)))
-  (is (= 100 (u/percentage-change 1 2)))
-  (is (= -50 (u/percentage-change 2 1)))
-  (is (= 2 (u/percentage-change 1 2 :heyhey)))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument))
-  (run-tests 'core.utils)
-  (smp/simple-strat-perc green-stop-out)
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (vs/plot-standard-candles green-stop-out)
-  (u/percentage-change 1.2 1.1)
-  (u/percentage-change 1.2 1.1 :hi)
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (* 1000 (u/percentage-change 1.2 1.1 :hi))
-  (smp/simple-strat-perc green-stop-out)
-/home/leeondamiky/Documents/Clojure/trading-tothemoon/build.boot
-  (:account (smp/simple-strat-perc green-stop-out))
-  (* 1000 (u/percentage-change 1.2 1.1 :hi))
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple))
+(is
+   (=
+     (float (/ 0.1 0.2))
+     (float (u/body-ratio red-half-ratio))))
+  (def red-one-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.7, :high 1.1, :close 0.8})
+(is
+   (=
+     (float (/ 0.2 0.2))
+     (float (u/body-ratio red-one-ratio))))
+  (def red-onehalf-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.6, :high 1.1, :close 0.7})
 (is
     (=
-      (* 1000 (u/percentage-change 1.2 1.1 :hi))
-      (:account (smp/simple-strat-perc green-stop-out))))
-  (vs/plot-standard-candles green->red)
+      (float (/ 0.3 0.2))
+      (float (u/body-ratio red-onehalf-ratio))))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple))

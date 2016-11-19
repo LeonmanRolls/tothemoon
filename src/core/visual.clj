@@ -24,4 +24,9 @@
                   data)
                 (plot-standard-candles))))))
 
+(defn plot-between-dates [candles start end]
+      (->
+        (filter #(<= start (:unixtimestamp %) end) candles)
+        plot-standard-candles))
+
 

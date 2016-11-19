@@ -9,6 +9,8 @@
     [clojurewerkz/envision "0.1.0-SNAPSHOT"]
     [incanter "1.5.7"]
     [http.async.client "0.5.2"]
+    [org.clojure/math.combinatorics "0.1.3"]
+    [cfft "0.1.0"]
     [clj-time "0.12.0"]]
   :source-paths #{"src"})
 
@@ -33,6 +35,8 @@
   '[clj-time.core :as t]
   '[clj-time.predicates :as pr]
   '[clj-time.coerce :as c]
+  '[cfft.core :as fft]
+  '[clojure.math.combinatorics :as combo]
   '[clojure.test :as tst :refer [is run-tests]]
   '[clojure.core.async :as casy :refer [<! >! go chan]])
 
@@ -109,161 +113,117 @@
 
                      (println raw)
                      (println "currask: " currask)
-                     (println "currbid: " currbid)
+                     (println "currbid: " currbid)))))
 
-                     )
-                ))
-
-       )
-
-  (load-file "src/core/datasources.clj")
-
-  ;------------------------------------------------------------------------
-
-  (def crypto-hist (ds/cryptocompare-hist "BTC" "USD" "histoday" 1000))
-
-  (pprint
-    (smp/simple-strat
-      (take-last 10 crypto-hist)
-      :human))
-
-  (smp/simple-strat-profit-calc
-      (smp/simple-strat
-        (take-last 720 crypto-hist)
-        :human))
-
- (u/update-all-vals
-   (take-last 10 crypto-hist)
-   [:unixtimestamp]
-   u/to-human)
-
-  (def rslt (u/json-get
-              "https://api.kraken.com/0/public/OHLC"
-              {:query-params {:pair "XBTUSD" :interval "1440"}}))
-
-  (def eth-eur
-    (u/json-get
-      "https://api.kraken.com/0/public/OHLC"
-      {:query-params {:pair "ETHEUR" :interval "1440"}}))
-
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "5S"))
-
-  (keys (:candles oanda-min))
-  (map ds/oanda-candle->standard (:candles oanda-min))
-
-  (def stnd (ds/kraken-hist->standard (:XXBTZUSD (:result rslt))))
-
-  (def crypt-krak (ds/cryptocompare-hist "BTC" "USD" "histoday" 720 "Kraken"))
-
-  (def krak-eur (ds/kraken-hist->standard (:XXBTZEUR (:result xbt-eur))))
-
-  (def krak-eth-btc (ds/kraken-hist->standard (:XETHXXBT (:result eth-btc))))
-
-  (def krak-eth-eur (ds/kraken-hist->standard (:XETHZEUR (:result eth-eur))))
-
-  (vs/plot-standard-candles (take-last 15 stnd))
-  (vs/plot-standard-candles (take-last 15 crypt-krak))
-  (vs/plot-standard-candles (take-last 15 krak-eur))
-  (vs/plot-standard-candles (take-last 15 krak-eth-btc))
-  (vs/plot-standard-candles (take-last 15 krak-eth-eur))
-
-  (smp/simple-strat-profit-calc
-    (smp/simple-strat
-      (take-last 250 stnd)
-      :human))
-
-  (smp/simple-strat-profit-calc
-    (smp/simple-strat
-      (take-last 720 krak-eur)
-      :human))
-
-  (smp/simple-strat-profit-calc
-    (smp/simple-strat
-      (take-last 250 krak-eur)
-      :human))
 
   (vs/plot-standard-candles (take-last 5 stnd))
   (vs/plot-standard-candles (take-last 15 krak-eth-eur))
   (pprint (take-last 15 krak-eth-eur))
 
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
-
-  (let [section (subvec (vec oanda-min) 4970 4990)]
-       (vs/plot-standard-candles section)
-       (smp/simple-strat-perc section))
-
-
-  (smp/simple-strat-no-stop-update (take-last 5000 oanda-min))
-  (smp/simple-strat-perc (take-last 27 oanda-min))
-  (vs/plot-standard-candles (subvec (vec oanda-min) 4990 5000))
-
-  (smp/simple-strat-profit-calc (smp/simple-strat (take-last 4000 oanda-min)))
-  (u/to-human (:unixtimestamp (first (take-last 1 oanda-min))))
+  (:account (smp/simple-strat-perc (take-last 1000 oanda-min)))
 
   (def oanda-raw (ds/oanda-historical-raw "EUR_USD" "5000" "H1"))
 
-  (pr/weekday? (:time (first oanda-raw)))
+  (first (take 6 oanda-min))
 
-  (t/date-time (:time (first oanda-raw)))
+  (vs/plot-between-dates (take 6 oanda-min) 1454378400000 1454389200000)
 
-  (pr/thursday? (c/from-long (:unixtimestamp (first oanda-min))))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
 
-  (mid-week? (:unixtimestamp (nth oanda-min 160)))
+
+
+
+  (->>
+    (filter #(> 1 (:perc %)) (:history (smp/simple-strat-perc oanda-min)))
+    (map #(update-in % [:start] u/timestamp->unix))
+    (map #(update-in % [:end] u/timestamp->unix))
+    (take 10)
+    (map (fn [{:keys [start end]}] (vs/plot-between-dates oanda-min start end)))
+    )
+
+  (def losses (smp/simple-strat-profits oanda-min true))
+
+  (def rslt (smp/create-chains losses))
+
+  (vs/plot-between-dates oanda-min (:start (last rslt)) (:end (last rslt)))
+
+  (def loss-length-filtered  (filter
+                               (fn [{:keys [start end]}]
+                                   (> (- end start) 10000000))
+                               sorted))
+
+  (def loss-length (map
+                     (fn [{:keys [start end]}]
+                         (- end start))
+                     rslt))
+
+
+  (apply
+    u/average
+    (map
+      (fn [{:keys [start end]}]
+          (- end start))
+      rslt))
+
+  (last sorted)
+
+  (let [data (->>
+               (map (fn [{:keys [start end]}] (u/to-human start)) rslt)
+               (map #(clojure.string/split % #"T"))
+               (map last)
+               frequencies
+               (sort-by first))]
+
+       (ic/with-data (ic/to-dataset data)
+
+                     (ic/$ :col-0)
+                     (ic/$ :col-1)
+                     (ic/view ic/$data)
+                     (ic/view (ich/line-chart :col-0 :col-1))
+                     (ic/view (ic/$order :col-1 :desc))
+
+                     ))
+
+
+  (ich/xy-plot (ic/to-dataset data))
+   plot (ich/xy-plot
+               :data (ic/to-dataset data)
+               )
+
+  (ic/view plot)
+
+
+  ;594
+  ;start at 572
+  (count sorted)
+
+  oanda-min
 
   (def tue-thu (->>
+                 oanda-min
+                 vec
                  (reduce
                    (fn [x y]
                        (cond
                          (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
                          :else (conj x [])))
-                   [[]]
-                   (vec oanda-min))
+                   [[]])
                  (filter #(not (empty? %)))))
 
-  (smp/simple-strat-perc (last tue-thu))
+  (smp/simple-strat-perc (nth tue-thu 38))
 
-  (apply
-    u/average
-  (map
-    :account
-  (map smp/simple-strat-no-stop-update tue-thu)
-    )
-    )
+  (apply u/average (map :account (map smp/simple-strat-perc tue-thu)))
 
-  ;43
+  ;42
   (count tue-thu)
-  (nth tue-thu 41)
+  (nth tue-thu 38)
+  (vs/plot-standard-candles (nth tue-thu 21))
+  (vs/plot-standard-candles (take 72 (nth tue-thu 21)))
+  (smp/simple-strat-perc (take 36 (nth tue-thu 21)))
+  (pprint (:history (smp/simple-strat-perc (take 72 (nth tue-thu 38)))))
+
   (:history (smp/simple-strat-perc (take 48 (nth tue-thu 41))))
   (pprint (:history (smp/simple-strat-perc (take 48 (nth tue-thu 41)))))
-  (vs/plot-standard-candles (take 48 (nth tue-thu 41)))
-
-  (type oanda-min)
-
-  (def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479347761}
-                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479358762}
-                       {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479369763}])
-
-  (def green->red [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
-                       {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
-                       {:open 1.3 :high 1.5 :low 1.15 :close 1.2 :unixtimestamp 1479366763}])
-
-  (def red-stop-out [{:open 1 :high 1.1 :low 0.7 :close 0.8 :unixtimestamp 1479346761}
-                     {:open 0.8 :high 0.9 :low 0.6 :close 0.7 :unixtimestamp 1479356762}
-                     {:open 0.7 :high 1 :low 0.5 :close 0.6 :unixtimestamp 1479366763}])
-
-  (def red->green [{:open 1 :high 1.1 :low 0.7 :close 0.8 :unixtimestamp 1479346761}
-                     {:open 0.8 :high 0.9 :low 0.6 :close 0.7 :unixtimestamp 1479356762}
-                     {:open 0.7 :high 0.75 :low 0.5 :close 0.6 :unixtimestamp 1479366763}])
-
-  (is
-    (=
-      (* 1000 (u/percentage-change 1.2 1.1 :hi))
-      (:account (smp/simple-strat-perc green-stop-out))))
-
-
-  (smp/simple-strat-perc green-stop-out)
-  (vs/plot-standard-candles green->red)
-  (vs/plot-standard-candles (subvec (vec oanda-min) 4990 5000))
 
   (do
     (load-file "src/core/visual.clj")
@@ -274,9 +234,8 @@
     (load-file "src/core/marketcap.clj")
     (load-file "build.boot")
     (ts/unstrument)
-    (ts/instrument))
-
-  (run-tests 'core.utils)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple))
 
   (ts/summarize-results
     (ts/check

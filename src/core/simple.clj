@@ -16,6 +16,7 @@
       [clojure.set :as set]
       [clojure.core.logic :as lgc]
       [clojure.core.async :as casy :refer [<! >! go chan]]
+      [clojure.test :as tst :refer [is run-tests with-test]]
       [core.datasources :as ds]
       [core.utils :as u]))
 
@@ -137,130 +138,178 @@
               x)
             (filter #(<= chain-length (count %)) x)))
 
-(defn simple-strat-perc [standard-candles]
-      (let [clear-fn (fn [deets-map]
-                         (->
-                           (update-in deets-map [:open-date] (fn [_] nil))
-                           (update-in [:stop-loss] (fn [_] nil))
-                           (update-in [:buy-or-sell] (fn [_] nil))
-                           (update-in [:order-price] (fn [_] nil))))
-            update-hist (fn [damap start end perc]
-                            (update-in damap [:history] #(conj % {:start (u/to-human start)
-                                                                  :end (u/to-human end)
-                                                                  :perc perc})))]
+(with-test
 
-           (reduce
-             (fn [{:keys [stop-loss buy-or-sell order-price account history open-date] :as x}
-                  {:keys [unixtimestamp open high low close] :as y}]
+  (defn simple-strat-perc [standard-candles]
+        (let [clear-fn (fn [deets-map]
+                           (->
+                             (update-in deets-map [:open-date] (fn [_] nil))
+                             (update-in [:stop-loss] (fn [_] nil))
+                             (update-in [:buy-or-sell] (fn [_] nil))
+                             (update-in [:order-price] (fn [_] nil))))
 
-                 (cond
-                   (= buy-or-sell "buy") (do
-                                           (println "buy")
-                                           (if
-                                             (u/green? y)
-                                             (cond
-                                               (< low stop-loss) (->
-                                                                   (update-hist
-                                                                     x
-                                                                     open-date
-                                                                     unixtimestamp
-                                                                     (u/percentage-change order-price stop-loss :spicy))
-                                                                   (update-in [:account]
-                                                                              (fn [acc]
-                                                                                  (* acc
-                                                                                     (u/percentage-change order-price stop-loss :spicy))))
-                                                                   clear-fn)
-                                               :else (->
-                                                       (update-in x [:stop-loss] (fn [_] low))))
+              update-hist (fn [damap start end perc]
+                              (update-in damap [:history] #(conj % {:start (u/to-human start)
+                                                                    :end (u/to-human end)
+                                                                    :perc perc})))
 
-                                             (cond
-                                               (< low stop-loss) (->
-                                                                   (update-hist
-                                                                     x
-                                                                     open-date
-                                                                     unixtimestamp
-                                                                     (u/percentage-change order-price stop-loss :spicy))
-                                                                   (update-in [:account]
-                                                                              (fn [acc]
-                                                                                  (* acc
-                                                                                     (u/percentage-change order-price stop-loss :spicy))))
-                                                                   clear-fn)
-                                               :else (->
-                                                       (update-hist
-                                                         x
-                                                         open-date
-                                                         unixtimestamp
-                                                         (u/percentage-change order-price stop-loss :spicy))
-                                                       (update-in [:account]
-                                                                  (fn [acc]
-                                                                      (* acc
-                                                                         (u/percentage-change order-price close :spicy))))
-                                                       clear-fn))))
+              buy-or-sell-fn (fn [acc candle high low close unixtimestamp]
+                                 (cond
+                                   (u/green? candle) (->
+                                                       (update-in acc [:buy-or-sell] (fn [_] "buy"))
+                                                       (update-in [:order-price] (fn [_] close))
+                                                       (update-in [:stop-loss] (fn [_] low))
+                                                       (update-in [:open-date] (fn [_] unixtimestamp)))
+
+                                   (not (u/green? candle)) (->
+                                                             (update-in acc [:buy-or-sell] (fn [_] "sell"))
+                                                             (update-in [:order-price] (fn [_] close))
+                                                             (update-in [:stop-loss] (fn [_] high))
+                                                             (update-in [:open-date] (fn [_] unixtimestamp)))))]
+
+             (reduce
+               (fn [{:keys [stop-loss buy-or-sell order-price account history open-date] :as x}
+                    {:keys [unixtimestamp open high low close] :as y}]
+
+                   (cond
+                     (= buy-or-sell "buy") (do
+                                             (if
+                                               (u/green? y)
+                                               (cond
+                                                 (< low stop-loss) (->
+                                                                     (update-hist
+                                                                       x
+                                                                       open-date
+                                                                       unixtimestamp
+                                                                       (u/percentage-change order-price stop-loss :spicy))
+                                                                     (update-in [:account]
+                                                                                (fn [acc]
+                                                                                    (* acc
+                                                                                       (u/percentage-change order-price stop-loss :spicy))))
+                                                                     clear-fn
+                                                                     (buy-or-sell-fn y high low close unixtimestamp))
+                                                 :else (->
+                                                         (update-in x [:stop-loss] (fn [_] low))))
+
+                                               (cond
+                                                 (< low stop-loss) (->
+                                                                     (update-hist
+                                                                       x
+                                                                       open-date
+                                                                       unixtimestamp
+                                                                       (u/percentage-change order-price stop-loss :spicy))
+                                                                     (update-in [:account]
+                                                                                (fn [acc]
+                                                                                    (* acc
+                                                                                       (u/percentage-change order-price stop-loss :spicy))))
+                                                                     clear-fn
+                                                                     (buy-or-sell-fn y high low close unixtimestamp))
+                                                 :else (->
+                                                         (update-hist
+                                                           x
+                                                           open-date
+                                                           unixtimestamp
+                                                           (u/percentage-change order-price close :spicy))
+                                                         (update-in [:account]
+                                                                    (fn [acc]
+                                                                        (* acc
+                                                                           (u/percentage-change order-price close :spicy))))
+                                                         clear-fn
+                                                         (buy-or-sell-fn y high low close unixtimestamp)))))
 
 
-                   (= buy-or-sell "sell") (if
-                                            (not (u/green? y))
-                                            (cond
-                                              (> high stop-loss) (->
-                                                                   (update-hist
-                                                                     x
-                                                                     open-date
-                                                                     unixtimestamp
-                                                                     (u/percentage-change order-price stop-loss :spicy))
-                                                                   (update-in [:account]
-                                                                              (fn [acc]
-                                                                                  (* acc
-                                                                                     (u/percentage-change stop-loss order-price :spicy))))
-                                                                   clear-fn)
-                                              :else (->
-                                                      (update-in x [:stop-loss] (fn [_] high))))
+                     (= buy-or-sell "sell") (if
+                                              (not (u/green? y))
+                                              (cond
+                                                (> high stop-loss) (->
+                                                                     (update-hist
+                                                                       x
+                                                                       open-date
+                                                                       unixtimestamp
+                                                                       (u/percentage-change stop-loss order-price :spicy))
+                                                                     (update-in [:account]
+                                                                                (fn [acc]
+                                                                                    (* acc
+                                                                                       (u/percentage-change stop-loss order-price :spicy))))
+                                                                     clear-fn
+                                                                     (buy-or-sell-fn y high low close unixtimestamp))
+                                                :else (->
+                                                        (update-in x [:stop-loss] (fn [_] high))))
 
-                                            (cond
-                                              (> high stop-loss) (->
-                                                                   (update-hist
-                                                                     x
-                                                                     open-date
-                                                                     unixtimestamp
-                                                                     (u/percentage-change order-price stop-loss :spicy))
-                                                                   (update-in [:account]
-                                                                              (fn [acc]
-                                                                                  (* acc
-                                                                                     (u/percentage-change stop-loss order-price :spicy))))
-                                                                   clear-fn)
-                                              :else (->
-                                                      (update-hist
-                                                        x
-                                                        open-date
-                                                        unixtimestamp
-                                                        (u/percentage-change order-price stop-loss :spicy))
-                                                      (update-in [:account]
-                                                                 (fn [acc]
-                                                                     (* acc
-                                                                        (u/percentage-change order-price close :spicy))))
-                                                      clear-fn)))
+                                              (cond
+                                                (> high stop-loss) (->
+                                                                     (update-hist
+                                                                       x
+                                                                       open-date
+                                                                       unixtimestamp
+                                                                       (u/percentage-change stop-loss order-price :spicy))
+                                                                     (update-in [:account]
+                                                                                (fn [acc]
+                                                                                    (* acc
+                                                                                       (u/percentage-change stop-loss order-price :spicy))))
+                                                                     clear-fn
+                                                                     (buy-or-sell-fn y high low close unixtimestamp))
+                                                :else (->
+                                                        (update-hist
+                                                          x
+                                                          open-date
+                                                          unixtimestamp
+                                                          (u/percentage-change close order-price :spicy))
+                                                        (update-in [:account]
+                                                                   (fn [acc]
+                                                                       (* acc
+                                                                          (u/percentage-change close order-price :spicy))))
+                                                        clear-fn
+                                                        (buy-or-sell-fn y high low close unixtimestamp))))
 
-                   (= buy-or-sell nil)  (do
-                                          (println "not buy or sell")
-                                          (cond
-                                            (u/green? y) (->
-                                                           (update-in x [:buy-or-sell] (fn [_] "buy"))
-                                                           (update-in [:order-price] (fn [_] close))
-                                                           (update-in [:stop-loss] (fn [_] low))
-                                                           (update-in [:open-date] (fn [_] unixtimestamp)))
+                     (= buy-or-sell nil)  (do
+                                            (println "hi there")
+                                            (buy-or-sell-fn x y high low close unixtimestamp))))
 
-                                            (not (u/green? y)) (->
-                                                                 (update-in x [:buy-or-sell] (fn [_] "sell"))
-                                                                 (update-in [:order-price] (fn [_] close))
-                                                                 (update-in [:stop-loss] (fn [_] high))
-                                                                 (update-in [:open-date] (fn [_] unixtimestamp)))))))
+               {:open-date nil
+                :stop-loss nil
+                :buy-or-sell nil
+                :order-price nil
+                :account 1000
+                :history []}
+               standard-candles)))
 
-             {:open-date nil
-              :stop-loss nil
-              :buy-or-sell nil
-              :order-price nil
-              :account 1000
-              :history []}
-             standard-candles)))
+  (is
+    (=
+      (:account (simple-strat-perc u/green-reversal))
+      (->
+        (* 1000 (u/percentage-change 1.1 1 :hi))
+        (* (u/percentage-change 0.9 1 :hi))))
+    "Green reversal")
+
+  (is
+    (=
+      (:account (simple-strat-perc u/red-reversal))
+      (->
+        (* 1000 (u/percentage-change 1.1 0.9 :hi))
+        (* (u/percentage-change 1.1 1.2 :hi))))
+    "red reversal")
+
+  (is
+    (=
+      (* 1000 (u/percentage-change 1.2 1.1 :hi))
+      (:account (simple-strat-perc u/green-stop-out))))
+
+  (is
+    (=
+      (* 1000 (u/percentage-change 1.2 1.25 :hi))
+      (:account (simple-strat-perc u/green->red))))
+
+  (is
+    (=
+      (* 1000 (u/percentage-change 0.9 0.8  :hi))
+      (:account (simple-strat-perc u/red-stop-out))))
+
+  (is
+    (=
+      (* 1000 (u/percentage-change 0.72 0.8  :hi))
+      (:account (simple-strat-perc u/red->green)))))
+
 
 (defn simple-strat-no-stop-update [standard-candles]
       (let [clear-fn (fn [deets-map]
@@ -528,10 +577,40 @@
                                                                         (update-in [:stop-loss] (fn [_] high))
                                                                         (update-in [:open-date] (fn [_] unixtimestamp)))))))))))
 
+(defn simple-strat-profits
+      "standard-candle bool"
+      [data profits?]
+      (->>
+        (if profits?
+          (filter #(< 1 (:perc %)) (:history (simple-strat-perc data)))
+          (filter #(> 1 (:perc %)) (:history (simple-strat-perc data))))
+        (map #(update-in % [:start] u/timestamp->unix))
+        (map #(update-in % [:end] u/timestamp->unix))))
+
+(defn create-chains
+      "link up individual profit and loss occurances to make chains"
+      [profits]
+      (->>
+        (loop [dadata profits]
+              (let [initial-count (count dadata)
+                    combo-pass (->>
+                                 (partition 2 dadata)
+                                 (map
+                                   (fn [[a b :as part]]
+                                       (if
+                                         (= (:end a) (:start b))
+                                         {:start (:start a) :end (:end b)}
+                                         part)))
+                                 flatten)
+                    final-count (count combo-pass)]
+                   (cond
+                     (= initial-count final-count) combo-pass
+                     (not= initial-count final-count) (recur combo-pass))))
+
+        (sort-by (fn [{:keys [start end]}] (- end start)))))
+
 
 (comment
-
-  (map #(ich/add-pointer plot (:unixtimestamp %) (:price %)))
 
   (as-> (nth big-daddy-data 11) x
         (:data x)
