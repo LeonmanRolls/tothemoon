@@ -1,500 +1,500 @@
-  (smp/simple-strat-perc-candleratio (subvec a-week 25 96) 300)
-  (def a-week (nth weeks 3))
-  (weeks-ratio (take 24 a-week))
-  (smp/simple-strat-perc-candleratio (subvec a-week 25 96) 2.76)
-  (def a-week (nth weeks 4))
-  (weeks-ratio (take 24 a-week))
-  (smp/simple-strat-perc-candleratio (subvec a-week 25 96) 5.37)
-  (def a-week (nth weeks 5))
-  (weeks-ratio (take 24 a-week))
-  (smp/simple-strat-perc-candleratio (subvec a-week 25 96) 2.97)
-  (def a-week (nth weeks 6))
-  (weeks-ratio (take 24 a-week))
-  (smp/simple-strat-perc-candleratio (subvec a-week 25 96) 0)
-  (def a-week (nth weeks 7))
-  (weeks-ratio (take 24 a-week))
-  (smp/simple-strat-perc-candleratio (subvec a-week 25 96) 0.37)
-  (weeks-ratio (take 48 a-week))
-  (smp/simple-strat-perc-candleratio (subvec a-week 49 96) 0.17)
-  (weeks-ratio (take 48 a-week))
-  (weeks-ratio (take 72 a-week))
-  (weeks-ratio (take 96 a-week))
-  (weeks-ratio (take 72 a-week))
-  (smp/simple-strat-perc-candleratio (subvec a-week 73 96) 0.15)
-  (smp/simple-strat-perc-candleratio (subvec a-week 73 96) 0.9)
-  (weeks-ratio (take 72 a-week))
-  (smp/simple-strat-perc-candleratio (take-last 48) 0.15)
-  (smp/simple-strat-perc-candleratio (take-last 48 a-week) 0.15)
-  (weeks-ratio (take 60 a-week))
-  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0.17)
-  (def a-week (nth weeks 0))
-  (weeks-ratio (take 60 a-week))
-  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0.4)
-  (def a-week (nth weeks 1))
-  (weeks-ratio (take 60 a-week))
-  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0)
-  (def a-week (nth weeks 2))
-  (weeks-ratio (take 60 a-week))
-  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 5.46)
-  (def a-week (nth weeks 3))
-  (weeks-ratio (take 60 a-week))
-  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 2.76)
-  (def a-week (nth weeks 4))
-  (weeks-ratio (take 60 a-week))
-  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 4.41)
-  (def a-week (nth weeks 5))
-  (weeks-ratio (take 60 a-week))
-  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 2.05)
-  (def a-week (nth weeks 6))
-  (weeks-ratio (take 60 a-week))
-  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0)
-  (def a-week (nth weeks 7))
-  (weeks-ratio (take 60 a-week))
-  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0.17)
-  (def a-week (nth weeks 8))
-  (weeks-ratio (take 60 a-week))
-  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0.21)
-  (def a-week (nth weeks 9))
-  (weeks-ratio (take 60 a-week))
-  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0.01)
-  (load-file "src/core/simple.clj")
-  (smp/predictive-length oanda-min 10)
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
-  (smp/predictive-length oanda-min 10)
-  (->>
-    (map
-      (partial smp/predictive-length oanda-min)
-      (range 1 10))
-    (sort-by :account))
-(->>
-    (map
-      (partial smp/predictive-length oanda-min)
-      (range 1 100))
-    (sort-by :account))
-  (load-file "src/core/simple.clj")
-  (smp/predictive-length oanda-min 10)
-(->>
-    (map
-      (partial smp/predictive-length oanda-min)
-      (range 1 100))
-    (sort-by :account))
-(->>
-    (map
-      (partial smp/predictive-length oanda-min)
-      (range 1 1000))
-    (sort-by :account))
-(->>
-    (map
-      (partial smp/predictive-length oanda-min)
-      (range 1 5000))
-    (sort-by :account))
-  (smp/simple-strat-perc-candleratio (take-last 50 oanda-min)  50)
-  (smp/simple-strat-perc-candleratio (take-last 50 oanda-min) 4)
-  (smp/predictive-length oanda-min 50)
-  (smp/simple-strat-perc-candleratio (take-last 50 oanda-min) 4)
-  (smp/simple-strat-perc-candleratio oanda-min 50)
-  (smp/simple-strat-perc-candleratio oanda-min 4)
-  (:account (smp/simple-strat-perc-candleratio oanda-min 4)) 
-  (:account (smp/simple-strat-perc-candleratio (take-last 50 oanda-min) 4))
-  (:account (smp/simple-strat-perc-candleratio (take-last 4500 oanda-min) 4))
-  (:account (smp/simple-strat-perc-candleratio (take-last 4950 oanda-min) 4))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H1"))
-  (def usdjpy (->>
-                (map
-                  (partial smp/predictive-length oanda-min)
-                  (range 1 5000))
-                (sort-by :account)))
-usdjpy
-  (map :ratio usdjpy)
-  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 4950 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 1))
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
-  (def eurusd (->>
-                (map
-                  (partial smp/predictive-length oanda-min)
-                  (range 1 5000))
-                (sort-by :account)))
-  usdjpy 
-  (map :account usdjpy)
-  (map :ratio usdjpy)
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "H1"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 1000 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 2000 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 3000 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
-usdjpy
-  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "H1"))
-  (def gbpusd (->>
-                (map
-                  (partial smp/predictive-length oanda-min)
-                  (range 1 5000))
-                (sort-by :account)))
-gbpusd
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 5))
-  (:account (smp/simple-strat-perc-candleratio (take-last 1000 oanda-min) 5))
-  (:account (smp/simple-strat-perc-candleratio (take-last 400 oanda-min) 5))
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 5))
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 4))
-  (map :ratio gbpusd)
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 22))
-  (filter #(> (:account %) 1000) gbpusd)
-(map 
-    :ratio 
-  (filter #(> (:account %) 1000) gbpusd)  
-    )
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 5))
-  (def oanda-min (ds/oanda-historical "AUD_USD" "5000" "H1"))
-(def audusd (->>
-                (map
-                  (partial smp/predictive-length oanda-min)
-                  (range 1 5000))
-                (sort-by :account)))
-  (:account (smp/simple-strat-perc-candleratio (take-last 720 oanda-min) 5))
-(map
-    :ratio
-    (filter #(> (:account %) 1000) audusd)
-    )
-  (:account (smp/simple-strat-perc-candleratio (take-last 720 oanda-min) 99))
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 99))
-  (def oanda-min (ds/oanda-historical "USD_CHF" "5000" "H1"))
-(def usdchf (->>
-                (map
-                  (partial smp/predictive-length oanda-min)
-                  (range 1 5000))
-                (sort-by :account)))
-(map
-    :ratio
-    (filter #(> (:account %) 1000) usdchf)
-    )
-usdchf
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 9))
-  (def oanda-min (ds/oanda-historical "USD_CAD" "5000" "H1"))
-  (def usdcad (->>
-                (map
-                  (partial smp/predictive-length oanda-min)
-                  (range 1 5000))
-                (sort-by :account)))
-usdcad
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 75))
-  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "H1"))
-  (def eurjpy (->>
-                (map
-                  (partial smp/predictive-length oanda-min)
-                  (range 1 5000))
-                (sort-by :account)))
-eurjpy
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
-(map
-    :ratio
-    (filter #(> (:account %) 1000) eurjpy)
-    )
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 1))
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 750 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 750 oanda-min) 1))
-  (:account (smp/simple-strat-perc-candleratio (take-last 750 oanda-min) 99))
-  (:account (smp/simple-strat-perc-candleratio (take-last 750 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 750 oanda-min) 1))
-eurjpy
-  (map
-    :ratio
-    (filter #(< (:length %) 4000) eurjpy)
-    )
-    (filter #(< (:length %) 4000) eurjpy)
-  (def oanda-min (ds/oanda-historical "EUR_GBP" "5000" "H1"))
-  (def eurgbp (->>
-                (map
-                  (partial smp/predictive-length oanda-min)
-                  (range 1 5000))
-                (sort-by :account)))
-  (map
-    :ratio
-    (filter #(> (:account %) 1000) eurgbp)
-    )
-    (filter #(> (:account %) 1000) eurgbp)
-eurgbp
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 99))
-    (filter #(> (:account %) 1000) eurusd)
-  (map
-    :ratio
-    (filter #(> (:account %) 1000) usdjpy)
-    )
-    (filter #(> (:account %) 1000) usdjpy)
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
-  (map
-    :ratio
-    (filter #(> (:account %) 1000) eurusd)
-    )
-  (:account (smp/simple-strat-perc-candleratio (take-last 720 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 720 oanda-min) 4))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 4))
-  (:account (smp/simple-strat-perc-candleratio (take-last 100 oanda-min) 4))
-  (:account (smp/simple-strat-perc-candleratio (take-last 200 oanda-min) 4))
-  (:account (smp/simple-strat-perc-candleratio (take-last 300 oanda-min) 4))
-  (:account (smp/simple-strat-perc-candleratio (take-last 400 oanda-min) 4))
-  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 4))
-  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 4))
-  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 240 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 360 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 480 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 600 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 720 oanda-min) 0)) 
-  (:account (smp/simple-strat-perc-candleratio (take-last 840 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 960 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 1080 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 1200 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 1320 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 1440 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 1660 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 1880 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 2000 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 3000 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 4000 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 4))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 4))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 4))
-  (:account (smp/simple-strat-perc-candleratio (take-last 480 oanda-min) 4))
-  (:account (smp/simple-strat-perc-candleratio (take-last 480 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 480 oanda-min) 4))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "D"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 30 oanda-min)))
-  (:account (smp/simple-strat-perc-candleratio (take-last 30 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 300 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 365 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 700 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 1000 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 1500 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 2000 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 3000 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 30 oanda-min) 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 720 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (subvec 3560 4280 oanda-min) 0))
-  (:account (smp/simple-strat-perc-candleratio (subvec oanda-min 3560 4280) 0))
-  (:account (smp/simple-strat-perc-candleratio (subvec (vec oanda-min)  3560 4280) 0))
-  (:account (smp/simple-strat-perc-candleratio (subvec (vec oanda-min) 2840 3560) 0))
-  (:account (smp/simple-strat-perc-candleratio (subvec (vec oanda-min) 2120 2840) 0))
-  (:account (smp/simple-strat-perc-candleratio (subvec (vec oanda-min) 1400 2120) 0))
-  (:account (smp/simple-strat-perc-candleratio (subvec (vec oanda-min) 680 1400) 0))
-  (:account (smp/simple-strat-perc-candleratio (subvec (vec oanda-min) 0 680) 0))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S10"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S15"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S30"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M1"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M2"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M3"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M4"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M10"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M15"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M30"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H2"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H3"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H4"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H6"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H8"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H12"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M30"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 1000 oanda-min)  0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 2000 oanda-min)  0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 3000 oanda-min)  0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 4000 oanda-min)  0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M1"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 1000 oanda-min)  0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 2000 oanda-min)  0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 3000 oanda-min)  0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 4000 oanda-min)  0))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M1"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "M1"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "S30"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "S15"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
- (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "S10"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "S5"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "S15"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "S30"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "M1"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M1"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M2"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M3"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M4"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M10"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M10"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M4"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M3"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+                 (reduce
+                   (fn [x y]
+                       (cond
+                         (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+                         :else (conj x [])))
+                   [[]])
+                 (filter #(not (empty? %)))))
+  (count (nth tue-thu 0))
+  (count (nth tue-thu 1))
+  (count tue-thu)
+  (count (nth tue-thu 2))
+  (count (nth tue-thu 3))
+  (:account (smp/simple-strat-perc-candleratio (nth tue-thu 1) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth tue-thu 2) 0))
   (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M3"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M10"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M10"))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M10"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M10"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M15"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M30"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H1"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H2"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H3"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H4"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H6"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H8"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H12"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "D"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "W"))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "D"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (count oanda-min)
-  (def oanda-min (ds/oanda-historical "GBP_USD" "4000" "D"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "4000" "D"))
-  (count oanda-min)
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "4000" "D"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M1"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M10"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "M10"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "M4"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "M3"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "AUD_USD" "5000" "M3"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "AUD_USD" "5000" "M4"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "AUD_USD" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "AUD_USD" "5000" "M10"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "USD_CHF" "5000" "M10"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "USD_CHF" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "USD_CAD" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "USD_CAD" "5000" "M4"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "USD_CAD" "5000" "M3"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "M3"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "M2"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "M1"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S30"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S15"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S10"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S5"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S30"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "M1"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S30"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S15"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_GBP" "5000" "S15"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_GBP" "5000" "M1"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_GBP" "5000" "S30"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_GBP" "5000" "S30"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 0))
+  (def tue-thu (->>
+                 oanda-min
+                 vec
+                 (reduce
+                   (fn [x y]
+                       (cond
+                         (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+                         :else (conj x [])))
+                   [[]])
+                 (filter #(not (empty? %)))))
+  (count tue-thu)
+  (count (nth tue-thu 1))
+  (count (nth tue-thu 0))
+  (count (nth tue-thu 1))
+  (count (nth tue-thu 2))
+  (:account (smp/simple-strat-perc-candleratio (nth tue-thu 0) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth tue-thu 1) 0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M2"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 0))
+  (def tue-thu (->>
+                 oanda-min
+                 vec
+                 (reduce
+                   (fn [x y]
+                       (cond
+                         (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+                         :else (conj x [])))
+                   [[]])
+                 (filter #(not (empty? %)))))
+  (count tue-thu)
+  (count (nth tue-thu 0))
+  (count (nth tue-thu 1))
+  (:account (smp/simple-strat-perc-candleratio (nth tue-thu 0) 0))
+  (load-file "src/core/utils.clj")
+  (def tue-thu (u/tue-thu-filter oanda-min))
+  (count tue-thu)
+  tue-thu
+  (flatten tue-thu) 
+  (count (flatten tue-thu))
+  (count tue-thu)
+  (map :unixtimestamp (flatten tue-thu))
+(map u/mid-week?
+       (map :unixtimestamp (flatten tue-thu))
+       )
+(to-set 
+    (map u/mid-week?
+       (map :unixtimestamp (flatten tue-thu)))
+    )
+  (toset
+    (map u/mid-week?
+       (map :unixtimestamp (flatten tue-thu)))
+    )
+  (set
+    (map u/mid-week?
+       (map :unixtimestamp (flatten tue-thu)))
+    )
+  (def oanda-min (ds/oanda-historical "EUR_USD" "50" "M5"))
+  (vs/plot-standard-candles oanda-min)
+  (vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "50" "M5"))
+  (timely/scheduled-item
+    (timely/second 59)
+    (println 1))
+  (timely/scheduled-item
+    (timely/second 59)
+    (println 1))
+  (timely/scheduled-item
+    (timely/minute 59)
+    (println 1))
+  (timely/scheduled-item
+    (timely/minute "*")
+    (println 1))
+nbow
+now
+(now)
+  (new java.util.Date)
+   (def cal (new java.util.Calendar))
+Calendar
+  (def data (new java.util.Date)) 
+  (def date (new java.util.Date))
+  (.getSeconds date)
+  (.getSeconds (new java.util.Date))
+(require
+  '[http.async.client :as http]
+  '[clojure.spec :as s]
+  '[clojure.spec.gen :as gen]
+  '[clojure.spec.test :as ts :refer [check]]
+  '[clojure.spec.gen :as gen]
+  '[clojure.core.reducers :as rd]
+  '[core.utils :as u]
+  '[core.visual :as vs]
+  '[core.spike :as sp]
+  '[clojure.data.json :as jsn]
+  '[core.datasources :as ds]
+  '[core.marketcap :as cmc]
+  '[core.simple :as smp]
+  '[incanter.core :as ic]
+  '[incanter.stats :as is]
+  '[incanter.charts :as ich]
+  '[incanter.datasets :as id]
+  '[clj-time.core :as t]
+  '[clj-time.predicates :as pr]
+  '[clj-time.coerce :as c]
+  '[cfft.core :as fft]
+  '[clojure.math.combinatorics :as combo]
+  '[clojure.test :as tst :refer [is run-tests]]
+  '[timely.core :as timely]
+  '[clojure.core.async :as casy :refer [<! >! go chan go-loop timeout]])
+  (go-loop []
+           (<! (timeout 100))
+           (println "hi")
+           (recur))
+  (go-loop []
+           (<! (timeout 1000))
+           (println "hi")
+           (recur))
+  (load-file "src/core/utils.clj")
+  (go
+    (let [c (chan)
+          init (u/on-the-x-second c 58)]
+         (while true
+               (println "hey" (<! c))
+                )))
+  (go
+    (let [c (chan)
+          init (u/on-the-x-second c 58)]
+         (while true
+               (println "hey" (<! c))
+                )))
+  (go
+    (let [c (chan)
+          init (u/on-the-x-second c 58)]
+         (while true
+               (println "hey" (<! c))
+                )))
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "100")
+     (println (<! c)))
+  (def c (chan))
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "100")
+     (println (<! c)))
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "-100")
+     (println (<! c)))
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "100")
+     (println (type (<! c))))
+l
+  (load-file "src/core/utils.clj")
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "100")
+     (println (type (<! c))))
+  (load-file "src/core/datasources.clj")
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "100")
+     (println (type (<! c))))
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "100")
+     (println (<! c)))
+  (vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "1" "M5"))
+(ds/oanda-historical "EUR_USD" "1" "M5")
+  (vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "1" "M5"))
+  (vs/plot-standard-candles (vec (ds/oanda-historical "EUR_USD" "1" "M5")) )
+  (vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "2" "M5") )
+(ds/oanda-historical "EUR_USD" "1" "M5")
+  (def price-hist (atom {:open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+(add-watch price-hist :clear-old
+            (fn [key atom old-state new-state])
+             (prn "-- Atom Changed --")
+             (prn "key" key)
+             (prn "atom" atom)
+             (prn "old-state" old-state)
+             (prn "new-state" new-state))
+(add-watch price-hist :clear-old
+            (fn [key atom old-state new-state])
+             (prn "-- Atom Changed --")
+             (prn "key" key)
+             (prn "atom" atom)
+             (prn "old-state" old-state)
+             (prn "new-state" new-state))
+(add-watch price-hist :clear-old
+             (fn [key atom old-state new-state]
+                 (prn "-- Atom Changed --")
+                 (prn "key" key)
+                 (prn "atom" atom)
+                 (prn "old-state" old-state)
+                 (prn "new-state" new-state)))
+  (go
+     (ds/oanda-open-order-cas c "EUR_USD" "-100")
+     (swap! price-hist update-in [:history] #(conj % (<! c)))
+     )
+  (def c (chan))
+     (ds/oanda-open-order-cas c "EUR_USD" "-100")
+     (swap! price-hist update-in [:history] #(conj % (go (<! c)) ))
+(go
+     (ds/oanda-open-order-cas c "EUR_USD" "-100")
+     (swap! price-hist update-in [:history] #(conj % (<! c) ))
+     )
+(go
+     (ds/oanda-open-order-cas c "EUR_USD" "-100")
+     (swap! price-hist update-in [:history] #(go (conj % (<! c))))
+     )
+(go
+     (ds/oanda-open-order-cas c "EUR_USD" "100")
+     (let [rslt (<! c)]
+          (swap! price-hist update-in [:history] #(conj % rslt))
+          )
+     
+     )
+  (def c (chan))
+(go
+     (ds/oanda-open-order-cas c "EUR_USD" "100")
+     (let [rslt (<! c)]
+          (println rslt)
+          (swap! price-hist update-in [:history] #(conj % rslt))
+          )
+     )
+(go
+     (ds/oanda-open-order-cas c "EUR_USD" "100")
+     (let [rslt (<! c)]
+          (println "rslt" rslt)
+          (println "rslt type" (type rslt))
+          (swap! price-hist update-in [:history] #(conj % rslt))
+          )
+     )
+ (go
+     (ds/oanda-open-order-cas c "EUR_USD" "100")
+     (let [rslt (<! c)]
+          (println "rslt" rslt)
+          (println "rslt type" (type rslt))
+          (swap! price-hist update-in [:history] #(conj % "hi"))
+          )
+     )
+          (swap! price-hist update-in [:history] #(conj % "hi"))
+  (def price-hist (atom {:open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (swap! price-hist update-in [:history] #(conj % "hi"))
+(go
+     (ds/oanda-open-order-cas c "EUR_USD" "100")
+     (let [rslt (<! c)]
+          (println "rslt" rslt)
+          (println "rslt type" (type rslt))
+          (swap! price-hist update-in [:history] #(conj % "hi"))
+          )
+     )
+  (swap! price-hist update-in [:history] #(conj % "hi"))
+(go
+     (ds/oanda-open-order-cas c "EUR_USD" "100")
+     (let [rslt (<! c)]
+          (println "rslt" rslt)
+          (println "rslt type" (type rslt))
+          (swap! price-hist update-in [:history] #(conj % rslt))
+          )
+     )
+  @price-hist
+(ds/oanda-historical "EUR_USD" "1" "M5")
+  @price-hist
+  (def price-hist (atom {:open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+price-hist
+  oanda-min
+  (def oanda-min (ds/oanda-historical "EUR_USD" "1" "M5"))
+oanda-min
+  (type oanda-min)
+  (swap! price-hist update-in [:history] #(conj % (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (def price-hist (atom {:open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (swap! price-hist update-in [:history] #(apply conj % (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (load-file "src/core/simple.clj")
+  @price-hist
+  (def price-hist (atom {:open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (smp/simple-strat-perc-live @price-hist (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (load-file "src/core/simple.clj")
+@price-hist
+  (smp/simple-strat-perc-live @price-hist (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+@price-hist
+  (load-file "src/core/simple.clj")
+  (def price-hist (atom {:open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  @price-hist
+  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (load-file "src/core/simple.clj")
+  (def price-hist (atom {:open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (load-file "src/core/simple.clj")
+  (def price-hist (atom {:open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (subs 0 3 "1.063635")   
+  (subs "1.063635" 0 3)
+  (subs "1.063635" 0 6)
+  (load-file "src/core/simple.clj")
+  (def price-hist (atom {:open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  @price-hist
+  (load-file "src/core/simple.clj")
+  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (load-file "src/core/simple.clj")
+  (def price-hist (atom {:current-order {}
+                         :open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  @price-hist
+  (load-file "src/core/simple.clj")
+  (def price-hist (atom {:current-order {}
+                         :open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+(go
+    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+    )
+  (load-file "src/core/utils.clj")
+  (load-file "src/core/simple.clj")
+    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (load-file "src/core/simple.clj")
+  @price-hist
+  (def price-hist (atom {:current-order {}
+                         :open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (def price-hist (atom {:current-order {}
+                         :open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (load-file "src/core/simple.clj")
+    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  @price-hist
+  (def price-hist (atom {:current-order {}
+                         :open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (load-file "src/core/simple.clj")
+  @price-hist
+    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (def price-hist (atom {:current-order {}
+                         :open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (load-file "src/core/simple.clj")
+    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  @price-hist
+  (def price-hist (atom {:current-order {}
+                         :open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  @price-hist
+    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (load-file "src/core/simple.clj")
+  (load-file "src/core/datasources.clj")
+(let [c (chan)]
+      (ds/order-info c 241)
+       (<!! c)
+       )
+(require
+  '[http.async.client :as http]
+  '[clojure.spec :as s]
+  '[clojure.spec.gen :as gen]
+  '[clojure.spec.test :as ts :refer [check]]
+  '[clojure.spec.gen :as gen]
+  '[clojure.core.reducers :as rd]
+  '[core.utils :as u]
+  '[core.visual :as vs]
+  '[core.spike :as sp]
+  '[clojure.data.json :as jsn]
+  '[core.datasources :as ds]
+  '[core.marketcap :as cmc]
+  '[core.simple :as smp]
+  '[incanter.core :as ic]
+  '[incanter.stats :as is]
+  '[incanter.charts :as ich]
+  '[incanter.datasets :as id]
+  '[clj-time.core :as t]
+  '[clj-time.predicates :as pr]
+  '[clj-time.coerce :as c]
+  '[cfft.core :as fft]
+  '[clojure.math.combinatorics :as combo]
+  '[clojure.test :as tst :refer [is run-tests]]
+  '[timely.core :as timely]
+  '[clojure.core.async :as casy :refer [<!! <! >! go chan go-loop timeout]])
+  (let [c (chan)]
+      (ds/order-info c 241)
+       (<!! c)
+       )
+  @price-hist
+  (def price-hist (atom {:current-order {}
+                         :open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (let [c (chan)]
+      (ds/order-info c 241)
+       (<!! c)
+       )
+    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (let [c (chan)]
+      (ds/order-info c 245)
+       (<!! c)
+       )
+  (def price-hist (atom {:current-order {}
+                         :open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (load-file "src/core/datasources.clj")
+  (let [c (chan)]
+       (ds/get-orders c)
+       (<!! c))
+  (let [c (chan)]
+       (ds/get-orders c)
+       (<!! c))
+  (load-file "src/core/datasources.clj")
+  (let [c (chan)]
+       (ds/acc-info c)
+       (<!! c))

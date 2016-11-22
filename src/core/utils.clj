@@ -9,6 +9,7 @@
       [clj-time.format :as f]
       [clj-time.predicates :as pr]
       [clojure.test :as tst :refer [is with-test]]
+      [clojure.core.async :as casy :refer [<! >! go chan go-loop timeout]]
       [clj-time.coerce :as c]))
 
 (def green-stop-out [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479347761}
@@ -249,5 +250,25 @@
               ))
         [[]]
         oanda-data))
+
+(defn tue-thu-filter [dadata]
+        (->>
+          dadata
+          vec
+          (reduce
+            (fn [x y]
+                (cond
+                  (mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
+                  :else (conj x [])))
+            [[]])
+          (filter #(not (empty? %)))))
+
+(defn now [] (new java.util.Date))
+
+(defn on-the-x-second [chan second]
+      (go
+        (while true
+               (<! (timeout 1000))
+               (when (= second (.getSeconds (now))) (>! chan true)))))
 
 

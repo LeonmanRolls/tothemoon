@@ -186,11 +186,35 @@
                                                                             {:stopLossOnFill {:price (first stoploss)
                                                                                               :timeInForce "GTC"}}))}))]
                       (http/await resp)
-                      (go (>! chan (http/string resp))))))
+                      (go (>! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))
 
-(defn oanda-close-order []
 
-      )
+(defn order-info [chan orderid]
+      (with-open [client (http/create-client)]
+                 (let [resp (http/GET client
+                                      (str rest-api-base-v3 "accounts/" account-no "/orders/" orderid)
+                                      :headers {:Authorization (str "Bearer " oanda-api-key)
+                                                :Content-type "application/json"})]
+                      (http/await resp)
+                      (go (>! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))
+
+(defn get-orders [chan]
+      (with-open [client (http/create-client)]
+                 (let [resp (http/GET client
+                                      (str rest-api-base-v3 "accounts/" account-no "/orders")
+                                      :headers {:Authorization (str "Bearer " oanda-api-key)
+                                                :Content-type "application/json"})]
+                      (http/await resp)
+                      (go (>! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))
+
+(defn acc-info [chan]
+      (with-open [client (http/create-client)]
+                 (let [resp (http/GET client
+                                      (str rest-api-base-v3 "accounts/" account-no)
+                                      :headers {:Authorization (str "Bearer " oanda-api-key)
+                                                :Content-type "application/json"})]
+                      (http/await resp)
+                      (go (>! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))
 
 (defn oanda-hist->standard-candle [candles]
       (->
