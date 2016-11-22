@@ -128,13 +128,158 @@
 
   (vs/plot-between-dates (take 6 oanda-min) 1454378400000 1454389200000)
 
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
+  (vs/plot-standard-candles u/red-reversal)
+
+  (let [data (subvec (vec oanda-min) 0 4997)]
+       (->>
+         (map
+           (fn [x]
+               {:ratio x
+                :profit (:account (smp/simple-strat-perc-candleratio data x))}
+               )
+           (range 0 300 0.01))
+         (sort-by :profit)
+         (take-last 30)))
+
+
+  ;---- Best prediciton length
+  (load-file "src/core/simple.clj")
+  (simple-strat-perc-candleratio (take-last length data))
+  :account
+
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (count oanda-min)
+
+  (def eurusd (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+
+  (def usdjpy (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+
+  (def gbpusd (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+
+  (def audusd (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+
+  (def usdchf (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+
+  (def usdcad (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+
+  (def eurjpy (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+
+  (def eurgbp (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+
+  (map
+    :ratio
+    (filter #(> (:account %) 1000) eurusd)
+    )
+
+  (:account (smp/simple-strat-perc-candleratio (subvec (vec oanda-min) 0 680) 0))
 
 
 
+
+
+  (smp/simple-strat-perc-candleratio oanda-min 4)
+  (:account (smp/simple-strat-perc-candleratio oanda-min 4))
+  (smp/predictive-length oanda-min 50)
+
+  ;4760
+  (def ds (let [data (subvec (vec oanda-min) 3712 3856)]
+               (->>
+                 (map
+                   (fn [x]
+                       {:ratio x
+                        :profit (:account (smp/simple-strat-perc-candleratio data x))}
+                       )
+                   (range 0 300 0.1))
+                 ic/to-dataset)))
+
+  (ic/with-data ds
+                (ic/view
+                  (ich/line-chart :ratio :profit)))
+
+
+
+
+
+
+
+  (sort-by :profit)
+  (take-last 10000)
+
+  (ic/$order :ratio :desc ds)
+  (ic/view ds)
+
+  (ic/sel ds :cols :ratio)
+  (ic/sel (ic/$order :ratio :asc ds) :cols :ratio)
+
+  (ic/with-data (ic/$order :ratio :asc ds)
+                (ic/view
+                      (ich/line-chart :ratio :profit)))
+
+
+                (let [dadata (ic/$order :ratio :asc ds)]
+                     (ic/view
+                       (ich/line-chart (ic/sel dadata :cols :ratio) (ic/sel dadata :cols :profit) )
+                       )
+
+                     )
+
+
+
+
+
+
+
+  (let [data (take-last 48 oanda-min)]
+       (->>
+         (map
+           (fn [x]
+               {:ratio x
+                :profit (:account (smp/simple-strat-perc-candleratio data x))}
+               )
+           (range 0 300 0.01))
+          (sort-by :profit)
+         (take-last 30)
+         )
+       )
+
+
+  (:history (smp/simple-strat-perc-candleratio (take 5000 oanda-min) 150))
 
   (->>
-    (filter #(> 1 (:perc %)) (:history (smp/simple-strat-perc oanda-min)))
+    (filter #(> 1 (:perc %)) (:history (smp/simple-strat-perc-candleratio oanda-min)))
     (map #(update-in % [:start] u/timestamp->unix))
     (map #(update-in % [:end] u/timestamp->unix))
     (take 10)
@@ -185,14 +330,6 @@
                      ))
 
 
-  (ich/xy-plot (ic/to-dataset data))
-   plot (ich/xy-plot
-               :data (ic/to-dataset data)
-               )
-
-  (ic/view plot)
-
-
   ;594
   ;start at 572
   (count sorted)
@@ -224,6 +361,62 @@
 
   (:history (smp/simple-strat-perc (take 48 (nth tue-thu 41))))
   (pprint (:history (smp/simple-strat-perc (take 48 (nth tue-thu 41)))))
+
+
+  (def oanda-data (ds/oanda-historical "EUR_USD" "5000" "H1"))
+
+  (def weeks (u/h1-to-weeks oanda-data))
+
+  (defn weeks-ratio [data]
+        (->>
+          (map
+            (fn [x]
+                {:ratio x
+                 :profit (:account (smp/simple-strat-perc-candleratio data x))})
+            (range 0 300 0.01))
+          (sort-by :profit)
+          last
+          ))
+
+  (defn weeks-ratio-filter [data]
+        (->>
+          (map
+            (fn [x]
+                {:ratio x
+                 :profit (:account (smp/simple-strat-perc-candleratio data x))})
+            (range 0 300 0.1))
+          (filter #(> (:profit %) 1010))
+          (map :ratio)
+          (into #{})))
+
+  (def mapped-weeks (map weeks-ratio-filter weeks))
+  (def no-empty (filter not-empty mapped-weeks))
+  (count mapped-weeks)
+  (count no-empty)
+
+  (apply clojure.set/intersection
+   no-empty)
+
+  (apply u/average
+    (map (fn [x] (apply u/average x)) no-empty))
+
+  (filter not-empty mapped-weeks)
+
+  (apply u/average (weeks-ratio-filter (first weeks)))
+
+  (count (map weeks-ratio-filter (take 2 weeks)))
+
+  (map :account
+       (map #(smp/simple-strat-perc-candleratio % 10) weeks))
+
+  (def a-week (nth weeks 9))
+  (weeks-ratio (take 60 a-week))
+  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0.01)
+
+  (smp/simple-strat-perc-candleratio (subvec a-week 73 96) 0.9)
+
+
+
 
   (do
     (load-file "src/core/visual.clj")

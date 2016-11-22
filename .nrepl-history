@@ -1,500 +1,500 @@
-    (map #(clojure.string/split % #"T"))
-    (map last)
-    frequencies
-    (sort-by last)
-    reverse
-    )
+  (smp/simple-strat-perc-candleratio (subvec a-week 25 96) 300)
+  (def a-week (nth weeks 3))
+  (weeks-ratio (take 24 a-week))
+  (smp/simple-strat-perc-candleratio (subvec a-week 25 96) 2.76)
+  (def a-week (nth weeks 4))
+  (weeks-ratio (take 24 a-week))
+  (smp/simple-strat-perc-candleratio (subvec a-week 25 96) 5.37)
+  (def a-week (nth weeks 5))
+  (weeks-ratio (take 24 a-week))
+  (smp/simple-strat-perc-candleratio (subvec a-week 25 96) 2.97)
+  (def a-week (nth weeks 6))
+  (weeks-ratio (take 24 a-week))
+  (smp/simple-strat-perc-candleratio (subvec a-week 25 96) 0)
+  (def a-week (nth weeks 7))
+  (weeks-ratio (take 24 a-week))
+  (smp/simple-strat-perc-candleratio (subvec a-week 25 96) 0.37)
+  (weeks-ratio (take 48 a-week))
+  (smp/simple-strat-perc-candleratio (subvec a-week 49 96) 0.17)
+  (weeks-ratio (take 48 a-week))
+  (weeks-ratio (take 72 a-week))
+  (weeks-ratio (take 96 a-week))
+  (weeks-ratio (take 72 a-week))
+  (smp/simple-strat-perc-candleratio (subvec a-week 73 96) 0.15)
+  (smp/simple-strat-perc-candleratio (subvec a-week 73 96) 0.9)
+  (weeks-ratio (take 72 a-week))
+  (smp/simple-strat-perc-candleratio (take-last 48) 0.15)
+  (smp/simple-strat-perc-candleratio (take-last 48 a-week) 0.15)
+  (weeks-ratio (take 60 a-week))
+  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0.17)
+  (def a-week (nth weeks 0))
+  (weeks-ratio (take 60 a-week))
+  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0.4)
+  (def a-week (nth weeks 1))
+  (weeks-ratio (take 60 a-week))
+  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0)
+  (def a-week (nth weeks 2))
+  (weeks-ratio (take 60 a-week))
+  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 5.46)
+  (def a-week (nth weeks 3))
+  (weeks-ratio (take 60 a-week))
+  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 2.76)
+  (def a-week (nth weeks 4))
+  (weeks-ratio (take 60 a-week))
+  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 4.41)
+  (def a-week (nth weeks 5))
+  (weeks-ratio (take 60 a-week))
+  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 2.05)
+  (def a-week (nth weeks 6))
+  (weeks-ratio (take 60 a-week))
+  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0)
+  (def a-week (nth weeks 7))
+  (weeks-ratio (take 60 a-week))
+  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0.17)
+  (def a-week (nth weeks 8))
+  (weeks-ratio (take 60 a-week))
+  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0.21)
+  (def a-week (nth weeks 9))
+  (weeks-ratio (take 60 a-week))
+  (smp/simple-strat-perc-candleratio (take-last 60 a-week) 0.01)
+  (load-file "src/core/simple.clj")
+  (smp/predictive-length oanda-min 10)
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
+  (smp/predictive-length oanda-min 10)
+  (->>
+    (map
+      (partial smp/predictive-length oanda-min)
+      (range 1 10))
+    (sort-by :account))
 (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-        plot (ich/candle-stick-plot
-               :data (ic/to-dataset data)
-               :date :unixtimestamp)]
-       (ic/view plot))
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-        plot (ich/candle-stick-plot
-               :data (ic/to-dataset data)
-               :date :unixtimestamp)]
-       (ic/to-dataset data)
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-        plot (ich/candle-stick-plot
-               :data (ic/to-dataset data)
-               :date :unixtimestamp)]
-       
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-       ]
-       (ic/to-dataset data)
-  
-)
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-       ]
-       (ic/to-dataset data)
-       (ich/xy-plot :data (ic/to-dataset data))
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-       ]
-       (ic/to-dataset data)
-       (ich/xy-plot (ic/to-dataset data))
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-       ]
-       (ic/to-dataset data)
-       )
-  (let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-       ]
-       (ic/with-data (ic/to-dataset data)
-        (ich/scatter-plot (ic/$ :col-0) (ic/$ :col-1))
-         )
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-       ]
-       (ic/with-data (ic/to-dataset data)
-                     
-         )
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-        ]
-       (ic/with-data (ic/to-dataset data)
-                     (ic/$ :col-0)
-                     )
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-        ]
-       (ic/with-data (ic/to-dataset data)
-                     (ic/$ :col-0)
-                     (ic/$ :col-1)
-                     )
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-        ]
-       (ic/with-data (ic/to-dataset data)
-                     (ic/$ :col-0)
-                     (ic/$ :col-1)
-                     (ic/view ic/$data)
-                     )
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-        ]
-       (ic/with-data (ic/to-dataset data)
-                     (ic/$ :col-0)
-                     (ic/$ :col-1)
-                     (ic/view ic/$data)
-                     (ich/line-chart :col-0 :col1)
-                     )
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-        ]
-       (ic/with-data (ic/to-dataset data)
-                     (ic/$ :col-0)
-                     (ic/$ :col-1)
-                     (ic/view ic/$data)
-                     (ic/view (ich/line-chart :col-0 :col1))
-                     
-                     )
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-        ]
-       (ic/with-data (ic/to-dataset data)
-                     (ic/$ :col-0)
-                     (ic/$ :col-1)
-                     (ic/view ic/$data)
-                     (ic/view (ich/line-chart :col-0 :col-1))
-                     )
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-        ]
-       (ic/with-data (ic/to-dataset data)
-                     (ic/$ :col-0)
-                     (ic/$ :col-1)
-                     (ic/view ic/$data)
-                     (ic/view (ich/line-chart :col-0 :col-1))
-                     (ic/view (ic/$order :col-1 :desc))
-                     )
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-        ]
-       data
-       
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by last)
-               reverse)
-        ]
-       (map
-        (fn [x]
-           (update-in x [0] u/timestamp->unix)
-            )
-         data
-         )
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by first)
-               reverse)
-        ]
-       (map
-        (fn [x]
-           (update-in x [0] u/timestamp->unix)
-            )
-         data
-         )
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by first)
-               reverse)
-        ]
-       data
-       
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by first))
-        ]
-       data
-       )
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) loss-length-filtered)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by first))
-        ]
-       
-       (ic/with-data (ic/to-dataset data)
-                     (ic/$ :col-0)
-                     (ic/$ :col-1)
-                     (ic/view ic/$data)
-                     (ic/view (ich/line-chart :col-0 :col-1))
-                     (ic/view (ic/$order :col-1 :desc))
-                     )
-       )
-  (def losses (smp/simple-strat-profits oanda-min true))
-  (def rslt (smp/create-chains losses))
-rslt
-(def loss-length (map
-                     (fn [{:keys [start end]}]
-                         (- end start))
-                     rslt))
-loss-length
-rslt
-(let [data (->>
-               (map (fn [{:keys [start end]}] (u/to-human start)) rslt)
-               (map #(clojure.string/split % #"T"))
-               (map last)
-               frequencies
-               (sort-by first))
-        ]
-       (ic/with-data (ic/to-dataset data)
-                     (ic/$ :col-0)
-                     (ic/$ :col-1)
-                     (ic/view ic/$data)
-                     (ic/view (ich/line-chart :col-0 :col-1))
-                     (ic/view (ic/$order :col-1 :desc))
-                     )
-       )
-  (last oanda-min)
-(let [{:keys [open low high close] :as candle} (last oanda-min)]
-       (cond
-         (green? candle) (/ (+ (- high close) (- open low)) (- close open))
-         :red (/ (+ (- high open) (- close low)) (- open close))))
-(let [{:keys [open low high close] :as candle} (last oanda-min)]
-       (cond
-         (u/green? candle) (/ (+ (- high close) (- open low)) (- close open))
-         :red (/ (+ (- high open) (- close low)) (- open close))))
-(last oanda-min)
-(let [{:keys [open low high close] :as candle} {:unixtimestamp 1479470400000,
-                                                  :open 1,
-                                                  :low 0.9,
-                                                  :high 1.2,
-                                                  :close 1.1}]
-       (cond
-         (u/green? candle) (/ (+ (- high close) (- open low)) (- close open))
-         :red (/ (+ (- high open) (- close low)) (- open close))))
-(let [{:keys [open low high close] :as candle} {:unixtimestamp 1479470400000,
-                                                  :open 1,
-                                                  :low 0.9,
-                                                  :high 1.2,
-                                                  :close 1.1}]
-       (cond
-         (u/green? candle) (/ (- close open) (+ (- high close) (- open low)))
-         :red (/ (+ (- open close) (- high open) (- close low)))))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple))
-(u/body-ratio {:unixtimestamp 1479470400000,
-                 :open 1,
-                 :low 0.9,
-                 :high 1.2,
-                 :close 1.1})
-(is
-   (=
-     (/ 0/1 0.2)
-     (u/body-ratio green-half-ratio)
-     
-     ) 
+    (map
+      (partial smp/predictive-length oanda-min)
+      (range 1 100))
+    (sort-by :account))
+  (load-file "src/core/simple.clj")
+  (smp/predictive-length oanda-min 10)
+(->>
+    (map
+      (partial smp/predictive-length oanda-min)
+      (range 1 100))
+    (sort-by :account))
+(->>
+    (map
+      (partial smp/predictive-length oanda-min)
+      (range 1 1000))
+    (sort-by :account))
+(->>
+    (map
+      (partial smp/predictive-length oanda-min)
+      (range 1 5000))
+    (sort-by :account))
+  (smp/simple-strat-perc-candleratio (take-last 50 oanda-min)  50)
+  (smp/simple-strat-perc-candleratio (take-last 50 oanda-min) 4)
+  (smp/predictive-length oanda-min 50)
+  (smp/simple-strat-perc-candleratio (take-last 50 oanda-min) 4)
+  (smp/simple-strat-perc-candleratio oanda-min 50)
+  (smp/simple-strat-perc-candleratio oanda-min 4)
+  (:account (smp/simple-strat-perc-candleratio oanda-min 4)) 
+  (:account (smp/simple-strat-perc-candleratio (take-last 50 oanda-min) 4))
+  (:account (smp/simple-strat-perc-candleratio (take-last 4500 oanda-min) 4))
+  (:account (smp/simple-strat-perc-candleratio (take-last 4950 oanda-min) 4))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H1"))
+  (def usdjpy (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+usdjpy
+  (map :ratio usdjpy)
+  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 4950 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 1))
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
+  (def eurusd (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+  usdjpy 
+  (map :account usdjpy)
+  (map :ratio usdjpy)
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "H1"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 1000 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 2000 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 3000 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
+usdjpy
+  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "H1"))
+  (def gbpusd (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+gbpusd
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 5))
+  (:account (smp/simple-strat-perc-candleratio (take-last 1000 oanda-min) 5))
+  (:account (smp/simple-strat-perc-candleratio (take-last 400 oanda-min) 5))
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 5))
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 4))
+  (map :ratio gbpusd)
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 22))
+  (filter #(> (:account %) 1000) gbpusd)
+(map 
+    :ratio 
+  (filter #(> (:account %) 1000) gbpusd)  
     )
-(defn green-half-ratio {:unixtimestamp 1479470400000,
-                          :open 1,
-                          :low 0.9,
-                          :high 1.2,
-                          :close 1.1})
-(def green-half-ratio {:unixtimestamp 1479470400000,
-                          :open 1,
-                          :low 0.9,
-                          :high 1.2,
-                          :close 1.1})
-(is
-   (=
-     (/ 0/1 0.2)
-     (u/body-ratio green-half-ratio)
-     )
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 5))
+  (def oanda-min (ds/oanda-historical "AUD_USD" "5000" "H1"))
+(def audusd (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+  (:account (smp/simple-strat-perc-candleratio (take-last 720 oanda-min) 5))
+(map
+    :ratio
+    (filter #(> (:account %) 1000) audusd)
     )
-(is
-   (=
-     (/ 0.1 0.2)
-     (u/body-ratio green-half-ratio)
-     )
+  (:account (smp/simple-strat-perc-candleratio (take-last 720 oanda-min) 99))
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 99))
+  (def oanda-min (ds/oanda-historical "USD_CHF" "5000" "H1"))
+(def usdchf (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+(map
+    :ratio
+    (filter #(> (:account %) 1000) usdchf)
     )
-(is
-   (=
-     (/ 0.1 0.2)
-     (format "%.2f" (u/body-ratio green-half-ratio))))
-(is
-   (=
-     (/ 0.1 0.2)
-     (double (u/body-ratio green-half-ratio))))
-(is
-   (=
-     (/ 0.1 0.2)
-     (float (u/body-ratio green-half-ratio))))
-(def green-one-ratio {:unixtimestamp 1479470400000,
-                          :open 1,
-                          :low 0.9,
-                          :high 1.3,
-                          :close 1.2})
-(is
-   (=
-     (/ 0.2 0.2)
-     (float (u/body-ratio green-one-ratio))))
-(def green-onehalf-ratio {:unixtimestamp 1479470400000,
-                          :open 1,
-                          :low 0.9,
-                          :high 1.4,
-                          :close 1.3})
-is
-   (=
-     (/ 0.3 0.2)
-     (float (u/body-ratio green-onehalf-ratio))))
-(is
-   (=
-     (/ 0.3 0.2)
-     (float (u/body-ratio green-onehalf-ratio))))
-(is
-   (=
-     (float (/ 0.3 0.2)) 
-     (float (u/body-ratio green-onehalf-ratio))))
-  (def red-half-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.8, :high 1.1, :close 0.9})
-(is
-   (=
-     (float (/ 0.1 0.2))
-     (float (u/body-ratio red-half-ratio))))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple))
-(is
-   (=
-     (float (/ 0.1 0.2))
-     (float (u/body-ratio red-half-ratio))))
-  (def red-one-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.7, :high 1.1, :close 0.8})
-(is
-   (=
-     (float (/ 0.2 0.2))
-     (float (u/body-ratio red-one-ratio))))
-  (def red-onehalf-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.6, :high 1.1, :close 0.7})
-(is
-    (=
-      (float (/ 0.3 0.2))
-      (float (u/body-ratio red-onehalf-ratio))))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple))
+usdchf
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 9))
+  (def oanda-min (ds/oanda-historical "USD_CAD" "5000" "H1"))
+  (def usdcad (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+usdcad
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 75))
+  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "H1"))
+  (def eurjpy (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+eurjpy
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
+(map
+    :ratio
+    (filter #(> (:account %) 1000) eurjpy)
+    )
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 1))
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 750 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 750 oanda-min) 1))
+  (:account (smp/simple-strat-perc-candleratio (take-last 750 oanda-min) 99))
+  (:account (smp/simple-strat-perc-candleratio (take-last 750 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 750 oanda-min) 1))
+eurjpy
+  (map
+    :ratio
+    (filter #(< (:length %) 4000) eurjpy)
+    )
+    (filter #(< (:length %) 4000) eurjpy)
+  (def oanda-min (ds/oanda-historical "EUR_GBP" "5000" "H1"))
+  (def eurgbp (->>
+                (map
+                  (partial smp/predictive-length oanda-min)
+                  (range 1 5000))
+                (sort-by :account)))
+  (map
+    :ratio
+    (filter #(> (:account %) 1000) eurgbp)
+    )
+    (filter #(> (:account %) 1000) eurgbp)
+eurgbp
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 99))
+    (filter #(> (:account %) 1000) eurusd)
+  (map
+    :ratio
+    (filter #(> (:account %) 1000) usdjpy)
+    )
+    (filter #(> (:account %) 1000) usdjpy)
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
+  (map
+    :ratio
+    (filter #(> (:account %) 1000) eurusd)
+    )
+  (:account (smp/simple-strat-perc-candleratio (take-last 720 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 720 oanda-min) 4))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 4))
+  (:account (smp/simple-strat-perc-candleratio (take-last 100 oanda-min) 4))
+  (:account (smp/simple-strat-perc-candleratio (take-last 200 oanda-min) 4))
+  (:account (smp/simple-strat-perc-candleratio (take-last 300 oanda-min) 4))
+  (:account (smp/simple-strat-perc-candleratio (take-last 400 oanda-min) 4))
+  (:account (smp/simple-strat-perc-candleratio (take-last 500 oanda-min) 4))
+  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 4))
+  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 240 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 360 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 480 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 600 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 720 oanda-min) 0)) 
+  (:account (smp/simple-strat-perc-candleratio (take-last 840 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 960 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 1080 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 1200 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 1320 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 1440 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 1660 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 1880 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 2000 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 3000 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 4000 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 4))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 4))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 120 oanda-min) 4))
+  (:account (smp/simple-strat-perc-candleratio (take-last 480 oanda-min) 4))
+  (:account (smp/simple-strat-perc-candleratio (take-last 480 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 480 oanda-min) 4))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "D"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 30 oanda-min)))
+  (:account (smp/simple-strat-perc-candleratio (take-last 30 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 300 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 365 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 700 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 1000 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 1500 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 2000 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 3000 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 30 oanda-min) 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 720 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (subvec 3560 4280 oanda-min) 0))
+  (:account (smp/simple-strat-perc-candleratio (subvec oanda-min 3560 4280) 0))
+  (:account (smp/simple-strat-perc-candleratio (subvec (vec oanda-min)  3560 4280) 0))
+  (:account (smp/simple-strat-perc-candleratio (subvec (vec oanda-min) 2840 3560) 0))
+  (:account (smp/simple-strat-perc-candleratio (subvec (vec oanda-min) 2120 2840) 0))
+  (:account (smp/simple-strat-perc-candleratio (subvec (vec oanda-min) 1400 2120) 0))
+  (:account (smp/simple-strat-perc-candleratio (subvec (vec oanda-min) 680 1400) 0))
+  (:account (smp/simple-strat-perc-candleratio (subvec (vec oanda-min) 0 680) 0))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S10"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S15"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "S30"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M1"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M2"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M3"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M4"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M10"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M15"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M30"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H1"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H2"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H3"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H4"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H6"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H8"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "H12"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M30"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min 0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 1000 oanda-min)  0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 2000 oanda-min)  0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 3000 oanda-min)  0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 4000 oanda-min)  0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M1"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 1000 oanda-min)  0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 2000 oanda-min)  0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 3000 oanda-min)  0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 4000 oanda-min)  0))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M1"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "M1"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "S30"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "S15"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+ (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "S10"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "S5"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "S15"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "S30"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "M1"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M1"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M2"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M3"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M4"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M10"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M10"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M4"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M3"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M3"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M10"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M10"))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M10"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M10"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M15"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M30"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H1"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H2"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H3"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H4"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H6"))
+  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min)  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H8"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "H12"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "D"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "W"))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "D"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (count oanda-min)
+  (def oanda-min (ds/oanda-historical "GBP_USD" "4000" "D"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "USD_JPY" "4000" "D"))
+  (count oanda-min)
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "4000" "D"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M1"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M10"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "M10"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "M4"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "GBP_USD" "5000" "M3"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "AUD_USD" "5000" "M3"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "AUD_USD" "5000" "M4"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "AUD_USD" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "AUD_USD" "5000" "M10"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "USD_CHF" "5000" "M10"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "USD_CHF" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "USD_CAD" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "USD_CAD" "5000" "M4"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "USD_CAD" "5000" "M3"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "M3"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "M2"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "M1"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S30"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S15"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S10"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S30"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "M1"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S30"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_JPY" "5000" "S15"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_GBP" "5000" "S15"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_GBP" "5000" "M1"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_GBP" "5000" "S30"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_GBP" "5000" "S30"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+  (:account (smp/simple-strat-perc-candleratio oanda-min  0))

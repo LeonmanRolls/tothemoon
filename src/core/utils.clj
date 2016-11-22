@@ -210,8 +210,8 @@
 
   (defn body-ratio [{:keys [open low high close] :as candle}]
         (cond
-          (green? candle) (/ (- close open) (+ (- high close) (- open low)))
-          :red (/ (- open close) (+ (- high open) (- close low)))))
+          (green? candle) (/ (- close open) (if (= 0.0 (+ (- high close) (- open low))) 0.001 (+ (- high close) (- open low)) ))
+          :red (/ (- open close) (if (= 0.0 (+ (- high open) (- close low))) 0.001 (+ (- high open) (- close low))))))
 
   (is
     (=
@@ -239,6 +239,15 @@
       (float (/ 0.3 0.2))
       (float (body-ratio red-onehalf-ratio)))))
 
-
+(defn h1-to-weeks [oanda-data]
+      (reduce
+        (fn [x y]
+            (cond
+              (empty? (last x)) (update-in x [0] #(conj % y))
+              (< (- (:unixtimestamp y) (:unixtimestamp (last (last x)))) 7200000) (update-in x [(- (count x) 1)] #(conj % y))
+              :greater-than-hour (conj x [y])
+              ))
+        [[]]
+        oanda-data))
 
 
