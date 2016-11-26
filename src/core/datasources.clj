@@ -169,7 +169,6 @@
                       (http/await resp)
                       (println (http/string resp)))))
 
-
 (defn oanda-open-order-cas [chan instrument units & stoploss]
       (with-open [client (http/create-client)]
                  (let [resp (http/POST client
@@ -188,6 +187,15 @@
                       (http/await resp)
                       (go (>! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))
 
+(defn oanda-patch-order-cas [chan tradeid stoploss]
+      (with-open [client (http/create-client)]
+                 (let [resp (http/PUT client
+                                      (str rest-api-base-v3 "accounts/" account-no "/trades/" tradeid "/orders/")
+                                      :headers {:Authorization (str "Bearer " oanda-api-key)
+                                                :Content-type "application/json"}
+                                      :body (jsn/write-str {:stopLoss {:price stoploss}}))]
+                      (http/await resp)
+                      (go (>! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))
 
 (defn order-info [chan orderid]
       (with-open [client (http/create-client)]
@@ -215,6 +223,28 @@
                                                 :Content-type "application/json"})]
                       (http/await resp)
                       (go (>! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))
+
+(defn trade-info [chan tradeid]
+      (with-open [client (http/create-client)]
+                 (let [resp (http/GET client
+                                      (str rest-api-base-v3 "accounts/" account-no "/trades/" tradeid)
+                                      :headers {:Authorization (str "Bearer " oanda-api-key)
+                                                :Content-type "application/json"})]
+                      (http/await resp)
+                      (go (>! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))
+
+(defn oanda-history-cas [chan instrument count timeframe]
+      (with-open [client (http/create-client)]
+                 (let [resp (http/GET client (str rest-api-base "candles")
+                                      :query {:instrument instrument :count count :granularity timeframe})]
+                      (http/await resp)
+                      (go
+                        (>! chan
+                            (->>
+                              (jsn/read-str (http/string resp) :key-fn keyword)
+                              :candles
+                              (map oanda-candle->standard)))))))
+
 
 (defn oanda-hist->standard-candle [candles]
       (->

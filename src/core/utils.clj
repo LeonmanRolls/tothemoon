@@ -271,4 +271,14 @@
                (<! (timeout 1000))
                (when (= second (.getSeconds (now))) (>! chan true)))))
 
+(defn on-the-minute-second [chan minutes seconds]
+      (go
+        (while true
+               (<! (timeout 1000))
+               (when
+                 (and
+                   (.contains minutes (.getMinutes (now)))
+                   (.contains seconds (.getSeconds (now))))
+                 (>! chan true)))))
+
 

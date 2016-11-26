@@ -1,500 +1,500 @@
-                 (reduce
-                   (fn [x y]
-                       (cond
-                         (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
-                         :else (conj x [])))
-                   [[]])
-                 (filter #(not (empty? %)))))
-  (count (nth tue-thu 0))
-  (count (nth tue-thu 1))
-  (count tue-thu)
-  (count (nth tue-thu 2))
-  (count (nth tue-thu 3))
-  (:account (smp/simple-strat-perc-candleratio (nth tue-thu 1) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth tue-thu 2) 0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M3"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 0))
-  (def tue-thu (->>
-                 oanda-min
-                 vec
-                 (reduce
-                   (fn [x y]
-                       (cond
-                         (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
-                         :else (conj x [])))
-                   [[]])
-                 (filter #(not (empty? %)))))
-  (count tue-thu)
-  (count (nth tue-thu 1))
-  (count (nth tue-thu 0))
-  (count (nth tue-thu 1))
-  (count (nth tue-thu 2))
-  (:account (smp/simple-strat-perc-candleratio (nth tue-thu 0) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth tue-thu 1) 0))
-  (def oanda-min (ds/oanda-historical "USD_JPY" "5000" "M2"))
-  (:account (smp/simple-strat-perc-candleratio (take-last 5000 oanda-min) 0))
-  (def tue-thu (->>
-                 oanda-min
-                 vec
-                 (reduce
-                   (fn [x y]
-                       (cond
-                         (u/mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
-                         :else (conj x [])))
-                   [[]])
-                 (filter #(not (empty? %)))))
-  (count tue-thu)
-  (count (nth tue-thu 0))
-  (count (nth tue-thu 1))
-  (:account (smp/simple-strat-perc-candleratio (nth tue-thu 0) 0))
-  (load-file "src/core/utils.clj")
-  (def tue-thu (u/tue-thu-filter oanda-min))
-  (count tue-thu)
-  tue-thu
-  (flatten tue-thu) 
-  (count (flatten tue-thu))
-  (count tue-thu)
-  (map :unixtimestamp (flatten tue-thu))
-(map u/mid-week?
-       (map :unixtimestamp (flatten tue-thu))
-       )
-(to-set 
-    (map u/mid-week?
-       (map :unixtimestamp (flatten tue-thu)))
-    )
-  (toset
-    (map u/mid-week?
-       (map :unixtimestamp (flatten tue-thu)))
-    )
-  (set
-    (map u/mid-week?
-       (map :unixtimestamp (flatten tue-thu)))
-    )
-  (def oanda-min (ds/oanda-historical "EUR_USD" "50" "M5"))
-  (vs/plot-standard-candles oanda-min)
-  (vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "50" "M5"))
-  (timely/scheduled-item
-    (timely/second 59)
-    (println 1))
-  (timely/scheduled-item
-    (timely/second 59)
-    (println 1))
-  (timely/scheduled-item
-    (timely/minute 59)
-    (println 1))
-  (timely/scheduled-item
-    (timely/minute "*")
-    (println 1))
-nbow
-now
-(now)
-  (new java.util.Date)
-   (def cal (new java.util.Calendar))
-Calendar
-  (def data (new java.util.Date)) 
-  (def date (new java.util.Date))
-  (.getSeconds date)
-  (.getSeconds (new java.util.Date))
-(require
-  '[http.async.client :as http]
-  '[clojure.spec :as s]
-  '[clojure.spec.gen :as gen]
-  '[clojure.spec.test :as ts :refer [check]]
-  '[clojure.spec.gen :as gen]
-  '[clojure.core.reducers :as rd]
-  '[core.utils :as u]
-  '[core.visual :as vs]
-  '[core.spike :as sp]
-  '[clojure.data.json :as jsn]
-  '[core.datasources :as ds]
-  '[core.marketcap :as cmc]
-  '[core.simple :as smp]
-  '[incanter.core :as ic]
-  '[incanter.stats :as is]
-  '[incanter.charts :as ich]
-  '[incanter.datasets :as id]
-  '[clj-time.core :as t]
-  '[clj-time.predicates :as pr]
-  '[clj-time.coerce :as c]
-  '[cfft.core :as fft]
-  '[clojure.math.combinatorics :as combo]
-  '[clojure.test :as tst :refer [is run-tests]]
-  '[timely.core :as timely]
-  '[clojure.core.async :as casy :refer [<! >! go chan go-loop timeout]])
-  (go-loop []
-           (<! (timeout 100))
-           (println "hi")
-           (recur))
-  (go-loop []
-           (<! (timeout 1000))
-           (println "hi")
-           (recur))
-  (load-file "src/core/utils.clj")
-  (go
+        (go
+               (let [shorten (fn [stng length] (if (>= length (count stng)) stng (subs stng 0 length)))
+                     c1 (chan)
+                     c2 (chan)
+                     order-chan (chan)
+                     _ (go (println (<! order-chan)))
+                     _ (ds/acc-info c1)
+                     _ (ds/oanda-history-cas c2 "EUR_USD" "1" "M5")
+                     {{:keys [orders balance trades positions]} :account :as account} (<! c1)
+                     {trade-price :price} (when (not (empty? trades)) (first trades))
+                     {stop-price :price} (when (not (empty? trades)) (first orders))
+                     stop-price-num (when (not (empty? trades)) (read-string stop-price))
+                     trade-price-num (when (not (empty? trades)) (read-string trade-price))
+                     {:keys [tradeID]} (when (not (empty? orders)) (first orders))
+                     {:keys [open high low close] :as current-candle} (first (<! c2))
+                     balance-lp (shorten (str balance) 4)
+                     balance-lp-two (shorten (str (* 2 (read-string balance))) 4)
+                     balance-lp "10000"
+                     balance-lp-two "20000"
+                     low-lp (shorten (str (- low 0.00005) ) 7)
+                     high-lp (shorten (str (+ high 0.00005)) 7)]
+                    (comment
+                      trade-green? (when (not (empty? trades)) (if (< 0 (- trade-price-num stop-price-num)) true false))
+                      (println "orders-> " orders)
+                      (println "tradeID-> " tradeID)
+                      (println "(empty? trades) " (empty? trades))
+                      (println "(u/green? current-candle) " (u/green? current-candle))
+                      (println "trades " trades)
+                      (println "orders " orders)
+                      (println "trade-price-num " trade-price-num)
+                      (println "stop-price-num " stop-price-num))
+                    (when (empty? trades) (reset! trade-green? (if (< 0 (- close open)) true false)))
+                    (println "trade-green? " trade-green?)
+                    (cond
+                      (empty? trades) (cond
+                                        (u/green? current-candle)
+                                        (do
+                                          (println "empty trade green current " low-lp)
+                                          (ds/oanda-open-order-cas order-chan "EUR_USD" balance-lp low-lp))
+                                        :red (do
+                                               (println "empty trade red current " high-lp)
+                                               (ds/oanda-open-order-cas order-chan "EUR_USD" (str "-" balance-lp) high-lp)))
+                      (u/green? current-candle) (cond
+                                                  @trade-green? (do
+                                                                 (println "current candle green, green trade " low-lp)
+                                                                 (ds/oanda-patch-order-cas order-chan tradeID low-lp))
+                                                  :trade-red (do
+                                                               (println "current candle green, red trade " balance-lp-two)
+                                                               (ds/oanda-open-order-cas order-chan "EUR_USD" (str balance-lp-two) low-lp)
+                                                               (reset! trade-green? (if (< 0 (- close open)) true false))
+                                                               ))
+                      :current-candle-red (cond
+                                            @trade-green? (do
+                                                           (println "current candle red, green trade " balance-lp-two)
+                                                           (ds/oanda-open-order-cas order-chan "EUR_USD" (str "-" balance-lp-two) high-lp)
+                                                           (reset! trade-green? (if (< 0 (- close open)) true false))
+                                                           )
+                                            :trade-red (do
+                                                         (println "current candle red, red trade " high-lp)
+                                                         (ds/oanda-patch-order-cas order-chan tradeID high-lp))))))
+        )
+(go
     (let [c (chan)
-          init (u/on-the-x-second c 58)]
+          trade-green? (atom false)
+          _ (u/on-the-minute-second c [4 9 14 19 24 29 34 39 44 49 54 59] [54])]
          (while true
-               (println "hey" (<! c))
+                (println "hey-----------------------------------------" (<! c))
+                (testing trade-green?)
                 )))
-  (go
+(defn testing [trade-green?]
+        (go
+               (let [shorten (fn [stng length] (if (>= length (count stng)) stng (subs stng 0 length)))
+                     c1 (chan)
+                     c2 (chan)
+                     order-chan (chan)
+                     _ (go (println (<! order-chan)))
+                     _ (ds/acc-info c1)
+                     _ (ds/oanda-history-cas c2 "EUR_USD" "1" "M5")
+                     {{:keys [orders balance trades positions]} :account :as account} (<! c1)
+                     {trade-price :price} (when (not (empty? trades)) (first trades))
+                     {stop-price :price} (when (not (empty? trades)) (first orders))
+                     stop-price-num (when (not (empty? trades)) (read-string stop-price))
+                     trade-price-num (when (not (empty? trades)) (read-string trade-price))
+                     {:keys [tradeID]} (when (not (empty? orders)) (first orders))
+                     {:keys [open high low close] :as current-candle} (first (<! c2))
+                     balance-lp (shorten (str balance) 4)
+                     balance-lp-two (shorten (str (* 2 (read-string balance))) 4)
+                     balance-lp "10000"
+                     balance-lp-two "20000"
+                     low-lp (shorten (str (- low 0.0001) ) 7)
+                     high-lp (shorten (str (+ high 0.0001)) 7)]
+                    (comment
+                      trade-green? (when (not (empty? trades)) (if (< 0 (- trade-price-num stop-price-num)) true false))
+                      (println "orders-> " orders)
+                      (println "tradeID-> " tradeID)
+                      (println "(empty? trades) " (empty? trades))
+                      (println "(u/green? current-candle) " (u/green? current-candle))
+                      (println "trades " trades)
+                      (println "orders " orders)
+                      (println "trade-price-num " trade-price-num)
+                      (println "stop-price-num " stop-price-num))
+                    (when (empty? trades) (reset! trade-green? (if (< 0 (- close open)) true false)))
+                    (println "trade-green? " trade-green?)
+                    (cond
+                      (empty? trades) (cond
+                                        (u/green? current-candle)
+                                        (do
+                                          (println "empty trade green current " low-lp)
+                                          (ds/oanda-open-order-cas order-chan "EUR_USD" balance-lp low-lp))
+                                        :red (do
+                                               (println "empty trade red current " high-lp)
+                                               (ds/oanda-open-order-cas order-chan "EUR_USD" (str "-" balance-lp) high-lp)))
+                      (u/green? current-candle) (cond
+                                                  @trade-green? (do
+                                                                 (println "current candle green, green trade " low-lp)
+                                                                 (ds/oanda-patch-order-cas order-chan tradeID low-lp))
+                                                  :trade-red (do
+                                                               (println "current candle green, red trade " balance-lp-two)
+                                                               (ds/oanda-open-order-cas order-chan "EUR_USD" (str balance-lp-two) low-lp)
+                                                               (reset! trade-green? (if (< 0 (- close open)) true false))
+                                                               ))
+                      :current-candle-red (cond
+                                            @trade-green? (do
+                                                           (println "current candle red, green trade " balance-lp-two)
+                                                           (ds/oanda-open-order-cas order-chan "EUR_USD" (str "-" balance-lp-two) high-lp)
+                                                           (reset! trade-green? (if (< 0 (- close open)) true false))
+                                                           )
+                                            :trade-red (do
+                                                         (println "current candle red, red trade " high-lp)
+                                                         (ds/oanda-patch-order-cas order-chan tradeID high-lp))))))
+        )
+(go
     (let [c (chan)
-          init (u/on-the-x-second c 58)]
+          trade-green? (atom false)
+          _ (u/on-the-minute-second c [4 9 14 19 24 29 34 39 44 49 54 59] [54])]
          (while true
-               (println "hey" (<! c))
+                (println "hey-----------------------------------------" (<! c))
+                (testing trade-green?)
                 )))
-  (go
-    (let [c (chan)
-          init (u/on-the-x-second c 58)]
-         (while true
-               (println "hey" (<! c))
-                )))
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "100")
-     (println (<! c)))
-  (def c (chan))
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "100")
-     (println (<! c)))
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "-100")
-     (println (<! c)))
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "100")
-     (println (type (<! c))))
-l
-  (load-file "src/core/utils.clj")
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "100")
-     (println (type (<! c))))
-  (load-file "src/core/datasources.clj")
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "100")
-     (println (type (<! c))))
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "100")
-     (println (<! c)))
-  (vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "1" "M5"))
+(def oanda-min (ds/oanda-historical "EUR_USD" "1" "M5")) 
+(def oanda-min (ds/oanda-historical "EUR_USD" "1" "M5"))
 (ds/oanda-historical "EUR_USD" "1" "M5")
-  (vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "1" "M5"))
-  (vs/plot-standard-candles (vec (ds/oanda-historical "EUR_USD" "1" "M5")) )
-  (vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "2" "M5") )
+  (let [c (chan)]
+       (ds/oanda-history-cas c "EUR_USD" "1" "M5")
+       (<!! c))
+(def oanda-min (ds/oanda-historical "EUR_USD" "1" "M5"))
+(ds/oanda-historical "EUR_USD" "5000" "M5")
 (ds/oanda-historical "EUR_USD" "1" "M5")
-  (def price-hist (atom {:open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-(add-watch price-hist :clear-old
-            (fn [key atom old-state new-state])
-             (prn "-- Atom Changed --")
-             (prn "key" key)
-             (prn "atom" atom)
-             (prn "old-state" old-state)
-             (prn "new-state" new-state))
-(add-watch price-hist :clear-old
-            (fn [key atom old-state new-state])
-             (prn "-- Atom Changed --")
-             (prn "key" key)
-             (prn "atom" atom)
-             (prn "old-state" old-state)
-             (prn "new-state" new-state))
-(add-watch price-hist :clear-old
-             (fn [key atom old-state new-state]
-                 (prn "-- Atom Changed --")
-                 (prn "key" key)
-                 (prn "atom" atom)
-                 (prn "old-state" old-state)
-                 (prn "new-state" new-state)))
-  (go
-     (ds/oanda-open-order-cas c "EUR_USD" "-100")
-     (swap! price-hist update-in [:history] #(conj % (<! c)))
-     )
-  (def c (chan))
-     (ds/oanda-open-order-cas c "EUR_USD" "-100")
-     (swap! price-hist update-in [:history] #(conj % (go (<! c)) ))
-(go
-     (ds/oanda-open-order-cas c "EUR_USD" "-100")
-     (swap! price-hist update-in [:history] #(conj % (<! c) ))
-     )
-(go
-     (ds/oanda-open-order-cas c "EUR_USD" "-100")
-     (swap! price-hist update-in [:history] #(go (conj % (<! c))))
-     )
-(go
-     (ds/oanda-open-order-cas c "EUR_USD" "100")
-     (let [rslt (<! c)]
-          (swap! price-hist update-in [:history] #(conj % rslt))
-          )
-     
-     )
-  (def c (chan))
-(go
-     (ds/oanda-open-order-cas c "EUR_USD" "100")
-     (let [rslt (<! c)]
-          (println rslt)
-          (swap! price-hist update-in [:history] #(conj % rslt))
-          )
-     )
-(go
-     (ds/oanda-open-order-cas c "EUR_USD" "100")
-     (let [rslt (<! c)]
-          (println "rslt" rslt)
-          (println "rslt type" (type rslt))
-          (swap! price-hist update-in [:history] #(conj % rslt))
-          )
-     )
- (go
-     (ds/oanda-open-order-cas c "EUR_USD" "100")
-     (let [rslt (<! c)]
-          (println "rslt" rslt)
-          (println "rslt type" (type rslt))
-          (swap! price-hist update-in [:history] #(conj % "hi"))
-          )
-     )
-          (swap! price-hist update-in [:history] #(conj % "hi"))
-  (def price-hist (atom {:open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  (swap! price-hist update-in [:history] #(conj % "hi"))
-(go
-     (ds/oanda-open-order-cas c "EUR_USD" "100")
-     (let [rslt (<! c)]
-          (println "rslt" rslt)
-          (println "rslt type" (type rslt))
-          (swap! price-hist update-in [:history] #(conj % "hi"))
-          )
-     )
-  (swap! price-hist update-in [:history] #(conj % "hi"))
-(go
-     (ds/oanda-open-order-cas c "EUR_USD" "100")
-     (let [rslt (<! c)]
-          (println "rslt" rslt)
-          (println "rslt type" (type rslt))
-          (swap! price-hist update-in [:history] #(conj % rslt))
-          )
-     )
-  @price-hist
-(ds/oanda-historical "EUR_USD" "1" "M5")
-  @price-hist
-  (def price-hist (atom {:open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-price-hist
-  oanda-min
-  (def oanda-min (ds/oanda-historical "EUR_USD" "1" "M5"))
+(def oanda-min (ds/oanda-historical "EUR_USD" "1" "M5"))
 oanda-min
-  (type oanda-min)
-  (swap! price-hist update-in [:history] #(conj % (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (def price-hist (atom {:open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  (swap! price-hist update-in [:history] #(apply conj % (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (load-file "src/core/simple.clj")
-  @price-hist
-  (def price-hist (atom {:open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  (smp/simple-strat-perc-live @price-hist (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (load-file "src/core/simple.clj")
-@price-hist
-  (smp/simple-strat-perc-live @price-hist (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-@price-hist
-  (load-file "src/core/simple.clj")
-  (def price-hist (atom {:open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  @price-hist
-  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (load-file "src/core/simple.clj")
-  (def price-hist (atom {:open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (load-file "src/core/simple.clj")
-  (def price-hist (atom {:open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (subs 0 3 "1.063635")   
-  (subs "1.063635" 0 3)
-  (subs "1.063635" 0 6)
-  (load-file "src/core/simple.clj")
-  (def price-hist (atom {:open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  @price-hist
-  (load-file "src/core/simple.clj")
-  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (load-file "src/core/simple.clj")
-  (def price-hist (atom {:current-order {}
-                         :open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  @price-hist
-  (load-file "src/core/simple.clj")
-  (def price-hist (atom {:current-order {}
-                         :open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-(go
-    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (first oanda-min)
+  (:uniximtestamp (first oanda-min)) 
+  (:unixtimestamp (first oanda-min)) 
+  (c/from-long (:unixtimestamp (first oanda-min)))
+(t/hour
+    (c/from-long (:unixtimestamp (first oanda-min)))
     )
-  (load-file "src/core/utils.clj")
-  (load-file "src/core/simple.clj")
-    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (load-file "src/core/simple.clj")
-  @price-hist
-  (def price-hist (atom {:current-order {}
-                         :open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (def price-hist (atom {:current-order {}
-                         :open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (load-file "src/core/simple.clj")
-    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  @price-hist
-  (def price-hist (atom {:current-order {}
-                         :open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  (load-file "src/core/simple.clj")
-  @price-hist
-    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (def price-hist (atom {:current-order {}
-                         :open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  (load-file "src/core/simple.clj")
-    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  @price-hist
-  (def price-hist (atom {:current-order {}
-                         :open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  @price-hist
-    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (load-file "src/core/simple.clj")
-  (load-file "src/core/datasources.clj")
-(let [c (chan)]
-      (ds/order-info c 241)
-       (<!! c)
-       )
-(require
-  '[http.async.client :as http]
-  '[clojure.spec :as s]
-  '[clojure.spec.gen :as gen]
-  '[clojure.spec.test :as ts :refer [check]]
-  '[clojure.spec.gen :as gen]
-  '[clojure.core.reducers :as rd]
-  '[core.utils :as u]
-  '[core.visual :as vs]
-  '[core.spike :as sp]
-  '[clojure.data.json :as jsn]
-  '[core.datasources :as ds]
-  '[core.marketcap :as cmc]
-  '[core.simple :as smp]
-  '[incanter.core :as ic]
-  '[incanter.stats :as is]
-  '[incanter.charts :as ich]
-  '[incanter.datasets :as id]
-  '[clj-time.core :as t]
-  '[clj-time.predicates :as pr]
-  '[clj-time.coerce :as c]
-  '[cfft.core :as fft]
-  '[clojure.math.combinatorics :as combo]
-  '[clojure.test :as tst :refer [is run-tests]]
-  '[timely.core :as timely]
-  '[clojure.core.async :as casy :refer [<!! <! >! go chan go-loop timeout]])
-  (let [c (chan)]
-      (ds/order-info c 241)
-       (<!! c)
-       )
-  @price-hist
-  (def price-hist (atom {:current-order {}
-                         :open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  (let [c (chan)]
-      (ds/order-info c 241)
-       (<!! c)
-       )
-    (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (let [c (chan)]
-      (ds/order-info c 245)
-       (<!! c)
-       )
-  (def price-hist (atom {:current-order {}
-                         :open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-  (load-file "src/core/datasources.clj")
-  (let [c (chan)]
-       (ds/get-orders c)
-       (<!! c))
-  (let [c (chan)]
-       (ds/get-orders c)
-       (<!! c))
-  (load-file "src/core/datasources.clj")
-  (let [c (chan)]
-       (ds/acc-info c)
-       (<!! c))
+(def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+(let [dadata oanda-min]
+       (->>
+         dadata
+         vec
+         (reduce
+           (fn [x y]
+               (cond
+                 (or (= 7 (:unixtimestamp y)) (= 8 (:unixtimestamp y)) (= 9 (:unixtimestamp y))) (update-in x [(- (count x) 1)] #(conj % y))
+                 :else (conj x [])))
+           [[]])
+         (filter #(not (empty? %)))))
+(let [dadata oanda-min]
+       (->>
+         dadata
+         vec
+         (reduce
+           (fn [x y]
+               (cond
+                 (or (= 7 (-> (:unixtimestamp y) c/from-long t/hour))
+                     (= 8 (-> (:unixtimestamp y) c/from-long t/hour))
+                     (= 9 (-> (:unixtimestamp y) c/from-long t/hour))) (update-in x [(- (count x) 1)] #(conj % y))
+                 :else (conj x [])))
+           [[]])
+         (filter #(not (empty? %)))))
+(def mornins (let [dadata oanda-min]
+                    (->>
+                      dadata
+                      vec
+                      (reduce
+                        (fn [x y]
+                            (cond
+                              (or (= 7 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  (= 8 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  (= 9 (-> (:unixtimestamp y) c/from-long t/hour))) (update-in x [(- (count x) 1)] #(conj % y))
+                              :else (conj x [])))
+                        [[]])
+                      (filter #(not (empty? %))))))
+  mornins
+  (first mornins)
+  (count mornins)
+  (:account (smp/simple-strat-perc-candleratio (first mornins) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 1) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 2) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 3) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 4) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 5) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 6) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 7) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 8) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 9) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 10) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 11) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 12) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 13) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 14) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 15) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 16) 0))
+(map 
+   #(:account (smp/simple-strat-perc-candleratio % 0)) 
+    mornins)
+  (def oanda-min (ds/oanda-historical "EU50_EUR" "5000" "M5"))
+  (def mornins (let [dadata oanda-min]
+                    (->>
+                      dadata
+                      vec
+                      (reduce
+                        (fn [x y]
+                            (cond
+                              (or (= 7 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  (= 8 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  (= 9 (-> (:unixtimestamp y) c/from-long t/hour))) (update-in x [(- (count x) 1)] #(conj % y))
+                              :else (conj x [])))
+                        [[]])
+                      (filter #(not (empty? %))))))
+  (map
+    #(:account (smp/simple-strat-perc-candleratio % 0))
+    mornins)
+oanda-min
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 16) 0))
+(nth mornins 0)
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 0) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 1) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 2) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 3) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 4) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 5) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 6) 0))
+  (:account (smp/simple-strat-perc-candleratio (nth mornins 7) 0))
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+(def mornins (let [dadata oanda-min]
+                    (->>
+                      dadata
+                      vec
+                      (reduce
+                        (fn [x y]
+                            (cond
+                              (or (= 7 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  (= 8 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  ) (update-in x [(- (count x) 1)] #(conj % y))
+                              :else (conj x [])))
+                        [[]])
+                      (filter #(not (empty? %))))))
+  (map
+    #(:account (smp/simple-strat-perc-candleratio % 0))
+    mornins)
+   (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+(def mornins (let [dadata oanda-min]
+                    (->>
+                      dadata
+                      vec
+                      (reduce
+                        (fn [x y]
+                            (cond
+                              (or (= 12 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  (= 13 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  ) (update-in x [(- (count x) 1)] #(conj % y))
+                              :else (conj x [])))
+                        [[]])
+                      (filter #(not (empty? %))))))
+  (map
+    #(:account (smp/simple-strat-perc-candleratio % 0))
+    mornins)
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+  (def mornins (let [dadata oanda-min]
+                    (->>
+                      dadata
+                      vec
+                      (reduce
+                        (fn [x y]
+                            (cond
+                              (or (= 16 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  ) (update-in x [(- (count x) 1)] #(conj % y))
+                              :else (conj x [])))
+                        [[]])
+                      (filter #(not (empty? %))))))
+  (map
+    #(:account (smp/simple-strat-perc-candleratio % 0))
+    mornins)
+  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
+(def mornins (let [dadata oanda-min]
+                    (->>
+                      dadata
+                      vec
+                      (reduce
+                        (fn [x y]
+                            (cond
+                              (or (= 7 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  (= 8 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  ) (update-in x [(- (count x) 1)] #(conj % y))
+                              :else (conj x [])))
+                        [[]])
+                      (filter #(not (empty? %))))))
+  (map
+    #(:account (smp/simple-strat-perc-candleratio % 0))
+    mornins)
+(def mornins (let [dadata oanda-min]
+                    (->>
+                      dadata
+                      vec
+                      (reduce
+                        (fn [x y]
+                            (cond
+                              (or (= 12 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  (= 13 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  ) (update-in x [(- (count x) 1)] #(conj % y))
+                              :else (conj x [])))
+                        [[]])
+                      (filter #(not (empty? %))))))
+  (map
+    #(:account (smp/simple-strat-perc-candleratio % 0))
+    mornins)
+(def mornins (let [dadata oanda-min]
+                    (->>
+                      dadata
+                      vec
+                      (reduce
+                        (fn [x y]
+                            (cond
+                              (or (= 7 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  (= 8 (-> (:unixtimestamp y) c/from-long t/hour))
+                                  ) (update-in x [(- (count x) 1)] #(conj % y))
+                              :else (conj x [])))
+                        [[]])
+                      (filter #(not (empty? %))))))
+  (map
+    #(:account (smp/simple-strat-perc-candleratio % 0))
+    mornins)
+(->>
+    (map
+      #(:account (smp/simple-strat-perc-candleratio % 0))
+      mornins)
+    (reduce +)
+    )
+(map
+      #(:account (smp/simple-strat-perc-candleratio % 0))
+      mornins)
+(->>
+    (map
+      #(:account (smp/simple-strat-perc-candleratio % 0))
+      mornins)
+    (map #(- 1000 %))
+    )
+    (map #(- % 1000 ))
+(->>
+    (map
+      #(:account (smp/simple-strat-perc-candleratio % 0))
+      mornins)
+    (map #(- % 1000))
+    )
+(->>
+    (map
+      #(:account (smp/simple-strat-perc-candleratio % 0))
+      mornins)
+    (map #(- % 1000))
+    (reduce +)
+    )
+(->>
+    (map
+      #(:account (smp/simple-strat-perc-candleratio % 0))
+      mornins)
+    )
+mornins
+(->>
+    (map
+      #(:account (smp/simple-strat-perc-candleratio % 0))
+      mornins)
+    first
+    )
+    mornins
+(->>
+    mornins
+    first
+    )
+(->>
+    mornins
+    first
+    
+    )
+(->>
+    mornins
+    first
+    :uniximtestamp
+    c/from-long
+    t/day
+    )
+(->>
+    mornins
+    first
+    :uniximtestamp
+    c/from-long
+    pr/monday?
+    )
+(->>
+    mornins
+    first
+    :uniximtestamp
+    c/from-long
+    c/day
+    )
+(->>
+    mornins
+    first
+    :uniximtestamp
+    c/from-long
+    t/day
+    )
+(->>
+    mornins
+    first
+    :uniximtestamp
+    c/from-long
+    t/day-of-week
+    )
+(map 
+  #(->>
+    %
+    first
+    :uniximtestamp
+    c/from-long
+    t/day-of-week
+    )  
+    
+    mornins)
+mornins
+(map
+  #(->>
+    %
+    first
+    :uniximtestamp
+    c/from-long
+    t/day
+    )
+    mornins)
+(map
+  #(println
+    %
+    )
+    mornins)
+(map
+    #(println
+      (->>
+        %
+        first
+        ))
+    mornins)
+(map
+    #(println
+      (->>
+        %
+        first
+        :unixtimestamp
+        ))
+    mornins)
+(map
+    #(println
+      (->>
+        %
+        first
+        :unixtimestamp
+        c/from-long
+        ))
+    mornins)
+(map
+    #(println
+      (->>
+        %
+        first
+        :unixtimestamp
+        c/from-long
+        t/day-of-week
+        ))
+    mornins)
+(->>
+    (map
+      #(:account (smp/simple-strat-perc-candleratio % 0))
+      mornins)
+    (map #(- % 1000))
+    (reduce +)
+    )
+  (map
+    #(:account (smp/simple-strat-perc-candleratio % 0))
+    mornins)
