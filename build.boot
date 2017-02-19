@@ -12,7 +12,8 @@
     [org.clojure/math.combinatorics "0.1.3"]
     [cfft "0.1.0"]
     [factual/timely "0.0.3"]
-    [clj-time "0.12.0"]]
+    [clj-time "0.12.0"]
+    [it.frbracch/boot-marginalia "0.1.3-1" :scope "test"]]
   :source-paths #{"src"})
 
 (require
@@ -40,7 +41,8 @@
   '[clojure.math.combinatorics :as combo]
   '[clojure.test :as tst :refer [is run-tests]]
   '[timely.core :as timely]
-  '[clojure.core.async :as casy :refer [<!! <! >! go chan go-loop timeout]])
+  '[clojure.core.async :as casy :refer [<!! <! >! go chan go-loop timeout]]
+  '[it.frbracch.boot-marginalia :refer [marginalia]])
 
 (deftask my-task
          "Does nothing."
@@ -49,6 +51,44 @@
              (fn [fileset]
                  (println "hi hi")
                  (next-task fileset))))
+
+(deftask test-doc-refresh 
+  "Run tests and recompile docs."
+  []
+  (fn [next-handler]
+    (fn [fileset]
+      (let [result (next-handler fileset)]
+        (do
+          (load-file "src/core/visual.clj")
+          (load-file "src/core/utils.clj")
+          (load-file "src/core/datasources.clj")
+          (load-file "src/core/simple.clj")
+          (load-file "src/core/spike.clj")
+          (load-file "src/core/marketcap.clj")
+          (load-file "build.boot")
+          (ts/unstrument)
+          (ts/instrument)
+          (run-tests 'core.utils 'core.simple)) 
+        result))))
+
+(deftask dev 
+  "Watch for file changes, run tests and recompile docs" 
+  []
+  (boot (watch) (test-doc-refresh) (marginalia)))
+
+(deftask rrl
+  []
+  "Reload files and re-instrument" 
+  (do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)))
 
 (comment
 
@@ -74,12 +114,23 @@
   (load-file "src/core/simple.clj")
   (load-file "src/core/datasources.clj")
 
-  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "10" "M5")))
+
+  ;(s/valid? (s/coll-of ::u/standard-candle) (ds/oanda-historical "EUR_USD" "10" "M5")) 
+
+  (doc ds/oanda-historical)
+
+  (smp/simple-strat (ds/oanda-historical "EUR_USD" "10" "M5"))
+
+  (smp/simple-strat-profit-calc  (smp/simple-strat (ds/oanda-historical "EUR_USD" "10" "H1"))) 
+
+  (load-file "src/core/utils.clj")
+
+  (vs/plot-standard-candles [u/green-half-ratio])
 
   (let [c (chan)]
        (ds/oanda-patch-order-cas c "300" "1.0625")
        (<!! c))
-
 
   (defn testing [trade-green?]
         (go
@@ -245,7 +296,7 @@
   (def oanda-min (ds/oanda-historical "EUR_USD" "1" "M5"))
   (type oanda-min)
   oanda-min
-  (vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "1" "M5") )
+  (vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "10" "M5") )
 
   (swap! price-hist update-in [:history] #(apply conj % (ds/oanda-historical "EUR_USD" "1" "M5")))
 
@@ -349,9 +400,6 @@
 
   (smp/simple-strat-perc-candleratio (subvec a-week 73 96) 0.9)
 
-
-
-
   (do
     (load-file "src/core/visual.clj")
     (load-file "src/core/utils.clj")
@@ -362,7 +410,8 @@
     (load-file "build.boot")
     (ts/unstrument)
     (ts/instrument)
-    (run-tests 'core.utils 'core.simple))
+    (run-tests 'core.utils 'core.simple)
+    (boot (marginalia)))
 
   (ts/summarize-results
     (ts/check

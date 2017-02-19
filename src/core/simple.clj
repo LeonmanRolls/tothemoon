@@ -20,6 +20,8 @@
       [core.datasources :as ds]
       [core.utils :as u]))
 
+(declare simple-strat-final-profit)
+
 (defn green? [{:keys [open close]}]
       (> close open))
 
@@ -38,87 +40,106 @@
         (- low close)
         (- nextclose close)))
 
+(defn clear-fn [deets-map]
+  (->
+    (update-in deets-map [:open-date] (fn [_] nil))
+    (update-in [:stop-loss] (fn [_] nil))
+    (update-in [:buy-or-sell] (fn [_] nil))
+    (update-in [:order-price] (fn [_] nil))))
+
+(defn human-or-long 
+  "Return human or long timestamps" 
+  [human? unixtimestamp]
+  (if
+    human?
+    (u/to-human unixtimestamp)
+    (long unixtimestamp)))
+
+(defn simple-strat-profit-calc 
+  "Add total profits/losses from buying and selling to get final profit/loss" 
+  [simple-strat-data]
+  (+
+    (->>
+      simple-strat-data
+      :greens
+      (map :profit)
+      (reduce +))
+    (->>
+      simple-strat-data
+      :reds
+      (map :profit)
+      (reduce +))))
+
 (s/fdef simple-strat
         :args (s/cat :data (s/coll-of ::u/standard-candle) :opts (s/? keyword?)))
 
-(defn simple-strat
-      "Basic strat backtesting price differences after in both directions"
-      [data & opts]
-      (let [humantime (if opts true false)]
-           (reduce
-             (fn [x
-                  {nexttime :unixtimestamp nextopen :open nexthigh :high nextlow :low nextclose :close :as y}]
-                 (cond
-                   (contains? x :greens)
-                   (let [{:keys [unixtimestamp open high low close] :as last} (:last x)]
-                        (if (green? last)
-                          {:greens (conj (:greens x) {:basetimestamp (if
-                                                                       humantime
-                                                                       (u/to-human unixtimestamp)
-                                                                       (long unixtimestamp))
-                                                      :nexttimestamp (if
-                                                                       humantime
-                                                                       (u/to-human nexttime)
-                                                                       (long nexttime))
+(with-test
+  (defn simple-strat
+    "Basic strat profit calculation separating buy and sell side. Can return human or unix timestamps."
+    [data & opts]
+    (let [humantime (if opts true false)]
+      (reduce
+        (fn [x
+             {nexttime :unixtimestamp nextopen :open nexthigh :high nextlow :low nextclose :close :as y}]
+          (cond
+            (contains? x :greens)
+            (let [{:keys [unixtimestamp open high low close] :as last} (:last x)]
+              (if (green? last)
+                {:greens (conj (:greens x) {:basetimestamp (human-or-long humantime unixtimestamp)
+                                            :nexttimestamp (human-or-long humantime nexttime)
+                                            :profit (profit-calc open nextlow low nextclose close)
+                                            :prof-calc [(:last x) y]})
+                 :reds (:reds x)
+                 :last y}
+                {:greens (:greens x)
+                 :reds (conj (:reds x) {:basetimestamp (human-or-long humantime unixtimestamp)
+                                        :nexttimestamp (human-or-long humantime nexttime)
 
-                                                      :profit (profit-calc open nextlow low nextclose close)
-                                                      :prof-calc [(:last x) y]})
-                           :reds (:reds x)
-                           :last y}
-                          {:greens (:greens x)
-                           :reds (conj (:reds x) {:basetimestamp (if
-                                                                   humantime
-                                                                   (u/to-human unixtimestamp)
-                                                                   (long unixtimestamp))
-                                                  :nexttimestamp (if
-                                                                   humantime
-                                                                   (u/to-human nexttime)
-                                                                   (long nexttime))
+                                        :profit (profit-calc-red nexthigh high close nextclose)
+                                        :prof-calc [(:last x) y]})
+                 :last y}))
+            :else
+            (let [{:keys [unixtimestamp open high low close]} x]
+              (if (green? x)
+                {:greens [{:basetimestamp (human-or-long humantime unixtimestamp)
+                           :nexttimestamp (human-or-long humantime nexttime)
+                           :profit (profit-calc open nextlow low nextclose close)
+                           :prof-calc [x y]}]
+                 :reds []
+                 :last y}
+                {:greens []
+                 :reds [{:basetimestamp (human-or-long humantime unixtimestamp)
+                         :nexttimestamp (human-or-long humantime nexttime)
+                         :profit (profit-calc-red nexthigh high close nextclose)
+                         :prof-calc [x y]}]
+                 :last y}))))
+        data))) 
 
-                                                  :profit (profit-calc-red nexthigh high close nextclose)
-                                                  :prof-calc [(:last x) y]})
-                           :last y}))
-                   :else
-                   (let [{:keys [unixtimestamp open high low close]} x]
-                        (if (green? x)
-                          {:greens [{:basetimestamp (if
-                                                      humantime
-                                                      (u/to-human unixtimestamp)
-                                                      (long unixtimestamp))
-                                     :nexttimestamp (if
-                                                      humantime
-                                                      (u/to-human nexttime)
-                                                      (long nexttime))
-                                     :profit (profit-calc open nextlow low nextclose close)
-                                     :prof-calc [x y]}]
-                           :reds []
-                           :last y}
-                          {:greens []
-                           :reds [{:basetimestamp (if
-                                                    humantime
-                                                    (u/to-human unixtimestamp)
-                                                    (long unixtimestamp))
-                                   :nexttimestamp (if
-                                                    humantime
-                                                    (u/to-human nexttime)
-                                                    (long nexttime))
-                                   :profit (profit-calc-red nexthigh high close nextclose)
-                                   :prof-calc [x y]}]
-                           :last y}))))
-             data)))
+  (is 
+    (= 
+      0.1 
+      (simple-strat-final-profit u/green->green))
+    "green->green, no stop out")
 
-(defn simple-strat-profit-calc [simple-strat-data]
-      (+
-        (->>
-          simple-strat-data
-          :greens
-          (map :profit)
-          (reduce +))
-        (->>
-          simple-strat-data
-          :reds
-          (map :profit)
-          (reduce +))))
+  (is 
+    (= 
+      -0.1 
+      (simple-strat-final-profit u/green->red))
+    "green->green, no stop out")
+
+  )
+
+(defn simple-strat-final-profit
+  "Final profit from buy and sell side for simple strat, optional rounding" 
+
+  ([standard-candles] 
+   (simple-strat-final-profit standard-candles 1))
+
+  ([standard-candles round-to]
+   (->> 
+     (simple-strat standard-candles)  
+     (simple-strat-profit-calc)
+     (u/round2 round-to))))
 
 (defn profit-chains [profits chain-length]
       (as-> profits x
@@ -141,14 +162,7 @@
 (with-test
 
   (defn simple-strat-perc-candleratio [standard-candles ratio]
-        (let [clear-fn (fn [deets-map]
-                           (->
-                             (update-in deets-map [:open-date] (fn [_] nil))
-                             (update-in [:stop-loss] (fn [_] nil))
-                             (update-in [:buy-or-sell] (fn [_] nil))
-                             (update-in [:order-price] (fn [_] nil))))
-
-              update-hist (fn [damap start end perc]
+        (let [update-hist (fn [damap start end perc]
                               (update-in damap [:history] #(conj % {:start (u/to-human start)
                                                                     :end (u/to-human end)
                                                                     :perc perc})))
@@ -276,52 +290,12 @@
 
   (is
     (=
-      (:account (simple-strat-perc-candleratio u/green-reversal 0.4))
-      (->
-        (* 1000 (u/percentage-change 1.1 1 :hi))
-        (* (u/percentage-change 0.9 1 :hi))))
-    "Green reversal")
-
-  (is
-    (=
-      (:account (simple-strat-perc-candleratio u/red-reversal 0.4))
-      (->
-        (* 1000 (u/percentage-change 1.1 0.9 :hi))
-        (* (u/percentage-change 1.1 1.2 :hi))))
-    "red reversal")
-
-  (is
-    (=
       (* 1000 (u/percentage-change 1.2 1.1 :hi))
-      (:account (simple-strat-perc-candleratio u/green-stop-out 0.4))))
-
-  (is
-    (=
-      (* 1000 (u/percentage-change 1.2 1.25 :hi))
-      (:account (simple-strat-perc-candleratio u/green->red 0.4))))
-
-  (is
-    (=
-      (* 1000 (u/percentage-change 0.9 0.8  :hi))
-      (:account (simple-strat-perc-candleratio u/red-stop-out 0.4))))
-
-  (is
-    (=
-      (* 1000 (u/percentage-change 0.72 0.8  :hi))
-      (:account (simple-strat-perc-candleratio u/red->green 0.4)))))
-
+      (:account (simple-strat-perc-candleratio u/green->green->green-stop-out 0.4)))))
 
 (with-test
-
   (defn simple-strat-perc [standard-candles]
-        (let [clear-fn (fn [deets-map]
-                           (->
-                             (update-in deets-map [:open-date] (fn [_] nil))
-                             (update-in [:stop-loss] (fn [_] nil))
-                             (update-in [:buy-or-sell] (fn [_] nil))
-                             (update-in [:order-price] (fn [_] nil))))
-
-              update-hist (fn [damap start end perc]
+        (let [update-hist (fn [damap start end perc]
                               (update-in damap [:history] #(conj % {:start (u/to-human start)
                                                                     :end (u/to-human end)
                                                                     :perc perc})))
@@ -449,39 +423,8 @@
 
   (is
     (=
-      (:account (simple-strat-perc u/green-reversal))
-      (->
-        (* 1000 (u/percentage-change 1.1 1 :hi))
-        (* (u/percentage-change 0.9 1 :hi))))
-    "Green reversal")
-
-  (is
-    (=
-      (:account (simple-strat-perc u/red-reversal))
-      (->
-        (* 1000 (u/percentage-change 1.1 0.9 :hi))
-        (* (u/percentage-change 1.1 1.2 :hi))))
-    "red reversal")
-
-  (is
-    (=
       (* 1000 (u/percentage-change 1.2 1.1 :hi))
-      (:account (simple-strat-perc u/green-stop-out))))
-
-  (is
-    (=
-      (* 1000 (u/percentage-change 1.2 1.25 :hi))
-      (:account (simple-strat-perc u/green->red))))
-
-  (is
-    (=
-      (* 1000 (u/percentage-change 0.9 0.8  :hi))
-      (:account (simple-strat-perc u/red-stop-out))))
-
-  (is
-    (=
-      (* 1000 (u/percentage-change 0.72 0.8  :hi))
-      (:account (simple-strat-perc u/red->green)))))
+      (:account (simple-strat-perc u/green->green->green-stop-out)))))
 
 
 (defn simple-strat-perc-live  [{:keys [stop-loss buy-or-sell order-price account history open-date] :as x}
@@ -499,13 +442,6 @@
                                          (update-in [:order-price] (fn [_] order-price))
                                          (update-in [:stop-loss] (fn [_] stop-loss))
                                          (update-in [:open-date] (fn [_] unixtimestamp)))))
-
-            clear-fn (fn [deets-map]
-                         (->
-                           (update-in deets-map [:open-date] (fn [_] nil))
-                           (update-in [:stop-loss] (fn [_] nil))
-                           (update-in [:buy-or-sell] (fn [_] nil))
-                           (update-in [:order-price] (fn [_] nil))))
 
             update-hist (fn [damap start end perc]
                             (update-in damap [:history] #(conj % {:start (u/to-human start)

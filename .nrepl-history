@@ -1,3 +1,9 @@
+          _ (u/on-the-minute-second c [4 9 14 19 24 29 34 39 44 49 54 59] [54])]
+         (while true
+                (println "hey-----------------------------------------" (<! c))
+                (testing trade-green?)
+                )))
+(defn testing [trade-green?]
         (go
                (let [shorten (fn [stng length] (if (>= length (count stng)) stng (subs stng 0 length)))
                      c1 (chan)
@@ -17,20 +23,9 @@
                      balance-lp-two (shorten (str (* 2 (read-string balance))) 4)
                      balance-lp "10000"
                      balance-lp-two "20000"
-                     low-lp (shorten (str (- low 0.00005) ) 7)
-                     high-lp (shorten (str (+ high 0.00005)) 7)]
-                    (comment
-                      trade-green? (when (not (empty? trades)) (if (< 0 (- trade-price-num stop-price-num)) true false))
-                      (println "orders-> " orders)
-                      (println "tradeID-> " tradeID)
-                      (println "(empty? trades) " (empty? trades))
-                      (println "(u/green? current-candle) " (u/green? current-candle))
-                      (println "trades " trades)
-                      (println "orders " orders)
-                      (println "trade-price-num " trade-price-num)
-                      (println "stop-price-num " stop-price-num))
+                     low-lp (shorten (str (- low 0.0001) ) 7)
+                     high-lp (shorten (str (+ high 0.0001)) 7)]
                     (when (empty? trades) (reset! trade-green? (if (< 0 (- close open)) true false)))
-                    (println "trade-green? " trade-green?)
                     (cond
                       (empty? trades) (cond
                                         (u/green? current-candle)
@@ -89,18 +84,7 @@
                      balance-lp-two "20000"
                      low-lp (shorten (str (- low 0.0001) ) 7)
                      high-lp (shorten (str (+ high 0.0001)) 7)]
-                    (comment
-                      trade-green? (when (not (empty? trades)) (if (< 0 (- trade-price-num stop-price-num)) true false))
-                      (println "orders-> " orders)
-                      (println "tradeID-> " tradeID)
-                      (println "(empty? trades) " (empty? trades))
-                      (println "(u/green? current-candle) " (u/green? current-candle))
-                      (println "trades " trades)
-                      (println "orders " orders)
-                      (println "trade-price-num " trade-price-num)
-                      (println "stop-price-num " stop-price-num))
                     (when (empty? trades) (reset! trade-green? (if (< 0 (- close open)) true false)))
-                    (println "trade-green? " trade-green?)
                     (cond
                       (empty? trades) (cond
                                         (u/green? current-candle)
@@ -137,364 +121,380 @@
                 (println "hey-----------------------------------------" (<! c))
                 (testing trade-green?)
                 )))
-(def oanda-min (ds/oanda-historical "EUR_USD" "1" "M5")) 
-(def oanda-min (ds/oanda-historical "EUR_USD" "1" "M5"))
-(ds/oanda-historical "EUR_USD" "1" "M5")
-  (let [c (chan)]
+(let [c (chan)]
        (ds/oanda-history-cas c "EUR_USD" "1" "M5")
        (<!! c))
-(def oanda-min (ds/oanda-historical "EUR_USD" "1" "M5"))
-(ds/oanda-historical "EUR_USD" "5000" "M5")
+price-hist
+(def price-hist (atom {:current-order {}
+                         :open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+@price-hist
+(add-watch price-hist :clear-old
+             (fn [key atom old-state new-state]
+                 (prn "-- Atom Changed --")
+                 (prn "key" key)
+                 (prn "atom" atom)
+                 (prn "old-state" old-state)
+                 (prn "new-state" new-state)))
 (ds/oanda-historical "EUR_USD" "1" "M5")
-(def oanda-min (ds/oanda-historical "EUR_USD" "1" "M5"))
-oanda-min
-  (first oanda-min)
-  (:uniximtestamp (first oanda-min)) 
-  (:unixtimestamp (first oanda-min)) 
-  (c/from-long (:unixtimestamp (first oanda-min)))
-(t/hour
-    (c/from-long (:unixtimestamp (first oanda-min)))
+(first (ds/oanda-historical "EUR_USD" "1" "M5"))
+(swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+  (load-file "src/core/simple.clj")
+  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple))
+(ds/oanda-historical "EUR_USD" "1" "M5")
+(ds/oanda-historical "EUR_USD" "10" "M5")
+  (docs ds/oanda-historical)
+  (doc ds/oanda-historical)
+  (s/valid? (s/coll-of ::u/standard-candle) (ds/oanda-historical "EUR_USD" "10" "M5")) 
+  (smp/simple-strat (ds/oanda-historical "EUR_USD" "10" "M5"))
+  (load-file "src/core/simple.clj")
+  (load-file "src/core/utils.clj")
+  (smp/simple-strat (ds/oanda-historical "EUR_USD" "10" "M5"))
+  (smp/simple-strat-profit-calc  (smp/simple-strat (ds/oanda-historical "EUR_USD" "10" "M5")))
+  (smp/simple-strat-profit-calc  (smp/simple-strat (ds/oanda-historical "EUR_USD" "5000" "M5")))
+  (smp/simple-strat-profit-calc  (smp/simple-strat (ds/oanda-historical "EUR_USD" "5000" "1H")))
+  (smp/simple-strat-profit-calc  (smp/simple-strat (ds/oanda-historical "EUR_USD" "5000" "M5")))
+  (smp/simple-strat-profit-calc  (smp/simple-strat (ds/oanda-historical "EUR_USD" "1000" "1H"))) 
+  (smp/simple-strat-profit-calc  (smp/simple-strat (ds/oanda-historical "EUR_USD" "1000" "H1"))) 
+(ds/oanda-historical "EUR_USD" "10" "H1")
+(vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "1" "M5") )
+(ds/oanda-historical "EUR_USD" "1" "M5")
+  (vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "10" "M5") )
+(vs/plot-standard-candles 
+    [
+   {:unixtimestamp 1487304000000, :open 1.06741, :low 1.06722, :high 1.0674700000000001, :close 1.067455}
+   {:unixtimestamp 1487307600000, :open 1.06748, :low 1.066925, :high 1.06756, :close 1.067145}
+   {:unixtimestamp 1487311200000, :open 1.06712, :low 1.06654, :high 1.067345, :close 1.066675}
+   {:unixtimestamp 1487314800000, :open 1.066655, :low 1.065465, :high 1.0673300000000001, :close 1.0655450000000002}
+   {:unixtimestamp 1487318400000, :open 1.065525, :low 1.0640749999999999, :high 1.06588, :close 1.064845}
+   {:unixtimestamp 1487322000000, :open 1.064825, :low 1.0637400000000001, :high 1.06535, :close 1.0643449999999999}
+   {:unixtimestamp 1487325600000, :open 1.0643150000000001, :low 1.064, :high 1.065245, :close 1.064505}
+   {:unixtimestamp 1487329200000, :open 1.064485, :low 1.06418, :high 1.06501, :close 1.06467}
+   {:unixtimestamp 1487332800000, :open 1.064645, :low 1.064495, :high 1.06579, :close 1.064695}
+   {:unixtimestamp 1487336400000, :open 1.064715, :low 1.06448, :high 1.0657999999999999, :close 1.065355}
+   ]
     )
-(def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-(let [dadata oanda-min]
-       (->>
-         dadata
-         vec
-         (reduce
-           (fn [x y]
-               (cond
-                 (or (= 7 (:unixtimestamp y)) (= 8 (:unixtimestamp y)) (= 9 (:unixtimestamp y))) (update-in x [(- (count x) 1)] #(conj % y))
-                 :else (conj x [])))
-           [[]])
-         (filter #(not (empty? %)))))
-(let [dadata oanda-min]
-       (->>
-         dadata
-         vec
-         (reduce
-           (fn [x y]
-               (cond
-                 (or (= 7 (-> (:unixtimestamp y) c/from-long t/hour))
-                     (= 8 (-> (:unixtimestamp y) c/from-long t/hour))
-                     (= 9 (-> (:unixtimestamp y) c/from-long t/hour))) (update-in x [(- (count x) 1)] #(conj % y))
-                 :else (conj x [])))
-           [[]])
-         (filter #(not (empty? %)))))
-(def mornins (let [dadata oanda-min]
-                    (->>
-                      dadata
-                      vec
-                      (reduce
-                        (fn [x y]
-                            (cond
-                              (or (= 7 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  (= 8 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  (= 9 (-> (:unixtimestamp y) c/from-long t/hour))) (update-in x [(- (count x) 1)] #(conj % y))
-                              :else (conj x [])))
-                        [[]])
-                      (filter #(not (empty? %))))))
-  mornins
-  (first mornins)
-  (count mornins)
-  (:account (smp/simple-strat-perc-candleratio (first mornins) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 1) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 2) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 3) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 4) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 5) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 6) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 7) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 8) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 9) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 10) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 11) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 12) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 13) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 14) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 15) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 16) 0))
-(map 
-   #(:account (smp/simple-strat-perc-candleratio % 0)) 
-    mornins)
-  (def oanda-min (ds/oanda-historical "EU50_EUR" "5000" "M5"))
-  (def mornins (let [dadata oanda-min]
-                    (->>
-                      dadata
-                      vec
-                      (reduce
-                        (fn [x y]
-                            (cond
-                              (or (= 7 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  (= 8 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  (= 9 (-> (:unixtimestamp y) c/from-long t/hour))) (update-in x [(- (count x) 1)] #(conj % y))
-                              :else (conj x [])))
-                        [[]])
-                      (filter #(not (empty? %))))))
-  (map
-    #(:account (smp/simple-strat-perc-candleratio % 0))
-    mornins)
-oanda-min
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 16) 0))
-(nth mornins 0)
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 0) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 1) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 2) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 3) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 4) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 5) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 6) 0))
-  (:account (smp/simple-strat-perc-candleratio (nth mornins 7) 0))
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-(def mornins (let [dadata oanda-min]
-                    (->>
-                      dadata
-                      vec
-                      (reduce
-                        (fn [x y]
-                            (cond
-                              (or (= 7 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  (= 8 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  ) (update-in x [(- (count x) 1)] #(conj % y))
-                              :else (conj x [])))
-                        [[]])
-                      (filter #(not (empty? %))))))
-  (map
-    #(:account (smp/simple-strat-perc-candleratio % 0))
-    mornins)
-   (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-(def mornins (let [dadata oanda-min]
-                    (->>
-                      dadata
-                      vec
-                      (reduce
-                        (fn [x y]
-                            (cond
-                              (or (= 12 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  (= 13 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  ) (update-in x [(- (count x) 1)] #(conj % y))
-                              :else (conj x [])))
-                        [[]])
-                      (filter #(not (empty? %))))))
-  (map
-    #(:account (smp/simple-strat-perc-candleratio % 0))
-    mornins)
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-  (def mornins (let [dadata oanda-min]
-                    (->>
-                      dadata
-                      vec
-                      (reduce
-                        (fn [x y]
-                            (cond
-                              (or (= 16 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  ) (update-in x [(- (count x) 1)] #(conj % y))
-                              :else (conj x [])))
-                        [[]])
-                      (filter #(not (empty? %))))))
-  (map
-    #(:account (smp/simple-strat-perc-candleratio % 0))
-    mornins)
-  (def oanda-min (ds/oanda-historical "EUR_USD" "5000" "M5"))
-(def mornins (let [dadata oanda-min]
-                    (->>
-                      dadata
-                      vec
-                      (reduce
-                        (fn [x y]
-                            (cond
-                              (or (= 7 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  (= 8 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  ) (update-in x [(- (count x) 1)] #(conj % y))
-                              :else (conj x [])))
-                        [[]])
-                      (filter #(not (empty? %))))))
-  (map
-    #(:account (smp/simple-strat-perc-candleratio % 0))
-    mornins)
-(def mornins (let [dadata oanda-min]
-                    (->>
-                      dadata
-                      vec
-                      (reduce
-                        (fn [x y]
-                            (cond
-                              (or (= 12 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  (= 13 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  ) (update-in x [(- (count x) 1)] #(conj % y))
-                              :else (conj x [])))
-                        [[]])
-                      (filter #(not (empty? %))))))
-  (map
-    #(:account (smp/simple-strat-perc-candleratio % 0))
-    mornins)
-(def mornins (let [dadata oanda-min]
-                    (->>
-                      dadata
-                      vec
-                      (reduce
-                        (fn [x y]
-                            (cond
-                              (or (= 7 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  (= 8 (-> (:unixtimestamp y) c/from-long t/hour))
-                                  ) (update-in x [(- (count x) 1)] #(conj % y))
-                              :else (conj x [])))
-                        [[]])
-                      (filter #(not (empty? %))))))
-  (map
-    #(:account (smp/simple-strat-perc-candleratio % 0))
-    mornins)
-(->>
-    (map
-      #(:account (smp/simple-strat-perc-candleratio % 0))
-      mornins)
-    (reduce +)
+(smp/simple-strat [{:unixtimestamp 1487304000000, :open 1.00, :low 0.9, :high 1.2, :close 1.1}
+                     {:unixtimestamp 1487307600000, :open 1.06748, :low 1.066925, :high 1.06756, :close 1.067145}])
+(-> 
+  (smp/simple-strat [{:unixtimestamp 1487304000000, :open 1.00, :low 0.9, :high 1.2, :close 1.1}
+                     {:unixtimestamp 1487307600000, :open 1.06748, :low 1.066925, :high 1.06756, :close 1.067145}])  
+    (smp/simple-strat-profit-calc)
     )
-(map
-      #(:account (smp/simple-strat-perc-candleratio % 0))
-      mornins)
-(->>
-    (map
-      #(:account (smp/simple-strat-perc-candleratio % 0))
-      mornins)
-    (map #(- 1000 %))
+(-> 
+  (smp/simple-strat [{:unixtimestamp 1487304000000, :open 1.0, :low 0.9, :high 1.2, :close 1.1}
+                     {:unixtimestamp 1487307600000, :open 1.1, :low 1.0, :high 1.3, :close 1.2}])  
+    (smp/simple-strat-profit-calc)
     )
-    (map #(- % 1000 ))
-(->>
-    (map
-      #(:account (smp/simple-strat-perc-candleratio % 0))
-      mornins)
-    (map #(- % 1000))
+(-> 
+  (smp/simple-strat [{:unixtimestamp 1487304000000, :open 1.00000, :low 0.90000, :high 1.20000, :close 1.10000}
+                     {:unixtimestamp 1487307600000, :open 1.10000, :low 1.00000, :high 1.30000, :close 1.20000}])  
+    (smp/simple-strat-profit-calc)
     )
-(->>
-    (map
-      #(:account (smp/simple-strat-perc-candleratio % 0))
-      mornins)
-    (map #(- % 1000))
-    (reduce +)
+(defn round2
+    "Round a double to the given precision (number of significant digits)"
+    [precision d]
+    (let [factor (Math/pow 10 precision)]
+      (/ (Math/round (* d factor)) factor)))
+(round2 0.0003)
+(round2 0.0003 2)
+(round2  2 0.0003)
+(round2 2 0.12345)
+(-> 
+    (smp/simple-strat [{:unixtimestamp 1487304000000, :open 1.00000, :low 0.90000, :high 1.20000, :close 1.10000}
+                       {:unixtimestamp 1487307600000, :open 1.10000, :low 1.00000, :high 1.30000, :close 1.20000}])  
+    (smp/simple-strat-profit-calc)
     )
-(->>
-    (map
-      #(:account (smp/simple-strat-perc-candleratio % 0))
-      mornins)
+(->> 
+    (smp/simple-strat [{:unixtimestamp 1487304000000, :open 1.00000, :low 0.90000, :high 1.20000, :close 1.10000}
+                       {:unixtimestamp 1487307600000, :open 1.10000, :low 1.00000, :high 1.30000, :close 1.20000}])  
+    (smp/simple-strat-profit-calc)
+    (round2 1)
     )
-mornins
-(->>
-    (map
-      #(:account (smp/simple-strat-perc-candleratio % 0))
-      mornins)
-    first
+u/green-stop-out
+  (vs/plot-standard-candles  u/green-stop-out)
+  (vs/plot-standard-candles u/green-stop-out)
+(vs/plot-standard-candles 
+    [
+   {:unixtimestamp 1487304000000, :open 1.06741, :low 1.06722, :high 1.0674700000000001, :close 1.067455}
+   {:unixtimestamp 1487307600000, :open 1.06748, :low 1.066925, :high 1.06756, :close 1.067145}
+   {:unixtimestamp 1487311200000, :open 1.06712, :low 1.06654, :high 1.067345, :close 1.066675}
+   {:unixtimestamp 1487314800000, :open 1.066655, :low 1.065465, :high 1.0673300000000001, :close 1.0655450000000002}
+   {:unixtimestamp 1487318400000, :open 1.065525, :low 1.0640749999999999, :high 1.06588, :close 1.064845}
+   {:unixtimestamp 1487322000000, :open 1.064825, :low 1.0637400000000001, :high 1.06535, :close 1.0643449999999999}
+   {:unixtimestamp 1487325600000, :open 1.0643150000000001, :low 1.064, :high 1.065245, :close 1.064505}
+   {:unixtimestamp 1487329200000, :open 1.064485, :low 1.06418, :high 1.06501, :close 1.06467}
+   {:unixtimestamp 1487332800000, :open 1.064645, :low 1.064495, :high 1.06579, :close 1.064695}
+   {:unixtimestamp 1487336400000, :open 1.064715, :low 1.06448, :high 1.0657999999999999, :close 1.065355}
+  ]
     )
-    mornins
-(->>
-    mornins
-    first
+l
+(vs/plot-standard-candles 
+    [
+   {:unixtimestamp 1487304000000, :open 1.06741, :low 1.06722, :high 1.0674700000000001, :close 1.067455}
+   {:unixtimestamp 1487307600000, :open 1.06748, :low 1.066925, :high 1.06756, :close 1.067145}
+   {:unixtimestamp 1487311200000, :open 1.06712, :low 1.06654, :high 1.067345, :close 1.066675}
+   {:unixtimestamp 1487314800000, :open 1.066655, :low 1.065465, :high 1.0673300000000001, :close 1.0655450000000002}
+   {:unixtimestamp 1487318400000, :open 1.065525, :low 1.0640749999999999, :high 1.06588, :close 1.064845}
+   {:unixtimestamp 1487322000000, :open 1.064825, :low 1.0637400000000001, :high 1.06535, :close 1.0643449999999999}
+   {:unixtimestamp 1487325600000, :open 1.0643150000000001, :low 1.064, :high 1.065245, :close 1.064505}
+   {:unixtimestamp 1487329200000, :open 1.064485, :low 1.06418, :high 1.06501, :close 1.06467}
+   {:unixtimestamp 1487332800000, :open 1.064645, :low 1.064495, :high 1.06579, :close 1.064695}
+   {:unixtimestamp 1487336400000, :open 1.064715, :low 1.06448, :high 1.0657999999999999, :close 1.065355}
+  ]
     )
-(->>
-    mornins
-    first
-    
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple))
+  (vs/plot-standard-candles u/green-stop-out)
+(vs/plot-standard-candles 
+    [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479347761}
+                     {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479358762}
+                     {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479369763}]
     )
-(->>
-    mornins
-    first
-    :uniximtestamp
-    c/from-long
-    t/day
+(vs/plot-standard-candles 
+    [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
+     {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
+     {:open 1.3 :high 1.5 :low 1.15 :close 1.25 :unixtimestamp 1479366763}]
     )
-(->>
-    mornins
-    first
-    :uniximtestamp
-    c/from-long
-    pr/monday?
+(vs/plot-standard-candles 
+    [{:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
+     {:open 1.3 :high 1.3 :low 1.15 :close 1.25 :unixtimestamp 1479366763}]
     )
-(->>
-    mornins
-    first
-    :uniximtestamp
-    c/from-long
-    c/day
+(vs/plot-standard-candles 
+    [{:open 1.2 :high 1.5 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
+     {:open 1.3 :high 1.4 :low 1.15 :close 1.25 :unixtimestamp 1479366763}]
     )
-(->>
-    mornins
-    first
-    :uniximtestamp
-    c/from-long
-    t/day
+(vs/plot-standard-candles 
+    [{:open 1.2 :high 1.5 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
+     {:open 1.3 :high 1.4 :low 1.15 :close 1.20 :unixtimestamp 1479366763}]
     )
-(->>
-    mornins
-    first
-    :uniximtestamp
-    c/from-long
-    t/day-of-week
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple))
+(vs/plot-standard-candles 
+    [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
+     {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
+     {:open 1.3 :high 1.5 :low 1.15 :close 1.25 :unixtimestamp 1479366763}]
     )
-(map 
-  #(->>
-    %
-    first
-    :uniximtestamp
-    c/from-long
-    t/day-of-week
-    )  
-    
-    mornins)
-mornins
-(map
-  #(->>
-    %
-    first
-    :uniximtestamp
-    c/from-long
-    t/day
+  (vs/plot-standard-candles u/green->red)
+marginalia
+(marginalia)
+(my-task)
+(boot (marginalia)
+)
+(boot (marginalia))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple)
+    (boot (maraginalia)))
+(boot (maraginalia))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple)
+    (boot (marginalia)))
+(vs/plot-standard-candles 
+    [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
+     {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
+     {:open 1.3 :high 1.5 :low 1.15 :close 1.25 :unixtimestamp 1479366763}]
     )
-    mornins)
-(map
-  #(println
-    %
-    )
-    mornins)
-(map
-    #(println
-      (->>
-        %
-        first
-        ))
-    mornins)
-(map
-    #(println
-      (->>
-        %
-        first
-        :unixtimestamp
-        ))
-    mornins)
-(map
-    #(println
-      (->>
-        %
-        first
-        :unixtimestamp
-        c/from-long
-        ))
-    mornins)
-(map
-    #(println
-      (->>
-        %
-        first
-        :unixtimestamp
-        c/from-long
-        t/day-of-week
-        ))
-    mornins)
-(->>
-    (map
-      #(:account (smp/simple-strat-perc-candleratio % 0))
-      mornins)
-    (map #(- % 1000))
-    (reduce +)
-    )
-  (map
-    #(:account (smp/simple-strat-perc-candleratio % 0))
-    mornins)
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple)
+    (boot (marginalia)))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple)
+    (boot (marginalia)))
+  (vs/plot-standard-candles u/green->green->green-stop-out)
+  (vs/plot-standard-candles u/green->green->red)
+  (load-file "src/core/utils.clj")
+(vs/plot-standard-candles 
+    [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
+     {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
+     {:open 1.3 :high 1.5 :low 1.15 :close 1.25 :unixtimestamp 1479366763}]
+)
+  (vs/plot-standard-candles u/green->green->red)
+  (load-file "src/core/utils.clj")
+  (vs/plot-standard-candles u/green->green->red)
+  (vs/plot-standard-candles u/red-stop-out)
+  (load-file "src/core/utils.clj")
+  (vs/plot-standard-candles u/red->green)
+  (load-file "src/core/utils.clj")
+  (vs/plot-standard-candles u/red->green)
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple)
+    (boot (marginalia)))
+  (vs/plot-standard-candles u/red->reversal)
+  (vs/plot-standard-candles u/red-reversal)
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple)
+    (boot (marginalia)))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple)
+    (boot (marginalia)))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple)
+    (boot (marginalia)))
+  (vs/plot-standard-candles u/green-reversal)
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple)
+    (boot (marginalia)))
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple)
+    (boot (marginalia)))
+  (vs/plot-standard-candles u/green-half-ratio)
+  (vs/plot-standard-candles [u/green-half-ratio])
+[u/green-half-ratio]
+  (vs/plot-standard-candles [u/green-half-ratio])
+  (load-file "src/core/utils.clj")
+  (vs/plot-standard-candles [u/green-half-ratio])
+[u/green-half-ratio]
+  (vs/plot-standard-candles [u/green-half-ratio])
+(do
+    (load-file "src/core/visual.clj")
+    (load-file "src/core/utils.clj")
+    (load-file "src/core/datasources.clj")
+    (load-file "src/core/simple.clj")
+    (load-file "src/core/spike.clj")
+    (load-file "src/core/marketcap.clj")
+    (load-file "build.boot")
+    (ts/unstrument)
+    (ts/instrument)
+    (run-tests 'core.utils 'core.simple)
+    (boot (marginalia)))
+(doc watch)
+(dev)
+(boot (dev)
+)
+(boot (watch) (test-doc-refresh))
+(boot (watch) (marginalia))
+(boot (watch) (marginalia) (test-doc-refresh))
+(dev)
+(run)
+(dev)
+(test-doc-refresh)
+(boot (test-doc-refresh)
+)
+(rrl)
+  (u/digit-count 12345)
+  (u/digit-count 12345.909)
+  (Math/log10 12345.909)
+  (Math/floor (Math/log10 12345.909))
