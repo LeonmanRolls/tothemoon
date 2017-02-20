@@ -13,7 +13,8 @@
     [cfft "0.1.0"]
     [factual/timely "0.0.3"]
     [clj-time "0.12.0"]
-    [it.frbracch/boot-marginalia "0.1.3-1" :scope "test"]]
+    [it.frbracch/boot-marginalia "0.1.3-1" :scope "test"]
+    [se.haleby/stub-http "0.2.1"]]
   :source-paths #{"src"})
 
 (require
@@ -42,7 +43,8 @@
   '[clojure.test :as tst :refer [is run-tests]]
   '[timely.core :as timely]
   '[clojure.core.async :as casy :refer [<!! <! >! go chan go-loop timeout]]
-  '[it.frbracch.boot-marginalia :refer [marginalia]])
+  '[it.frbracch.boot-marginalia :refer [marginalia]]
+  '[stub-http.core :refer :all])
 
 (deftask my-task
          "Does nothing."
@@ -68,7 +70,7 @@
           (load-file "build.boot")
           (ts/unstrument)
           (ts/instrument)
-          (run-tests 'core.utils 'core.simple)) 
+          (run-tests 'core.utils 'core.simple 'core.datasources)) 
         result))))
 
 (deftask dev 
@@ -92,6 +94,41 @@
 
 (comment
 
+  ;Mock request as provided for by stub-http
+  (defn mock-req->body-data
+    "Takes a mock request and returns the body of the response as a map" 
+    [mock-req]
+    (jsn/read-str (get (:body mock-req) "postData") :key-fn keyword ))
+
+(update-in (ds/order-gen 100 "EUR_USD") [:order] merge (ds/stop-loss-gen 100))
+
+  (ds/oanda-open-order-cas! "EUR_USD" 100 "sadfasf")
+
+  (def cache (atom []))
+
+  (with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 (str uri "/something") 123.233))
+    (let [requests (recorded-requests server)
+          order (:order (u/mock-req->body-data @cache))]
+      (contains? order :stopLossOnFill)))
+
+  (type (:body @cache))
+
+    (type (get (:body @cache) "postData"))  
+
+  (jsn/read-str 
+    (get (:body @cache) "postData") :key-fn keyword
+    )
+  
+  (jsn/read-str 
+    (get (:body @cache) "postData"))
+
+  (u/mock-req->body-data @cache)
+
+  (smp/simple-strat-live @price-hist (ds/oanda-historical "EUR_USD" "10" "M5"))
+
+ (u/basic-stub (fn [uri] (ds/http-cas uri {} http/GET)))
+
   (def price-hist (atom {:current-order {}
                          :open-date nil
                          :stop-loss nil
@@ -110,15 +147,14 @@
                  (prn "old-state" old-state)
                  (prn "new-state" new-state)))
 
-  (load-file "src/core/utils.clj")
-  (load-file "src/core/simple.clj")
-  (load-file "src/core/datasources.clj")
-
   (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "10" "M5")))
+  (swap! price-hist smp/simple-strat-perc-live (ds/oanda-historical "EUR_USD" "10" "M5"))
 
-  ;(s/valid? (s/coll-of ::u/standard-candle) (ds/oanda-historical "EUR_USD" "10" "M5")) 
+  (contains? @price-hist :current-order)
 
-  (doc ds/oanda-historical)
+  (contains? 
+    (smp/simple-strat-perc-live @price-hist (first (ds/oanda-historical "EUR_USD" "10" "M5")))
+    :current-order)
 
   (smp/simple-strat (ds/oanda-historical "EUR_USD" "10" "M5"))
 

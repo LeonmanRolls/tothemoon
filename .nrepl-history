@@ -1,475 +1,3 @@
-          _ (u/on-the-minute-second c [4 9 14 19 24 29 34 39 44 49 54 59] [54])]
-         (while true
-                (println "hey-----------------------------------------" (<! c))
-                (testing trade-green?)
-                )))
-(defn testing [trade-green?]
-        (go
-               (let [shorten (fn [stng length] (if (>= length (count stng)) stng (subs stng 0 length)))
-                     c1 (chan)
-                     c2 (chan)
-                     order-chan (chan)
-                     _ (go (println (<! order-chan)))
-                     _ (ds/acc-info c1)
-                     _ (ds/oanda-history-cas c2 "EUR_USD" "1" "M5")
-                     {{:keys [orders balance trades positions]} :account :as account} (<! c1)
-                     {trade-price :price} (when (not (empty? trades)) (first trades))
-                     {stop-price :price} (when (not (empty? trades)) (first orders))
-                     stop-price-num (when (not (empty? trades)) (read-string stop-price))
-                     trade-price-num (when (not (empty? trades)) (read-string trade-price))
-                     {:keys [tradeID]} (when (not (empty? orders)) (first orders))
-                     {:keys [open high low close] :as current-candle} (first (<! c2))
-                     balance-lp (shorten (str balance) 4)
-                     balance-lp-two (shorten (str (* 2 (read-string balance))) 4)
-                     balance-lp "10000"
-                     balance-lp-two "20000"
-                     low-lp (shorten (str (- low 0.0001) ) 7)
-                     high-lp (shorten (str (+ high 0.0001)) 7)]
-                    (when (empty? trades) (reset! trade-green? (if (< 0 (- close open)) true false)))
-                    (cond
-                      (empty? trades) (cond
-                                        (u/green? current-candle)
-                                        (do
-                                          (println "empty trade green current " low-lp)
-                                          (ds/oanda-open-order-cas order-chan "EUR_USD" balance-lp low-lp))
-                                        :red (do
-                                               (println "empty trade red current " high-lp)
-                                               (ds/oanda-open-order-cas order-chan "EUR_USD" (str "-" balance-lp) high-lp)))
-                      (u/green? current-candle) (cond
-                                                  @trade-green? (do
-                                                                 (println "current candle green, green trade " low-lp)
-                                                                 (ds/oanda-patch-order-cas order-chan tradeID low-lp))
-                                                  :trade-red (do
-                                                               (println "current candle green, red trade " balance-lp-two)
-                                                               (ds/oanda-open-order-cas order-chan "EUR_USD" (str balance-lp-two) low-lp)
-                                                               (reset! trade-green? (if (< 0 (- close open)) true false))
-                                                               ))
-                      :current-candle-red (cond
-                                            @trade-green? (do
-                                                           (println "current candle red, green trade " balance-lp-two)
-                                                           (ds/oanda-open-order-cas order-chan "EUR_USD" (str "-" balance-lp-two) high-lp)
-                                                           (reset! trade-green? (if (< 0 (- close open)) true false))
-                                                           )
-                                            :trade-red (do
-                                                         (println "current candle red, red trade " high-lp)
-                                                         (ds/oanda-patch-order-cas order-chan tradeID high-lp))))))
-        )
-(go
-    (let [c (chan)
-          trade-green? (atom false)
-          _ (u/on-the-minute-second c [4 9 14 19 24 29 34 39 44 49 54 59] [54])]
-         (while true
-                (println "hey-----------------------------------------" (<! c))
-                (testing trade-green?)
-                )))
-(defn testing [trade-green?]
-        (go
-               (let [shorten (fn [stng length] (if (>= length (count stng)) stng (subs stng 0 length)))
-                     c1 (chan)
-                     c2 (chan)
-                     order-chan (chan)
-                     _ (go (println (<! order-chan)))
-                     _ (ds/acc-info c1)
-                     _ (ds/oanda-history-cas c2 "EUR_USD" "1" "M5")
-                     {{:keys [orders balance trades positions]} :account :as account} (<! c1)
-                     {trade-price :price} (when (not (empty? trades)) (first trades))
-                     {stop-price :price} (when (not (empty? trades)) (first orders))
-                     stop-price-num (when (not (empty? trades)) (read-string stop-price))
-                     trade-price-num (when (not (empty? trades)) (read-string trade-price))
-                     {:keys [tradeID]} (when (not (empty? orders)) (first orders))
-                     {:keys [open high low close] :as current-candle} (first (<! c2))
-                     balance-lp (shorten (str balance) 4)
-                     balance-lp-two (shorten (str (* 2 (read-string balance))) 4)
-                     balance-lp "10000"
-                     balance-lp-two "20000"
-                     low-lp (shorten (str (- low 0.0001) ) 7)
-                     high-lp (shorten (str (+ high 0.0001)) 7)]
-                    (when (empty? trades) (reset! trade-green? (if (< 0 (- close open)) true false)))
-                    (cond
-                      (empty? trades) (cond
-                                        (u/green? current-candle)
-                                        (do
-                                          (println "empty trade green current " low-lp)
-                                          (ds/oanda-open-order-cas order-chan "EUR_USD" balance-lp low-lp))
-                                        :red (do
-                                               (println "empty trade red current " high-lp)
-                                               (ds/oanda-open-order-cas order-chan "EUR_USD" (str "-" balance-lp) high-lp)))
-                      (u/green? current-candle) (cond
-                                                  @trade-green? (do
-                                                                 (println "current candle green, green trade " low-lp)
-                                                                 (ds/oanda-patch-order-cas order-chan tradeID low-lp))
-                                                  :trade-red (do
-                                                               (println "current candle green, red trade " balance-lp-two)
-                                                               (ds/oanda-open-order-cas order-chan "EUR_USD" (str balance-lp-two) low-lp)
-                                                               (reset! trade-green? (if (< 0 (- close open)) true false))
-                                                               ))
-                      :current-candle-red (cond
-                                            @trade-green? (do
-                                                           (println "current candle red, green trade " balance-lp-two)
-                                                           (ds/oanda-open-order-cas order-chan "EUR_USD" (str "-" balance-lp-two) high-lp)
-                                                           (reset! trade-green? (if (< 0 (- close open)) true false))
-                                                           )
-                                            :trade-red (do
-                                                         (println "current candle red, red trade " high-lp)
-                                                         (ds/oanda-patch-order-cas order-chan tradeID high-lp))))))
-        )
-(go
-    (let [c (chan)
-          trade-green? (atom false)
-          _ (u/on-the-minute-second c [4 9 14 19 24 29 34 39 44 49 54 59] [54])]
-         (while true
-                (println "hey-----------------------------------------" (<! c))
-                (testing trade-green?)
-                )))
-(let [c (chan)]
-       (ds/oanda-history-cas c "EUR_USD" "1" "M5")
-       (<!! c))
-price-hist
-(def price-hist (atom {:current-order {}
-                         :open-date nil
-                         :stop-loss nil
-                         :buy-or-sell nil
-                         :order-price nil
-                         :account 1000
-                         :history []}))
-@price-hist
-(add-watch price-hist :clear-old
-             (fn [key atom old-state new-state]
-                 (prn "-- Atom Changed --")
-                 (prn "key" key)
-                 (prn "atom" atom)
-                 (prn "old-state" old-state)
-                 (prn "new-state" new-state)))
-(ds/oanda-historical "EUR_USD" "1" "M5")
-(first (ds/oanda-historical "EUR_USD" "1" "M5"))
-(swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-  (load-file "src/core/simple.clj")
-  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "1" "M5")))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple))
-(ds/oanda-historical "EUR_USD" "1" "M5")
-(ds/oanda-historical "EUR_USD" "10" "M5")
-  (docs ds/oanda-historical)
-  (doc ds/oanda-historical)
-  (s/valid? (s/coll-of ::u/standard-candle) (ds/oanda-historical "EUR_USD" "10" "M5")) 
-  (smp/simple-strat (ds/oanda-historical "EUR_USD" "10" "M5"))
-  (load-file "src/core/simple.clj")
-  (load-file "src/core/utils.clj")
-  (smp/simple-strat (ds/oanda-historical "EUR_USD" "10" "M5"))
-  (smp/simple-strat-profit-calc  (smp/simple-strat (ds/oanda-historical "EUR_USD" "10" "M5")))
-  (smp/simple-strat-profit-calc  (smp/simple-strat (ds/oanda-historical "EUR_USD" "5000" "M5")))
-  (smp/simple-strat-profit-calc  (smp/simple-strat (ds/oanda-historical "EUR_USD" "5000" "1H")))
-  (smp/simple-strat-profit-calc  (smp/simple-strat (ds/oanda-historical "EUR_USD" "5000" "M5")))
-  (smp/simple-strat-profit-calc  (smp/simple-strat (ds/oanda-historical "EUR_USD" "1000" "1H"))) 
-  (smp/simple-strat-profit-calc  (smp/simple-strat (ds/oanda-historical "EUR_USD" "1000" "H1"))) 
-(ds/oanda-historical "EUR_USD" "10" "H1")
-(vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "1" "M5") )
-(ds/oanda-historical "EUR_USD" "1" "M5")
-  (vs/plot-standard-candles (ds/oanda-historical "EUR_USD" "10" "M5") )
-(vs/plot-standard-candles 
-    [
-   {:unixtimestamp 1487304000000, :open 1.06741, :low 1.06722, :high 1.0674700000000001, :close 1.067455}
-   {:unixtimestamp 1487307600000, :open 1.06748, :low 1.066925, :high 1.06756, :close 1.067145}
-   {:unixtimestamp 1487311200000, :open 1.06712, :low 1.06654, :high 1.067345, :close 1.066675}
-   {:unixtimestamp 1487314800000, :open 1.066655, :low 1.065465, :high 1.0673300000000001, :close 1.0655450000000002}
-   {:unixtimestamp 1487318400000, :open 1.065525, :low 1.0640749999999999, :high 1.06588, :close 1.064845}
-   {:unixtimestamp 1487322000000, :open 1.064825, :low 1.0637400000000001, :high 1.06535, :close 1.0643449999999999}
-   {:unixtimestamp 1487325600000, :open 1.0643150000000001, :low 1.064, :high 1.065245, :close 1.064505}
-   {:unixtimestamp 1487329200000, :open 1.064485, :low 1.06418, :high 1.06501, :close 1.06467}
-   {:unixtimestamp 1487332800000, :open 1.064645, :low 1.064495, :high 1.06579, :close 1.064695}
-   {:unixtimestamp 1487336400000, :open 1.064715, :low 1.06448, :high 1.0657999999999999, :close 1.065355}
-   ]
-    )
-(smp/simple-strat [{:unixtimestamp 1487304000000, :open 1.00, :low 0.9, :high 1.2, :close 1.1}
-                     {:unixtimestamp 1487307600000, :open 1.06748, :low 1.066925, :high 1.06756, :close 1.067145}])
-(-> 
-  (smp/simple-strat [{:unixtimestamp 1487304000000, :open 1.00, :low 0.9, :high 1.2, :close 1.1}
-                     {:unixtimestamp 1487307600000, :open 1.06748, :low 1.066925, :high 1.06756, :close 1.067145}])  
-    (smp/simple-strat-profit-calc)
-    )
-(-> 
-  (smp/simple-strat [{:unixtimestamp 1487304000000, :open 1.0, :low 0.9, :high 1.2, :close 1.1}
-                     {:unixtimestamp 1487307600000, :open 1.1, :low 1.0, :high 1.3, :close 1.2}])  
-    (smp/simple-strat-profit-calc)
-    )
-(-> 
-  (smp/simple-strat [{:unixtimestamp 1487304000000, :open 1.00000, :low 0.90000, :high 1.20000, :close 1.10000}
-                     {:unixtimestamp 1487307600000, :open 1.10000, :low 1.00000, :high 1.30000, :close 1.20000}])  
-    (smp/simple-strat-profit-calc)
-    )
-(defn round2
-    "Round a double to the given precision (number of significant digits)"
-    [precision d]
-    (let [factor (Math/pow 10 precision)]
-      (/ (Math/round (* d factor)) factor)))
-(round2 0.0003)
-(round2 0.0003 2)
-(round2  2 0.0003)
-(round2 2 0.12345)
-(-> 
-    (smp/simple-strat [{:unixtimestamp 1487304000000, :open 1.00000, :low 0.90000, :high 1.20000, :close 1.10000}
-                       {:unixtimestamp 1487307600000, :open 1.10000, :low 1.00000, :high 1.30000, :close 1.20000}])  
-    (smp/simple-strat-profit-calc)
-    )
-(->> 
-    (smp/simple-strat [{:unixtimestamp 1487304000000, :open 1.00000, :low 0.90000, :high 1.20000, :close 1.10000}
-                       {:unixtimestamp 1487307600000, :open 1.10000, :low 1.00000, :high 1.30000, :close 1.20000}])  
-    (smp/simple-strat-profit-calc)
-    (round2 1)
-    )
-u/green-stop-out
-  (vs/plot-standard-candles  u/green-stop-out)
-  (vs/plot-standard-candles u/green-stop-out)
-(vs/plot-standard-candles 
-    [
-   {:unixtimestamp 1487304000000, :open 1.06741, :low 1.06722, :high 1.0674700000000001, :close 1.067455}
-   {:unixtimestamp 1487307600000, :open 1.06748, :low 1.066925, :high 1.06756, :close 1.067145}
-   {:unixtimestamp 1487311200000, :open 1.06712, :low 1.06654, :high 1.067345, :close 1.066675}
-   {:unixtimestamp 1487314800000, :open 1.066655, :low 1.065465, :high 1.0673300000000001, :close 1.0655450000000002}
-   {:unixtimestamp 1487318400000, :open 1.065525, :low 1.0640749999999999, :high 1.06588, :close 1.064845}
-   {:unixtimestamp 1487322000000, :open 1.064825, :low 1.0637400000000001, :high 1.06535, :close 1.0643449999999999}
-   {:unixtimestamp 1487325600000, :open 1.0643150000000001, :low 1.064, :high 1.065245, :close 1.064505}
-   {:unixtimestamp 1487329200000, :open 1.064485, :low 1.06418, :high 1.06501, :close 1.06467}
-   {:unixtimestamp 1487332800000, :open 1.064645, :low 1.064495, :high 1.06579, :close 1.064695}
-   {:unixtimestamp 1487336400000, :open 1.064715, :low 1.06448, :high 1.0657999999999999, :close 1.065355}
-  ]
-    )
-l
-(vs/plot-standard-candles 
-    [
-   {:unixtimestamp 1487304000000, :open 1.06741, :low 1.06722, :high 1.0674700000000001, :close 1.067455}
-   {:unixtimestamp 1487307600000, :open 1.06748, :low 1.066925, :high 1.06756, :close 1.067145}
-   {:unixtimestamp 1487311200000, :open 1.06712, :low 1.06654, :high 1.067345, :close 1.066675}
-   {:unixtimestamp 1487314800000, :open 1.066655, :low 1.065465, :high 1.0673300000000001, :close 1.0655450000000002}
-   {:unixtimestamp 1487318400000, :open 1.065525, :low 1.0640749999999999, :high 1.06588, :close 1.064845}
-   {:unixtimestamp 1487322000000, :open 1.064825, :low 1.0637400000000001, :high 1.06535, :close 1.0643449999999999}
-   {:unixtimestamp 1487325600000, :open 1.0643150000000001, :low 1.064, :high 1.065245, :close 1.064505}
-   {:unixtimestamp 1487329200000, :open 1.064485, :low 1.06418, :high 1.06501, :close 1.06467}
-   {:unixtimestamp 1487332800000, :open 1.064645, :low 1.064495, :high 1.06579, :close 1.064695}
-   {:unixtimestamp 1487336400000, :open 1.064715, :low 1.06448, :high 1.0657999999999999, :close 1.065355}
-  ]
-    )
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple))
-  (vs/plot-standard-candles u/green-stop-out)
-(vs/plot-standard-candles 
-    [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479347761}
-                     {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479358762}
-                     {:open 1.3 :high 1.5 :low 1 :close 1.4 :unixtimestamp 1479369763}]
-    )
-(vs/plot-standard-candles 
-    [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
-     {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
-     {:open 1.3 :high 1.5 :low 1.15 :close 1.25 :unixtimestamp 1479366763}]
-    )
-(vs/plot-standard-candles 
-    [{:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
-     {:open 1.3 :high 1.3 :low 1.15 :close 1.25 :unixtimestamp 1479366763}]
-    )
-(vs/plot-standard-candles 
-    [{:open 1.2 :high 1.5 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
-     {:open 1.3 :high 1.4 :low 1.15 :close 1.25 :unixtimestamp 1479366763}]
-    )
-(vs/plot-standard-candles 
-    [{:open 1.2 :high 1.5 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
-     {:open 1.3 :high 1.4 :low 1.15 :close 1.20 :unixtimestamp 1479366763}]
-    )
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple))
-(vs/plot-standard-candles 
-    [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
-     {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
-     {:open 1.3 :high 1.5 :low 1.15 :close 1.25 :unixtimestamp 1479366763}]
-    )
-  (vs/plot-standard-candles u/green->red)
-marginalia
-(marginalia)
-(my-task)
-(boot (marginalia)
-)
-(boot (marginalia))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple)
-    (boot (maraginalia)))
-(boot (maraginalia))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple)
-    (boot (marginalia)))
-(vs/plot-standard-candles 
-    [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
-     {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
-     {:open 1.3 :high 1.5 :low 1.15 :close 1.25 :unixtimestamp 1479366763}]
-    )
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple)
-    (boot (marginalia)))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple)
-    (boot (marginalia)))
-  (vs/plot-standard-candles u/green->green->green-stop-out)
-  (vs/plot-standard-candles u/green->green->red)
-  (load-file "src/core/utils.clj")
-(vs/plot-standard-candles 
-    [{:open 1 :high 1.3 :low 0.9 :close 1.2 :unixtimestamp 1479346761}
-     {:open 1.2 :high 1.4 :low 1.1 :close 1.3 :unixtimestamp 1479356762}
-     {:open 1.3 :high 1.5 :low 1.15 :close 1.25 :unixtimestamp 1479366763}]
-)
-  (vs/plot-standard-candles u/green->green->red)
-  (load-file "src/core/utils.clj")
-  (vs/plot-standard-candles u/green->green->red)
-  (vs/plot-standard-candles u/red-stop-out)
-  (load-file "src/core/utils.clj")
-  (vs/plot-standard-candles u/red->green)
-  (load-file "src/core/utils.clj")
-  (vs/plot-standard-candles u/red->green)
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple)
-    (boot (marginalia)))
-  (vs/plot-standard-candles u/red->reversal)
-  (vs/plot-standard-candles u/red-reversal)
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple)
-    (boot (marginalia)))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple)
-    (boot (marginalia)))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple)
-    (boot (marginalia)))
-  (vs/plot-standard-candles u/green-reversal)
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple)
-    (boot (marginalia)))
-(do
-    (load-file "src/core/visual.clj")
-    (load-file "src/core/utils.clj")
-    (load-file "src/core/datasources.clj")
-    (load-file "src/core/simple.clj")
-    (load-file "src/core/spike.clj")
-    (load-file "src/core/marketcap.clj")
-    (load-file "build.boot")
-    (ts/unstrument)
-    (ts/instrument)
-    (run-tests 'core.utils 'core.simple)
-    (boot (marginalia)))
-  (vs/plot-standard-candles u/green-half-ratio)
-  (vs/plot-standard-candles [u/green-half-ratio])
-[u/green-half-ratio]
-  (vs/plot-standard-candles [u/green-half-ratio])
-  (load-file "src/core/utils.clj")
-  (vs/plot-standard-candles [u/green-half-ratio])
-[u/green-half-ratio]
-  (vs/plot-standard-candles [u/green-half-ratio])
-(do
-    (load-file "src/core/visual.clj")
     (load-file "src/core/utils.clj")
     (load-file "src/core/datasources.clj")
     (load-file "src/core/simple.clj")
@@ -498,3 +26,475 @@ marginalia
   (u/digit-count 12345.909)
   (Math/log10 12345.909)
   (Math/floor (Math/log10 12345.909))
+  (u/to-human 1479470400000)
+  (u/map->mapofcol {:unixtimestamp 1479470400000, :open 1, :low 0.6, :high 1.1, :close 0.7})
+(defn map->mapofcol 
+    "Puts the vals of a map into vectors" 
+    [damap]
+(map (fn [x] [(first x) [(last x)]]) damap)
+    )
+  (u/map->mapofcol {:unixtimestamp 1479470400000, :open 1, :low 0.6, :high 1.1, :close 0.7})
+  (u/json-get "https://jsonplaceholder.typicode.com")
+  (u/json-get "https://jsonplaceholder.typicode.com/posts/1")
+  (u/json-get "http://ip.jsontest.com/")
+  (type (u/json-get "http://ip.jsontest.com/"))
+  (load-file "src/core/utils.clj")
+  (type (u/json-get "http://ip.jsontest.com/"))
+  (u/to-human 1479470400000)
+  (u/map->mapofcol {:unixtimestamp 1479470400000, :open 1, :low 0.6, :high 1.1, :close 0.7})
+  (series-insert [1 2 3] {:one 1 :two 2 :three 3})
+  (u/series-insert [1 2 3] {:one 1 :two 2 :three 3})
+(rrl)
+  (smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "10" "M5")))
+(def price-hist (atom {:current-order {}
+                         :open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (swap! price-hist smp/simple-strat-perc-live (first (ds/oanda-historical "EUR_USD" "10" "M5")))
+  (swap! price-hist smp/simple-strat-perc-live (ds/oanda-historical "EUR_USD" "10" "M5"))
+  (contains? @price-hist :current-order)
+  (smp/simple-strat-perc-live price-hist (first (ds/oanda-historical "EUR_USD" "10" "M5")))
+  (smp/simple-strat-perc-live @price-hist (first (ds/oanda-historical "EUR_USD" "10" "M5")))
+(contains? 
+    (smp/simple-strat-perc-live @price-hist (first (ds/oanda-historical "EUR_USD" "10" "M5")))
+    :current-order)
+(def price-hist (atom {:current-order {}
+                         :open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+(with-routes!
+    {"/something" {:status 200 :content-type "application/json"
+                   :body   (jsn/write-str {:hello "world"})}}
+    (is (= "world"  (:hello (u/json-get "/something")))))
+(with-routes!
+    {"/something" {:status 200 :content-type "application/json"
+                   :body   (jsn/write-str {:hello "world"})}}
+    (is (= "world"  (:hello (u/json-get "/something")))))
+(with-routes!
+    {"/something" {:status 200 :content-type "application/json"
+                   :body   (jsn/write-str {:hello "world"})}}
+    (is (= "world"  (:hello (u/json-get "http://www.google.com/something")))))
+(with-routes!
+    {"/something" {:status 200 :content-type "application/json"
+                   :body   (jsn/write-str {:hello "world"})}}
+    (is (= "world"  (:hello (u/json-get (str uri "/something"))))))
+(with-routes!
+    {(str "/accounts/" "101-004-4632889-001" "/orders")  {:status 200 :content-type "application/json"
+                                                          :body   (jsn/write-str {:hello "world"})}}
+    (simple-strat-perc-live 
+      u/oanda-account-rep
+      (first (ds/oanda-historical "EUR_USD" "10" "M5")))
+    )
+(with-routes!
+    {(str "/accounts/" "101-004-4632889-001" "/orders")  {:status 200 :content-type "application/json"
+                                                          :body   (jsn/write-str {:hello "world"})}}
+    (smp/simple-strat-perc-live 
+      u/oanda-account-rep
+      (first (ds/oanda-historical "EUR_USD" "10" "M5")))
+    )
+(rrl)
+(go 
+    (with-routes!
+      {"/something" {:status 200 :content-type "application/json"
+                     :body   (jsn/write-str {:hello "world"})}}
+      (println "" (:hello (<! (http-request-cas (str url "/something") {} {}))))
+      ) 
+    )
+(go 
+    (with-routes!
+      {"/something" {:status 200 :content-type "application/json"
+                     :body   (jsn/write-str {:hello "world"})}}
+      (println "" (:hello (<! (ds/http-request-cas (str url "/something") {} {}))))
+      ) 
+    )
+(with-routes!
+      {"/something" {:status 200 :content-type "application/json"
+                     :body   (jsn/write-str {:hello "world"})}}
+      (println "" (:hello (<! (ds/http-request-cas (str url "/something") {} {}))))
+      )
+(go 
+    (with-routes!
+      {"/something" {:status 200 :content-type "application/json"
+                     :body   (jsn/write-str {:hello "world"})}}
+      (println "" (:hello (<! (ds/http-request-cas (str uri "/something") {} {}))))
+      ) 
+    )
+(with-routes!
+      {"/something" {:status 200 :content-type "application/json"
+                     :body   (jsn/write-str {:hello "world"})}}
+      (println "" (:hello (<!! (ds/http-request-cas (str uri "/something") {} {}))))
+      )
+(go 
+    (with-routes!
+      {"/something" {:status 200 :content-type "application/json"
+                     :body   (jsn/write-str {:hello "world"})}}
+      (:hello (<!! (ds/http-request-cas (str uri "/something") {} {})))
+      ) 
+    )
+(with-routes!
+      {"/something" {:status 200 :content-type "application/json"
+                     :body   (jsn/write-str {:hello "world"})}}
+      (:hello (<!! (ds/http-request-cas (str uri "/something") {} {})))
+      )
+(defn basic-stub
+    "Takes a function that executes a request when given a url and returns the result on a channel." 
+    [req-fn] 
+    (with-routes!
+      {"/something" {:status 200 :content-type "application/json"
+                     :body   (jsn/write-str {:hello "world"})}}
+      (:hello (<!! (req-fn (str uri "/something"))))))
+  (basic-stub (fn [url] (ds/http-request-cas url {} {}) ))
+u/oanda-account-rep
+  (smp/simple-strat u/oanda-account-rep (ds/oanda-historical "EUR_USD" "10" "M5"))
+  (smp/simple-strat @price-hist (ds/oanda-historical "EUR_USD" "10" "M5"))
+  (def price-hist (atom {:current-order {}
+                         :open-date nil
+                         :stop-loss nil
+                         :buy-or-sell nil
+                         :order-price nil
+                         :account 1000
+                         :history []}))
+  (smp/simple-strat @price-hist (ds/oanda-historical "EUR_USD" "10" "M5"))
+  (smp/simple-strat-live @price-hist (ds/oanda-historical "EUR_USD" "10" "M5"))
+  (ds/oanda-open-order-cas (chan) "EUR_USD" 100)
+(rrl)
+  (ds/oanda-open-order-cas (chan) "EUR_USD" 100)
+(rrl)
+  (ds/oanda-open-order-cas (chan) "EUR_USD" 100)
+(rrl)
+(defn http-request-cas 
+    "http request that puts the result on a cas channel"
+    [url headers body method]
+    (with-open [client (http/create-client)]
+      (let [resp (method client
+                            url
+                            :headers headers 
+                            :body (jsn/write-str body))]
+        (http/await resp)
+        (go (jsn/read-str (http/string resp) :key-fn keyword)))))
+(with-routes!
+    {"/something" {:status 200 :content-type "application/json"
+                   :body   (jsn/write-str {:hello "world"})}}
+    (is 
+      (= "world" (:hello (<!! (http-request-cas (str uri "/something") {} {} http/GET))))))
+(defn http-request-cas 
+    "http request that puts the result on a cas channel"
+    [url headers body method]
+    (with-open [client (http/create-client)]
+      (let [resp (method client
+                            url
+                            :headers headers 
+                            :body (jsn/write-str body))]
+        (http/await resp)
+        (go (jsn/read-str (http/string resp) :key-fn keyword)))))
+(with-routes!
+    {"/something" {:status 200 :content-type "application/json"
+                   :body   (jsn/write-str {:hello "world"})}}
+    (is 
+      (= "world" (:hello (<!! (http-request-cas (str uri "/something") {} {} http/GET))))))
+(rrl)
+  (<!! (http-request-cas (str uri "/something") {} http/GET))
+(with-routes!
+    {"/something" {:status 200 :content-type "application/json"
+                   :body   (jsn/write-str {:hello "world"})}}
+  (<!! (http-request-cas (str uri "/something") {} http/GET))
+    )
+(with-routes!
+    {"/something" {:status 200 :content-type "application/json"
+                   :body   (jsn/write-str {:hello "world"})}}
+  (<!! (http-cas (str uri "/something") {} http/GET))
+    )
+(with-routes!
+    {"/something" {:status 200 :content-type "application/json"
+                   :body   (jsn/write-str {:hello "world"})}}
+  (<!! (ds/http-cas (str uri "/something") {} http/GET))
+    )
+(with-routes!
+    {"/something" {:status 200 :content-type "application/json"
+                   :body   (jsn/write-str {:hello "world"})}}
+    (is 
+      (= "world" (:hello (<!! (http-cas (str uri "/something") {} http/GET))))))
+(with-routes!
+    {"/something" {:status 200 :content-type "application/json"
+                   :body   (jsn/write-str {:hello "world"})}}
+    (is 
+      (= "world" (:hello (<!! (ds/http-cas (str uri "/something") {} http/GET))))))
+ (u/basic-stub (fn [uri] (http-cas uri {} http/GET)))
+ (u/basic-stub (fn [uri] (ds/http-cas uri {} http/GET)))
+(with-routes! { "/something" {:status 200 :content-type "text/plain" :body "body"}}
+    (client/get ...)
+    (let [responses (recorded-responses server)]
+      (println responses)
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count responses)))))
+(with-routes! { "/something" {:status 200 :content-type "text/plain" :body "body"}}
+    (<!! (http-cas uri {} http/GET))
+    (let [responses (recorded-responses server)]
+      (println responses)
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count responses)))))
+(with-routes! { "/something" {:status 200 :content-type "text/plain" :body "body"}}
+    (<!! (ds/http-cas uri {} http/GET))
+    (let [responses (recorded-responses server)]
+      (println responses)
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count responses)))))
+(with-routes! { "/something" {:status 200 :content-type "text/plain" :body "body"}}
+    (<!! (ds/http-cas (str uri "/something") {} http/GET))
+    (let [responses (recorded-responses server)]
+      (println responses)
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count responses)))))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body "body"}}
+    (<!! (ds/http-cas (str uri "/something") {} http/GET))
+    (let [responses (recorded-responses server)]
+      (println responses)
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count responses)))))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (clj->js {:hi "there"})}}
+    (<!! (ds/http-cas (str uri "/something") {} http/GET))
+    (let [responses (recorded-responses server)]
+      (println responses)
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count responses)))))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (json/write-str {:hi "there"})}}
+    (<!! (ds/http-cas (str uri "/something") {} http/GET))
+    (let [responses (recorded-responses server)]
+      (println responses)
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count responses)))))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/http-cas (str uri "/something") {} http/GET))
+    (let [responses (recorded-responses server)]
+      (println responses)
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count responses)))))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/http-cas (str uri "/something") {} http/GET))
+    (let [requests (recorded-requests server)]
+      (println requests)
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count responses)))))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/http-cas (str uri "/something") {} http/GET))
+    (let [requests (recorded-requests server)]
+      (println requests)
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! {} http/GET (str uri "/something")))
+    (let [requests (recorded-requests server)]
+      (println requests)
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(rrl)
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100  (str uri "/something")))
+    (let [requests (recorded-requests server)]
+      (println requests)
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(rrl)
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100  (str uri "/something")))
+    (let [requests (recorded-requests server)]
+      (println requests)
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100  (str uri "/something")))
+    (let [requests (recorded-requests server)]
+      (println (jsn/read-str (:body (first requests))))
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100  (str uri "/something")))
+    (let [requests (recorded-requests server)]
+      (println (first (:body (first requests))))
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100  (str uri "/something")))
+    (let [requests (recorded-requests server)]
+      (println (type (:body (first requests))))
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100  (str uri "/something")))
+    (let [requests (recorded-requests server)]
+      (reset! cache (first requests))
+      (println (type (:body (first requests))))
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+  (def cache (atom []))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100  (str uri "/something")))
+    (let [requests (recorded-requests server)]
+      (reset! cache (first requests))
+      (println (type (:body (first requests))))
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+@cache
+  (type @cache)
+(:body @cache)
+(last (:body @cache))
+  (doc aget)
+(aget (:body @cache) 0)
+(get (:body @cache) 0)
+  (doc aget)
+  (type (:body @cache))
+(get (:body @cache) postData)
+(get (:body @cache) 'postData)
+(get (:body @cache) "postData")
+  (type (get (:body @cache) "postData"))
+(jsn/read-str 
+  (type (get (:body @cache) "postData"))  
+    )
+(jsn/read-str 
+    (get (:body @cache) "postData")
+    )
+(jsn/read-str 
+    (type (get (:body @cache) "postData"))  
+    :key-fn
+    keyword
+    )
+(jsn/read-str 
+(get (:body @cache) "postData")
+    :key-fn
+    keyword
+    )
+(jsn/read-str 
+    (get (:body @cache) "postData")
+    :key-fn
+    keyword
+    )
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100  (str uri "/something") 100))
+    (let [requests (recorded-requests server)]
+      (reset! cache (first requests))
+      (println (type (:body (first requests))))
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100  (str uri "/something") ))
+    (let [requests (recorded-requests server)]
+      (reset! cache (first requests))
+      (println (type (:body (first requests))))
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(<!! (ds/oanda-open-order-cas! "EUR_USD" 100  (str uri "/something") 123.233))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100  (str uri "/something") 123.233))
+    (let [requests (recorded-requests server)]
+      (reset! cache (first requests))
+      (println (type (:body (first requests))))
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(rrl)
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100  (str uri "/something") 123.233))
+    (let [requests (recorded-requests server)]
+      (reset! cache (first requests))
+      (println (type (:body (first requests))))
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(rrl)
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100  (str uri "/something") 123.233))
+    (let [requests (recorded-requests server)]
+      (reset! cache (first requests))
+      (println (type (:body (first requests))))
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(with-test 
+  (defn oanda-open-order-cas! 
+    "Open oanda order e.g. [EUR_USD 100]" 
+    ([instrument units]
+     (oanda-open-order-cas! instrument units (str rest-api-base-v3 "accounts/" account-no "/orders")))
+    ([instrument units url]
+     (http-body-cas url (oanda-order-header-gen) (order-gen units instrument) http/POST))
+    ([instrument units url stoploss]
+     (println (update-in (order-gen units instrument) :order merge (stop-loss-gen stoploss)))
+     #_(http-body-cas  
+       url 
+       (oanda-order-header-gen)
+       (update-in (order-gen units instrument) :order merge (stop-loss-gen stoploss))
+       http/POST))) 
+  )
+(rrl)
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 (str uri "/something") 123.233))
+    (let [requests (recorded-requests server)]
+      (reset! cache (first requests))
+      (println (type (:body (first requests))))
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(update-in (ds/order-gen 100 "EUR_USD") :order merge (ds/stop-loss-gen 100))
+(ds/stop-loss-gen 100)
+(update-in (ds/order-gen 100 "EUR_USD") [:order] merge (ds/stop-loss-gen 100))
+(rrl)
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 (str uri "/something") 123.233))
+    (let [requests (recorded-requests server)]
+      (reset! cache (first requests))
+      (println (type (:body (first requests))))
+      ; Now do something with the responses, for example count them      
+      (is (= 1 (count requests)))))
+(jsn/read-str 
+    (get (:body @cache) "postData")
+    :key-fn
+    keyword
+    )
+(defn mock-req->body-data
+    "Takes a mock request and returns the body of the response as a map" 
+    [mock-req]
+    (jsn/read-str 
+      (get (:body mock-req) "postData")))
+  (mock-req->body-data @cache)
+(defn mock-req->body-data
+    "Takes a mock request and returns the body of the response as a map" 
+    [mock-req]
+    (jsn/read-str (get (:body mock-req) "postData") :key-fn keyword ))
+  (mock-req->body-data @cache)
+(rrl)
+  (u/mock-req->body-data @cache)
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 (str uri "/something") 123.233))
+    (let [requests (recorded-requests server)
+          order (:order (u/mock-req->body-data @cache))]
+      (println (contains? :stopLossOnFill order))
+      (is (= 1 (count requests)))))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 (str uri "/something") 123.233))
+    (let [requests (recorded-requests server)
+          order (:order (u/mock-req->body-data @cache))]
+      (println (contains? order :stopLossOnFill))
+      (is (= 1 (count requests)))))
+(all-ns)
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 (str uri "/something")))
+    (let [requests (recorded-requests server)
+          order (:order (u/mock-req->body-data @cache))]
+      order))
+(rrl)
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 (str uri "/something")))
+    (let [requests (recorded-requests server)
+          order (:order (u/mock-req->body-data @cache))]
+      order))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 :url (str uri "/something")))
+    (let [requests (recorded-requests server)
+          order (:order (u/mock-req->body-data @cache))]
+      order))
+(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
+    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 :url (str uri "/something")))
+    (let [requests (recorded-requests server)
+          order (:order (u/mock-req->body-data (first requests)))]
+      order))

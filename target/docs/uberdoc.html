@@ -2866,21 +2866,25 @@ net.brehaut.ClojureTools = (function (SH) {
   };
 })(SyntaxHighlighter);
 </script><title> -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name"></h1><h2 class="project-version"></h2><br />
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.9.0-alpha10</td></tr><tr><td class="dep-name">org.clojure/core.async</td><td class="dotted"><hr /></td><td class="dep-version">0.2.395</td></tr><tr><td class="dep-name">org.clojure/core.logic</td><td class="dotted"><hr /></td><td class="dep-version">0.8.11</td></tr><tr><td class="dep-name">clj-http</td><td class="dotted"><hr /></td><td class="dep-version">2.2.0</td></tr><tr><td class="dep-name">org.clojure/data.json</td><td class="dotted"><hr /></td><td class="dep-version">0.2.6</td></tr><tr><td class="dep-name">clojurewerkz/envision</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0-SNAPSHOT</td></tr><tr><td class="dep-name">incanter</td><td class="dotted"><hr /></td><td class="dep-version">1.5.7</td></tr><tr><td class="dep-name">http.async.client</td><td class="dotted"><hr /></td><td class="dep-version">0.5.2</td></tr><tr><td class="dep-name">org.clojure/math.combinatorics</td><td class="dotted"><hr /></td><td class="dep-version">0.1.3</td></tr><tr><td class="dep-name">cfft</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">factual/timely</td><td class="dotted"><hr /></td><td class="dep-version">0.0.3</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.12.0</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#core.utils">core.utils</a></li><li><a href="#core.core">core.core</a></li><li><a href="#core.datasources">core.datasources</a></li><li><a href="#core.visual">core.visual</a></li><li><a href="#core.spike">core.spike</a></li><li><a href="#core.marketcap">core.marketcap</a></li><li><a href="#core.simple">core.simple</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.utils" name="core.utils"><h1 class="project-name">core.utils</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.9.0-alpha10</td></tr><tr><td class="dep-name">org.clojure/core.async</td><td class="dotted"><hr /></td><td class="dep-version">0.2.395</td></tr><tr><td class="dep-name">org.clojure/core.logic</td><td class="dotted"><hr /></td><td class="dep-version">0.8.11</td></tr><tr><td class="dep-name">clj-http</td><td class="dotted"><hr /></td><td class="dep-version">2.2.0</td></tr><tr><td class="dep-name">org.clojure/data.json</td><td class="dotted"><hr /></td><td class="dep-version">0.2.6</td></tr><tr><td class="dep-name">clojurewerkz/envision</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0-SNAPSHOT</td></tr><tr><td class="dep-name">incanter</td><td class="dotted"><hr /></td><td class="dep-version">1.5.7</td></tr><tr><td class="dep-name">http.async.client</td><td class="dotted"><hr /></td><td class="dep-version">0.5.2</td></tr><tr><td class="dep-name">org.clojure/math.combinatorics</td><td class="dotted"><hr /></td><td class="dep-version">0.1.3</td></tr><tr><td class="dep-name">cfft</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">factual/timely</td><td class="dotted"><hr /></td><td class="dep-version">0.0.3</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.12.0</td></tr><tr><td class="dep-name">se.haleby/stub-http</td><td class="dotted"><hr /></td><td class="dep-version">0.2.1</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#core.utils">core.utils</a></li><li><a href="#core.core">core.core</a></li><li><a href="#core.datasources">core.datasources</a></li><li><a href="#core.visual">core.visual</a></li><li><a href="#core.spike">core.spike</a></li><li><a href="#core.marketcap">core.marketcap</a></li><li><a href="#core.simple">core.simple</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.utils" name="core.utils"><h1 class="project-name">core.utils</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns core.utils
-    (:require
-      [clj-http.client :as cnt]
-      [clojure.data.json :as jsn]
-      [clojure.spec :as s]
-      [clojure.spec.gen :as gen]
-      [clojure.spec.test :as ts :refer [check]]
-      [clojure.spec.gen :as gen]
-      [clj-time.format :as f]
-      [clj-time.predicates :as pr]
-      [clojure.test :as tst :refer [is with-test]]
-      [clojure.core.async :as casy :refer [&lt;! &gt;! go chan go-loop timeout]]
-      [clj-time.coerce :as c]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def cmc-syms #{&quot;bitcoin&quot; &quot;ethereum&quot; &quot;ripple&quot; &quot;litecoin&quot; &quot;monero&quot; &quot;ethereum-classic&quot; &quot;dash&quot; &quot;augur&quot; &quot;maidsafecoin&quot; &quot;waves&quot; &quot;nem&quot; &quot;steem&quot; &quot;dogecoin&quot; &quot;factom&quot; &quot;digixdao&quot; &quot;lisk&quot; &quot;gulden&quot; &quot;stellar&quot; &quot;bitshares&quot; &quot;shadowcoin&quot; &quot;peerplays&quot; &quot;iconomi&quot; &quot;ardor&quot; &quot;gamecredits&quot; &quot;bytecoin-bcn&quot; &quot;storjcoin-x&quot; &quot;xaurum&quot; &quot;antshares&quot; &quot;emercoin&quot; &quot;counterparty&quot; &quot;singulardtv&quot; &quot;tether&quot; &quot;siacoin&quot; &quot;nxt&quot; &quot;synereo&quot; &quot;bitcrystals&quot; &quot;stratis&quot; &quot;peercoin&quot; &quot;agoras-tokens&quot; &quot;ybcoin&quot; &quot;iocoin&quot; &quot;vcash&quot; &quot;bitcoindark&quot; &quot;namecoin&quot; &quot;syscoin&quot; &quot;rubycoin&quot; &quot;global-currency-reserve&quot; &quot;zcash&quot; &quot;potcoin&quot; &quot;nav-coin&quot; &quot;digibyte&quot; &quot;blackcoin&quot; &quot;yocoin&quot; &quot;solarcoin&quot; &quot;omni&quot; &quot;gridcoin&quot; &quot;supernet-unity&quot; &quot;decred&quot; &quot;scotcoin&quot; &quot;steem-dollars&quot; &quot;fuelcoin&quot; &quot;sarcoin&quot; &quot;nautiluscoin&quot; &quot;vpncoin&quot; &quot;faircoin&quot; &quot;expanse&quot; &quot;curecoin&quot; &quot;fedoracoin&quot; &quot;earthcoin&quot; &quot;swiscoin&quot; &quot;monacoin&quot; &quot;clams&quot; &quot;auroracoin&quot; &quot;startcoin&quot; &quot;digitalnote&quot; &quot;primecoin&quot; &quot;nexus&quot; &quot;burst&quot; &quot;asiadigicoin&quot; &quot;breakout-stake&quot; &quot;reddcoin&quot; &quot;radium&quot; &quot;vertcoin&quot; &quot;worldcoin&quot; &quot;vericoin&quot; &quot;feathercoin&quot; &quot;hitcoin&quot; &quot;qora&quot; &quot;blocknet&quot; &quot;boolberry&quot; &quot;quark&quot; &quot;i0coin&quot; &quot;dnotes&quot; &quot;hicoin&quot; &quot;mmnxt&quot; &quot;nubits&quot; &quot;darknet&quot; &quot;goldcoin&quot; &quot;library-credit&quot; &quot;novacoin&quot; &quot;breakout&quot; &quot;boostcoin&quot; &quot;mintcoin&quot; &quot;bitbay&quot; &quot;obits&quot; &quot;virtacoin&quot; &quot;gambit&quot; &quot;play&quot; &quot;diamond&quot; &quot;safe-exchange-coin&quot; &quot;adzcoin&quot; &quot;aeon&quot; &quot;project-decorum&quot; &quot;bilshares&quot; &quot;megacoin&quot; &quot;blockpay&quot; &quot;zetacoin&quot; &quot;triggers&quot; &quot;zeitcoin&quot; &quot;casinocoin&quot; &quot;europecoin&quot; &quot;stealthcoin&quot; &quot;viacoin&quot; &quot;nushares&quot; &quot;wild-beast-block&quot; &quot;florincoin&quot; &quot;infinitecoin&quot; &quot;riecoin&quot; &quot;cloakcoin&quot; &quot;zcoin&quot; &quot;unobtanium&quot; &quot;zccoin&quot; &quot;rise&quot; &quot;myriad&quot; &quot;pesobit&quot; &quot;silk&quot; &quot;salus&quot; &quot;ambercoin&quot; &quot;applecoin&quot; &quot;voxels&quot; &quot;digitalcoin&quot; &quot;circuits-of-value&quot; &quot;evergreencoin&quot; &quot;foldingcoin&quot; &quot;vootcoin&quot; &quot;bitmark&quot; &quot;bitcny&quot; &quot;next-horizon&quot; &quot;okcash&quot; &quot;cannabiscoin&quot; &quot;anoncoin&quot; &quot;verge&quot; &quot;unioncoin&quot; &quot;energycoin&quot; &quot;noblecoin&quot; &quot;cryptonite&quot; &quot;britcoin&quot; &quot;orbitcoin&quot; &quot;gems&quot; &quot;pinkcoin&quot; &quot;coinmarketscoin&quot; &quot;neoscoin&quot; &quot;einsteinium&quot; &quot;electronic-gulden&quot; &quot;smileycoin&quot; &quot;shift&quot; &quot;pepe-cash&quot; &quot;huntercoin&quot; &quot;geocoin&quot; &quot;tagcoin&quot; &quot;audiocoin&quot; &quot;jewels&quot; &quot;diem&quot; &quot;ltbcoin&quot; &quot;mazacoin&quot; &quot;levocoin&quot; &quot;hempcoin-hmp&quot; &quot;securecoin&quot; &quot;fantomcoin&quot; &quot;crowncoin&quot; &quot;trumpcoin&quot; &quot;1credit&quot; &quot;spreadcoin&quot; &quot;dubaicoin&quot; &quot;stabilityshares&quot; &quot;bitcoin-plus&quot; &quot;gycoin&quot; &quot;stress&quot; &quot;vtorrent&quot; &quot;ixcoin&quot; &quot;sync&quot; &quot;maxcoin&quot; &quot;woodcoin&quot; &quot;capricoin&quot; &quot;skynet-asset&quot; &quot;sibcoin&quot; &quot;bellacoin&quot; &quot;bitstar&quot; &quot;mooncoin&quot; &quot;magi&quot; &quot;coin2-1&quot; &quot;mineum&quot; &quot;synergy&quot; &quot;pangea-poker&quot; &quot;creditbit&quot; &quot;groestlcoin&quot; &quot;bitswift&quot; &quot;bitusd&quot; &quot;netcoin&quot; &quot;swing&quot; &quot;veriumreserve&quot; &quot;quatloo&quot; &quot;krypton&quot; &quot;hempcoin&quot; &quot;bytecent&quot; &quot;whitecoin&quot; &quot;qibuck&quot; &quot;joincoin&quot; &quot;dashcoin&quot; &quot;bitsend&quot; &quot;dopecoin&quot; &quot;cryptogenic-bullion&quot; &quot;uro&quot; &quot;bitbean&quot; &quot;applebyte&quot; &quot;trustplus&quot; &quot;rimbit&quot; &quot;sterlingcoin&quot; &quot;blitzcash&quot; &quot;cryptographic-anomaly&quot; &quot;incakoin&quot; &quot;tickets&quot; &quot;dotcoin&quot; &quot;xiaomicoin&quot; &quot;monetaryunit&quot; &quot;titcoin&quot; &quot;pipcoin&quot; &quot;rubies&quot; &quot;cannacoin&quot; &quot;syndicate&quot; &quot;pakcoin&quot; &quot;terracoin&quot; &quot;nxtventure&quot; &quot;cryptofund&quot; &quot;coin&quot; &quot;canada-ecoin&quot; &quot;devcoin&quot; &quot;elcoin-el&quot; &quot;billarycoin&quot; &quot;debune&quot; &quot;the-viral-exchange&quot; &quot;eccoin&quot; &quot;goldpieces&quot; &quot;truckcoin&quot; &quot;dimecoin&quot; &quot;teslacoin&quot; &quot;bluecoin&quot; &quot;dt-token&quot; &quot;deutsche-emark&quot; &quot;pesetacoin&quot; &quot;korecoin&quot; &quot;sphere&quot; &quot;parkbyte&quot; &quot;hodlcoin&quot; &quot;hyper&quot; &quot;sativacoin&quot; &quot;transfercoin&quot; &quot;bitbtc&quot; &quot;1337&quot; &quot;tao&quot; &quot;cryptcoin&quot; &quot;cryptojacks&quot; &quot;postcoin&quot; &quot;unbreakablecoin&quot; &quot;bata&quot; &quot;piggycoin&quot; &quot;sexcoin&quot; &quot;artex-coin&quot; &quot;wexcoin&quot; &quot;secretcoin&quot; &quot;goldblocks&quot; &quot;fluttercoin&quot; &quot;moin&quot; &quot;karbowanec&quot; &quot;metalcoin&quot; &quot;sling&quot; &quot;mojocoin&quot; &quot;arcticcoin&quot; &quot;blakecoin&quot; &quot;hobonickels&quot; &quot;grantcoin&quot; &quot;memetic&quot; &quot;influxcoin&quot; &quot;exclusivecoin&quot; &quot;archcoin&quot; &quot;bottlecaps&quot; &quot;veltor&quot; &quot;franko&quot; &quot;hyperstake&quot; &quot;tekcoin&quot; &quot;newbium&quot; &quot;universal-currency&quot; &quot;vip-tokens&quot; &quot;soilcoin&quot; &quot;gpu-coin&quot; &quot;bitseeds&quot; &quot;mastertradercoin&quot; &quot;globalboost-y&quot; &quot;bbqcoin&quot; &quot;ziftrcoin&quot; &quot;x-coin&quot; &quot;nolimitcoin&quot; &quot;digicube&quot; &quot;granitecoin&quot; &quot;francs&quot; &quot;8bit&quot; &quot;gapcoin&quot; &quot;fujicoin&quot; &quot;cryptoescudo&quot; &quot;primechain&quot; &quot;neutron&quot; &quot;steps&quot; &quot;songcoin&quot; &quot;hommalicoin&quot; &quot;apexcoin&quot; &quot;dollarcoin&quot; &quot;gcoin&quot; &quot;ucoin&quot; &quot;alexium&quot; &quot;destiny&quot; &quot;spacecoin&quot; &quot;bios-crypto&quot; &quot;unitus&quot; &quot;joulecoin&quot; &quot;berncash&quot; &quot;beatcoin&quot; &quot;bipcoin&quot; &quot;42-coin&quot; &quot;warp&quot; &quot;prime-xi&quot; &quot;letitride&quot; &quot;rhinocoin-rhc&quot; &quot;firecoin&quot; &quot;allsafe&quot; &quot;insanecoin&quot; &quot;bikercoin&quot; &quot;zonecoin&quot; &quot;sixeleven&quot; &quot;gamebet-coin&quot; &quot;gamerholiccoin&quot; &quot;bolivarcoin&quot; &quot;chronos&quot; &quot;genstake&quot; &quot;zayedcoin&quot; &quot;crevacoin&quot; &quot;evil-coin&quot; &quot;islacoin&quot; &quot;anarchistsprime&quot; &quot;litebar&quot; &quot;jobscoin&quot; &quot;impulsecoin&quot; &quot;guccionecoin&quot; &quot;bantam&quot; &quot;agrolifecoin&quot; &quot;emirates-gold-coin&quot; &quot;sydpak&quot; &quot;808coin&quot; &quot;xp&quot; &quot;cannabis-industry-coin&quot; &quot;unrealcoin&quot; &quot;powercoin&quot; &quot;world-gold-coin&quot; &quot;mudracoin&quot; &quot;trmb&quot; &quot;kilocoin&quot; &quot;ion&quot; &quot;bitshares-music&quot; &quot;jinn&quot; &quot;instantdex&quot; &quot;ico-openledger&quot; &quot;neucoin&quot; &quot;htmlcoin&quot; &quot;xcurrency&quot; &quot;asiacoin&quot; &quot;2give&quot; &quot;colossuscoin-v2&quot; &quot;btsr&quot; &quot;btctalkcoin&quot; &quot;librexcoin&quot; &quot;ultracoin&quot; &quot;leafcoin&quot; &quot;flycoin&quot; &quot;coinomat&quot; &quot;mediterraneancoin&quot; &quot;pandacoin-pnd&quot; &quot;liquid&quot; &quot;rare-pepe-party&quot; &quot;bigup&quot; &quot;kobocoin&quot; &quot;nxttycoin&quot; &quot;bitcointx&quot; &quot;sooncoin&quot; &quot;litedoge&quot; &quot;paycoin2&quot; &quot;sprouts&quot; &quot;the-cypherfunks&quot; &quot;tilecoin&quot; &quot;yacoin&quot; &quot;lottocoin&quot; &quot;wayguide&quot; &quot;swagbucks&quot; &quot;martexcoin&quot; &quot;putincoin&quot; &quot;quazarcoin&quot; &quot;checkcoin&quot; &quot;quotient&quot; &quot;trollcoin&quot; &quot;reecoin&quot; &quot;supercoin&quot; &quot;sproutsextreme&quot; &quot;globalcoin&quot; &quot;bitsilver&quot; &quot;gaia&quot; &quot;plncoin&quot; &quot;triangles&quot; &quot;ratecoin&quot; &quot;smartcoin&quot; &quot;bitbar&quot; &quot;ufo-coin&quot; &quot;arbit&quot; &quot;qubitcoin&quot; &quot;bitz&quot; &quot;nyancoin&quot; &quot;bitgold&quot; &quot;hamradiocoin&quot; &quot;viral&quot; &quot;datacoin&quot; &quot;satoshimadness&quot; &quot;mindcoin&quot; &quot;amsterdamcoin&quot; &quot;freicoin&quot; &quot;aricoin&quot; &quot;tigercoin&quot; &quot;cashout&quot; &quot;russiacoin&quot; &quot;petrodollar&quot; &quot;redcoin&quot; &quot;cypher&quot; &quot;emerald&quot; &quot;aurumcoin&quot; &quot;octocoin&quot; &quot;tittiecoin&quot; &quot;cagecoin&quot; &quot;crypto&quot; &quot;guncoin&quot; &quot;bunnycoin&quot; &quot;fastcoin&quot; &quot;beavercoin&quot; &quot;argentum&quot; &quot;philosopher-stones&quot; &quot;bumbacoin&quot; &quot;coexistcoin&quot; &quot;revolvercoin&quot; &quot;hundredcoin&quot; &quot;phoenixcoin&quot; &quot;biteur&quot; &quot;bitcoin-scrypt&quot; &quot;mgw&quot; &quot;cubits&quot; &quot;uniqredit&quot; &quot;halcyon&quot; &quot;bitzeny&quot; &quot;antibitcoin&quot; &quot;debitcoin&quot; &quot;flavorcoin&quot; &quot;vaperscoin&quot; &quot;kittehcoin&quot; &quot;leacoin&quot; &quot;ronpaulcoin&quot; &quot;prototanium&quot; &quot;dobbscoin&quot; &quot;captcoin&quot; &quot;spots&quot; &quot;icash&quot; &quot;mangocoinz&quot; &quot;dappster&quot; &quot;atomic-coin&quot; &quot;paycon&quot; &quot;cybercoin&quot; &quot;evotion&quot; &quot;wmcoin&quot; &quot;osmiumcoin&quot; &quot;breakcoin&quot; &quot;zurcoin&quot; &quot;ego&quot; &quot;metal-music-coin&quot; &quot;mmbtcd&quot; &quot;floz&quot; &quot;chesscoin&quot; &quot;pospro&quot; &quot;blazecoin&quot; &quot;vcoin&quot; &quot;bitcloud&quot; &quot;topcoin&quot; &quot;bitcoin-21&quot; &quot;popularcoin&quot; &quot;lanacoin&quot; &quot;guarany&quot; &quot;high-voltage&quot; &quot;acoin&quot; &quot;independent-money-system&quot; &quot;unicoin&quot; &quot;digitalprice&quot; &quot;b3coin&quot; &quot;jin-coin&quot; &quot;newyorkcoin&quot; &quot;elementrem&quot; &quot;parallelcoin&quot; &quot;orlycoin&quot; &quot;fuzzballs&quot; &quot;elcoin&quot; &quot;corgicoin&quot; &quot;nevacoin&quot; &quot;pulse&quot; &quot;machinecoin&quot; &quot;posex&quot; &quot;px&quot; &quot;helleniccoin&quot; &quot;c-bit&quot; &quot;mustangcoin&quot; &quot;cabbage&quot; &quot;unfed&quot; &quot;xonecoin&quot; &quot;comet&quot; &quot;eurocoin&quot; &quot;dpay&quot; &quot;tagrcoin&quot; &quot;virtualcoin&quot; &quot;bitquark&quot; &quot;revenu&quot; &quot;chaincoin&quot; &quot;selfiecoin&quot; &quot;cryptbit&quot; &quot;photon&quot; &quot;money&quot; &quot;cashcoin&quot; &quot;shilling&quot; &quot;bittokens&quot; &quot;bowscoin&quot; &quot;tajcoin&quot; &quot;ponzicoin&quot; &quot;stronghands&quot; &quot;antilitecoin&quot; &quot;litecred&quot; &quot;save-and-gain&quot; &quot;imperialcoin&quot; &quot;number7&quot; &quot;p7coin&quot; &quot;batcoin&quot; &quot;swaptoken&quot; &quot;crtcoin&quot; &quot;enigma&quot; &quot;californium&quot; &quot;digital-credits&quot; &quot;pizzacoin&quot; &quot;khancoin&quot; &quot;ernus&quot; &quot;23-skidoo&quot; &quot;satoshicard&quot; &quot;horiemoncard&quot; &quot;royalcoin-2&quot; &quot;nxttyacci&quot; &quot;forevercoin&quot; &quot;pluton&quot; &quot;e-dinar-coin&quot; &quot;bfx&quot; &quot;leocoin&quot; &quot;techshares&quot; &quot;clubcoin&quot; &quot;maskcoin&quot; &quot;wowecoin&quot; &quot;dynamiccoin&quot; &quot;asset-backed-coin&quot; &quot;heat-ledger&quot; &quot;the-dao&quot; &quot;edrcoin&quot; &quot;index-coin&quot; &quot;omicron&quot; &quot;mind-gene&quot; &quot;first-blood&quot; &quot;alpacoin&quot; &quot;npccoin&quot; &quot;gaycoin&quot; &quot;biglifecoin&quot; &quot;international-diamond&quot; &quot;uncoin&quot; &quot;tbcoin&quot; &quot;happy-creator-coin&quot; &quot;caliphcoin&quot; &quot;first-bitcoin&quot; &quot;invisiblecoin&quot; &quot;deltacredits&quot; &quot;gbcgoldcoin&quot; &quot;taopay&quot; &quot;timekoin&quot; &quot;futurepoints&quot; &quot;lecoin&quot; &quot;neptunecoin&quot; &quot;alphabet-coin-fund&quot; &quot;rhodiumcoin&quot; &quot;lomocoin&quot; &quot;bitland&quot; &quot;eclipse&quot; &quot;digitalfund&quot; &quot;enecoin&quot; &quot;kolschcoin&quot; &quot;sharkcoin&quot; &quot;bagcoin&quot; &quot;revcoin&quot; &quot;clinton&quot; &quot;president-johnson&quot; &quot;woodshares&quot; &quot;cthulhu-offerings&quot; &quot;gotfomo&quot; &quot;peacecoin&quot; &quot;cartercoin&quot; &quot;xaucoin&quot; &quot;shellpay&quot; &quot;advanced-internet-blocks&quot; &quot;royalcoin&quot; &quot;president-trump&quot; &quot;upcoin&quot; &quot;eggcoin&quot; &quot;futcoin&quot; &quot;rcoin&quot; &quot;goldmaxcoin&quot; &quot;cbd-crystals&quot; &quot;chncoin&quot; &quot;cleverbot&quot; &quot;bitalphacoin&quot; &quot;ocow&quot; &quot;trickycoin&quot; &quot;frankywillcoin&quot; &quot;psilocybin&quot; &quot;bitcoinfast&quot; &quot;rublebit&quot; &quot;kcoin&quot; &quot;local-family-owned&quot; &quot;richcoin&quot; &quot;digital-bullion-gold&quot; &quot;gameleaguecoin&quot; &quot;fedorashare&quot; &quot;pabyosicoin&quot; &quot;denarius&quot; &quot;flaxscript&quot; &quot;braincoin&quot; &quot;asiccoin&quot; &quot;avatarcoin&quot; &quot;xab&quot; &quot;motocoin&quot; &quot;todaycoin&quot; &quot;quebecoin&quot; &quot;cycling-coin&quot; &quot;linkedcoin&quot; &quot;dubstep&quot; &quot;operand&quot; &quot;opescoin&quot; &quot;mobilecash&quot; &quot;lazaruscoin&quot; &quot;sportscoin&quot; &quot;darklisk&quot; &quot;superstaketoken&quot; &quot;skeincoin&quot; &quot;president-clinton&quot; &quot;ugain&quot; &quot;lathaan&quot; &quot;fitcoin&quot; &quot;vegascoin&quot; &quot;sakuracoin&quot; &quot;paypeer&quot; &quot;moneta2&quot; &quot;digieuro&quot; &quot;prismchain&quot; &quot;pokechain&quot; &quot;teamup&quot; &quot;aces&quot; &quot;cashme&quot; &quot;bitmoon&quot; &quot;golfcoin&quot; &quot;nucleustokens&quot; &quot;valorbit&quot; &quot;superturbostake&quot; &quot;thecreed&quot; &quot;fireflycoin&quot; &quot;x2&quot; &quot;soulcoin&quot; &quot;safecoin&quot; &quot;pokecoin&quot; &quot;tellurion&quot; &quot;victoriouscoin&quot; &quot;ganjacoin-v2&quot; &quot;choofcoin&quot; &quot;xpay&quot; &quot;nutcoin&quot; &quot;paccoin&quot;})</pre></td></tr><tr><td class="docs">
+  (:require
+    [clj-http.client :as cnt]
+    [clojure.data.json :as jsn]
+    [clojure.spec :as s]
+    [clojure.spec.gen :as gen]
+    [clojure.spec.test :as ts :refer [check]]
+    [clojure.spec.gen :as gen]
+    [clj-time.format :as f]
+    [clj-time.predicates :as pr]
+    [clojure.test :as tst :refer [is with-test]]
+    [clojure.core.async :as casy :refer [&lt;!! &lt;! &gt;! go chan go-loop timeout]]
+    [clj-time.coerce :as c]
+    [stub-http.core :refer :all]))</pre></td></tr><tr><td class="docs"><p>Coins available from coinmarketcap.com</p>
+</td><td class="codes"><pre class="brush: clojure">(def cmc-syms 
+  #{&quot;bitcoin&quot; &quot;ethereum&quot; &quot;ripple&quot; &quot;litecoin&quot; &quot;monero&quot; &quot;ethereum-classic&quot; &quot;dash&quot; &quot;augur&quot; &quot;maidsafecoin&quot; &quot;waves&quot; &quot;nem&quot; &quot;steem&quot; &quot;dogecoin&quot; &quot;factom&quot; &quot;digixdao&quot; &quot;lisk&quot; &quot;gulden&quot; &quot;stellar&quot; &quot;bitshares&quot; &quot;shadowcoin&quot; &quot;peerplays&quot; &quot;iconomi&quot; &quot;ardor&quot; &quot;gamecredits&quot; &quot;bytecoin-bcn&quot; &quot;storjcoin-x&quot; &quot;xaurum&quot; &quot;antshares&quot; &quot;emercoin&quot; &quot;counterparty&quot; &quot;singulardtv&quot; &quot;tether&quot; &quot;siacoin&quot; &quot;nxt&quot; &quot;synereo&quot; &quot;bitcrystals&quot; &quot;stratis&quot; &quot;peercoin&quot; &quot;agoras-tokens&quot; &quot;ybcoin&quot; &quot;iocoin&quot; &quot;vcash&quot; &quot;bitcoindark&quot; &quot;namecoin&quot; &quot;syscoin&quot; &quot;rubycoin&quot; &quot;global-currency-reserve&quot; &quot;zcash&quot; &quot;potcoin&quot; &quot;nav-coin&quot; &quot;digibyte&quot; &quot;blackcoin&quot; &quot;yocoin&quot; &quot;solarcoin&quot; &quot;omni&quot; &quot;gridcoin&quot; &quot;supernet-unity&quot; &quot;decred&quot; &quot;scotcoin&quot; &quot;steem-dollars&quot; &quot;fuelcoin&quot; &quot;sarcoin&quot; &quot;nautiluscoin&quot; &quot;vpncoin&quot; &quot;faircoin&quot; &quot;expanse&quot; &quot;curecoin&quot; &quot;fedoracoin&quot; &quot;earthcoin&quot; &quot;swiscoin&quot; &quot;monacoin&quot; &quot;clams&quot; &quot;auroracoin&quot; &quot;startcoin&quot; &quot;digitalnote&quot; &quot;primecoin&quot; &quot;nexus&quot; &quot;burst&quot; &quot;asiadigicoin&quot; &quot;breakout-stake&quot; &quot;reddcoin&quot; &quot;radium&quot; &quot;vertcoin&quot; &quot;worldcoin&quot; &quot;vericoin&quot; &quot;feathercoin&quot; &quot;hitcoin&quot; &quot;qora&quot; &quot;blocknet&quot; &quot;boolberry&quot; &quot;quark&quot; &quot;i0coin&quot; &quot;dnotes&quot; &quot;hicoin&quot; &quot;mmnxt&quot; &quot;nubits&quot; &quot;darknet&quot; &quot;goldcoin&quot; &quot;library-credit&quot; &quot;novacoin&quot; &quot;breakout&quot; &quot;boostcoin&quot; &quot;mintcoin&quot; &quot;bitbay&quot; &quot;obits&quot; &quot;virtacoin&quot; &quot;gambit&quot; &quot;play&quot; &quot;diamond&quot; &quot;safe-exchange-coin&quot; &quot;adzcoin&quot; &quot;aeon&quot; &quot;project-decorum&quot; &quot;bilshares&quot; &quot;megacoin&quot; &quot;blockpay&quot; &quot;zetacoin&quot; &quot;triggers&quot; &quot;zeitcoin&quot; &quot;casinocoin&quot; &quot;europecoin&quot; &quot;stealthcoin&quot; &quot;viacoin&quot; &quot;nushares&quot; &quot;wild-beast-block&quot; &quot;florincoin&quot; &quot;infinitecoin&quot; &quot;riecoin&quot; &quot;cloakcoin&quot; &quot;zcoin&quot; &quot;unobtanium&quot; &quot;zccoin&quot; &quot;rise&quot; &quot;myriad&quot; &quot;pesobit&quot; &quot;silk&quot; &quot;salus&quot; &quot;ambercoin&quot; &quot;applecoin&quot; &quot;voxels&quot; &quot;digitalcoin&quot; &quot;circuits-of-value&quot; &quot;evergreencoin&quot; &quot;foldingcoin&quot; &quot;vootcoin&quot; &quot;bitmark&quot; &quot;bitcny&quot; &quot;next-horizon&quot; &quot;okcash&quot; &quot;cannabiscoin&quot; &quot;anoncoin&quot; &quot;verge&quot; &quot;unioncoin&quot; &quot;energycoin&quot; &quot;noblecoin&quot; &quot;cryptonite&quot; &quot;britcoin&quot; &quot;orbitcoin&quot; &quot;gems&quot; &quot;pinkcoin&quot; &quot;coinmarketscoin&quot; &quot;neoscoin&quot; &quot;einsteinium&quot; &quot;electronic-gulden&quot; &quot;smileycoin&quot; &quot;shift&quot; &quot;pepe-cash&quot; &quot;huntercoin&quot; &quot;geocoin&quot; &quot;tagcoin&quot; &quot;audiocoin&quot; &quot;jewels&quot; &quot;diem&quot; &quot;ltbcoin&quot; &quot;mazacoin&quot; &quot;levocoin&quot; &quot;hempcoin-hmp&quot; &quot;securecoin&quot; &quot;fantomcoin&quot; &quot;crowncoin&quot; &quot;trumpcoin&quot; &quot;1credit&quot; &quot;spreadcoin&quot; &quot;dubaicoin&quot; &quot;stabilityshares&quot; &quot;bitcoin-plus&quot; &quot;gycoin&quot; &quot;stress&quot; &quot;vtorrent&quot; &quot;ixcoin&quot; &quot;sync&quot; &quot;maxcoin&quot; &quot;woodcoin&quot; &quot;capricoin&quot; &quot;skynet-asset&quot; &quot;sibcoin&quot; &quot;bellacoin&quot; &quot;bitstar&quot; &quot;mooncoin&quot; &quot;magi&quot; &quot;coin2-1&quot; &quot;mineum&quot; &quot;synergy&quot; &quot;pangea-poker&quot; &quot;creditbit&quot; &quot;groestlcoin&quot; &quot;bitswift&quot; &quot;bitusd&quot; &quot;netcoin&quot; &quot;swing&quot; &quot;veriumreserve&quot; &quot;quatloo&quot; &quot;krypton&quot; &quot;hempcoin&quot; &quot;bytecent&quot; &quot;whitecoin&quot; &quot;qibuck&quot; &quot;joincoin&quot; &quot;dashcoin&quot; &quot;bitsend&quot; &quot;dopecoin&quot; &quot;cryptogenic-bullion&quot; &quot;uro&quot; &quot;bitbean&quot; &quot;applebyte&quot; &quot;trustplus&quot; &quot;rimbit&quot; &quot;sterlingcoin&quot; &quot;blitzcash&quot; &quot;cryptographic-anomaly&quot; &quot;incakoin&quot; &quot;tickets&quot; &quot;dotcoin&quot; &quot;xiaomicoin&quot; &quot;monetaryunit&quot; &quot;titcoin&quot; &quot;pipcoin&quot; &quot;rubies&quot; &quot;cannacoin&quot; &quot;syndicate&quot; &quot;pakcoin&quot; &quot;terracoin&quot; &quot;nxtventure&quot; &quot;cryptofund&quot; &quot;coin&quot; &quot;canada-ecoin&quot; &quot;devcoin&quot; &quot;elcoin-el&quot; &quot;billarycoin&quot; &quot;debune&quot; &quot;the-viral-exchange&quot; &quot;eccoin&quot; &quot;goldpieces&quot; &quot;truckcoin&quot; &quot;dimecoin&quot; &quot;teslacoin&quot; &quot;bluecoin&quot; &quot;dt-token&quot; &quot;deutsche-emark&quot; &quot;pesetacoin&quot; &quot;korecoin&quot; &quot;sphere&quot; &quot;parkbyte&quot; &quot;hodlcoin&quot; &quot;hyper&quot; &quot;sativacoin&quot; &quot;transfercoin&quot; &quot;bitbtc&quot; &quot;1337&quot; &quot;tao&quot; &quot;cryptcoin&quot; &quot;cryptojacks&quot; &quot;postcoin&quot; &quot;unbreakablecoin&quot; &quot;bata&quot; &quot;piggycoin&quot; &quot;sexcoin&quot; &quot;artex-coin&quot; &quot;wexcoin&quot; &quot;secretcoin&quot; &quot;goldblocks&quot; &quot;fluttercoin&quot; &quot;moin&quot; &quot;karbowanec&quot; &quot;metalcoin&quot; &quot;sling&quot; &quot;mojocoin&quot; &quot;arcticcoin&quot; &quot;blakecoin&quot; &quot;hobonickels&quot; &quot;grantcoin&quot; &quot;memetic&quot; &quot;influxcoin&quot; &quot;exclusivecoin&quot; &quot;archcoin&quot; &quot;bottlecaps&quot; &quot;veltor&quot; &quot;franko&quot; &quot;hyperstake&quot; &quot;tekcoin&quot; &quot;newbium&quot; &quot;universal-currency&quot; &quot;vip-tokens&quot; &quot;soilcoin&quot; &quot;gpu-coin&quot; &quot;bitseeds&quot; &quot;mastertradercoin&quot; &quot;globalboost-y&quot; &quot;bbqcoin&quot; &quot;ziftrcoin&quot; &quot;x-coin&quot; &quot;nolimitcoin&quot; &quot;digicube&quot; &quot;granitecoin&quot; &quot;francs&quot; &quot;8bit&quot; &quot;gapcoin&quot; &quot;fujicoin&quot; &quot;cryptoescudo&quot; &quot;primechain&quot; &quot;neutron&quot; &quot;steps&quot; &quot;songcoin&quot; &quot;hommalicoin&quot; &quot;apexcoin&quot; &quot;dollarcoin&quot; &quot;gcoin&quot; &quot;ucoin&quot; &quot;alexium&quot; &quot;destiny&quot; &quot;spacecoin&quot; &quot;bios-crypto&quot; &quot;unitus&quot; &quot;joulecoin&quot; &quot;berncash&quot; &quot;beatcoin&quot; &quot;bipcoin&quot; &quot;42-coin&quot; &quot;warp&quot; &quot;prime-xi&quot; &quot;letitride&quot; &quot;rhinocoin-rhc&quot; &quot;firecoin&quot; &quot;allsafe&quot; &quot;insanecoin&quot; &quot;bikercoin&quot; &quot;zonecoin&quot; &quot;sixeleven&quot; &quot;gamebet-coin&quot; &quot;gamerholiccoin&quot; &quot;bolivarcoin&quot; &quot;chronos&quot; &quot;genstake&quot; &quot;zayedcoin&quot; &quot;crevacoin&quot; &quot;evil-coin&quot; &quot;islacoin&quot; &quot;anarchistsprime&quot; &quot;litebar&quot; &quot;jobscoin&quot; &quot;impulsecoin&quot; &quot;guccionecoin&quot; &quot;bantam&quot; &quot;agrolifecoin&quot; &quot;emirates-gold-coin&quot; &quot;sydpak&quot; &quot;808coin&quot; &quot;xp&quot; &quot;cannabis-industry-coin&quot; &quot;unrealcoin&quot; &quot;powercoin&quot; &quot;world-gold-coin&quot; &quot;mudracoin&quot; &quot;trmb&quot; &quot;kilocoin&quot; &quot;ion&quot; &quot;bitshares-music&quot; &quot;jinn&quot; &quot;instantdex&quot; &quot;ico-openledger&quot; &quot;neucoin&quot; &quot;htmlcoin&quot; &quot;xcurrency&quot; &quot;asiacoin&quot; &quot;2give&quot; &quot;colossuscoin-v2&quot; &quot;btsr&quot; &quot;btctalkcoin&quot; &quot;librexcoin&quot; &quot;ultracoin&quot; &quot;leafcoin&quot; &quot;flycoin&quot; &quot;coinomat&quot; &quot;mediterraneancoin&quot; &quot;pandacoin-pnd&quot; &quot;liquid&quot; &quot;rare-pepe-party&quot; &quot;bigup&quot; &quot;kobocoin&quot; &quot;nxttycoin&quot; &quot;bitcointx&quot; &quot;sooncoin&quot; &quot;litedoge&quot; &quot;paycoin2&quot; &quot;sprouts&quot; &quot;the-cypherfunks&quot; &quot;tilecoin&quot; &quot;yacoin&quot; &quot;lottocoin&quot; &quot;wayguide&quot; &quot;swagbucks&quot; &quot;martexcoin&quot; &quot;putincoin&quot; &quot;quazarcoin&quot; &quot;checkcoin&quot; &quot;quotient&quot; &quot;trollcoin&quot; &quot;reecoin&quot; &quot;supercoin&quot; &quot;sproutsextreme&quot; &quot;globalcoin&quot; &quot;bitsilver&quot; &quot;gaia&quot; &quot;plncoin&quot; &quot;triangles&quot; &quot;ratecoin&quot; &quot;smartcoin&quot; &quot;bitbar&quot; &quot;ufo-coin&quot; &quot;arbit&quot; &quot;qubitcoin&quot; &quot;bitz&quot; &quot;nyancoin&quot; &quot;bitgold&quot; &quot;hamradiocoin&quot; &quot;viral&quot; &quot;datacoin&quot; &quot;satoshimadness&quot; &quot;mindcoin&quot; &quot;amsterdamcoin&quot; &quot;freicoin&quot; &quot;aricoin&quot; &quot;tigercoin&quot; &quot;cashout&quot; &quot;russiacoin&quot; &quot;petrodollar&quot; &quot;redcoin&quot; &quot;cypher&quot; &quot;emerald&quot; &quot;aurumcoin&quot; &quot;octocoin&quot; &quot;tittiecoin&quot; &quot;cagecoin&quot; &quot;crypto&quot; &quot;guncoin&quot; &quot;bunnycoin&quot; &quot;fastcoin&quot; &quot;beavercoin&quot; &quot;argentum&quot; &quot;philosopher-stones&quot; &quot;bumbacoin&quot; &quot;coexistcoin&quot; &quot;revolvercoin&quot; &quot;hundredcoin&quot; &quot;phoenixcoin&quot; &quot;biteur&quot; &quot;bitcoin-scrypt&quot; &quot;mgw&quot; &quot;cubits&quot; &quot;uniqredit&quot; &quot;halcyon&quot; &quot;bitzeny&quot; &quot;antibitcoin&quot; &quot;debitcoin&quot; &quot;flavorcoin&quot; &quot;vaperscoin&quot; &quot;kittehcoin&quot; &quot;leacoin&quot; &quot;ronpaulcoin&quot; &quot;prototanium&quot; &quot;dobbscoin&quot; &quot;captcoin&quot; &quot;spots&quot; &quot;icash&quot; &quot;mangocoinz&quot; &quot;dappster&quot; &quot;atomic-coin&quot; &quot;paycon&quot; &quot;cybercoin&quot; &quot;evotion&quot; &quot;wmcoin&quot; &quot;osmiumcoin&quot; &quot;breakcoin&quot; &quot;zurcoin&quot; &quot;ego&quot; &quot;metal-music-coin&quot; &quot;mmbtcd&quot; &quot;floz&quot; &quot;chesscoin&quot; &quot;pospro&quot; &quot;blazecoin&quot; &quot;vcoin&quot; &quot;bitcloud&quot; &quot;topcoin&quot; &quot;bitcoin-21&quot; &quot;popularcoin&quot; &quot;lanacoin&quot; &quot;guarany&quot; &quot;high-voltage&quot; &quot;acoin&quot; &quot;independent-money-system&quot; &quot;unicoin&quot; &quot;digitalprice&quot; &quot;b3coin&quot; &quot;jin-coin&quot; &quot;newyorkcoin&quot; &quot;elementrem&quot; &quot;parallelcoin&quot; &quot;orlycoin&quot; &quot;fuzzballs&quot; &quot;elcoin&quot; &quot;corgicoin&quot; &quot;nevacoin&quot; &quot;pulse&quot; &quot;machinecoin&quot; &quot;posex&quot; &quot;px&quot; &quot;helleniccoin&quot; &quot;c-bit&quot; &quot;mustangcoin&quot; &quot;cabbage&quot; &quot;unfed&quot; &quot;xonecoin&quot; &quot;comet&quot; &quot;eurocoin&quot; &quot;dpay&quot; &quot;tagrcoin&quot; &quot;virtualcoin&quot; &quot;bitquark&quot; &quot;revenu&quot; &quot;chaincoin&quot; &quot;selfiecoin&quot; &quot;cryptbit&quot; &quot;photon&quot; &quot;money&quot; &quot;cashcoin&quot; &quot;shilling&quot; &quot;bittokens&quot; &quot;bowscoin&quot; &quot;tajcoin&quot; &quot;ponzicoin&quot; &quot;stronghands&quot; &quot;antilitecoin&quot; &quot;litecred&quot; &quot;save-and-gain&quot; &quot;imperialcoin&quot; &quot;number7&quot; &quot;p7coin&quot; &quot;batcoin&quot; &quot;swaptoken&quot; &quot;crtcoin&quot; &quot;enigma&quot; &quot;californium&quot; &quot;digital-credits&quot; &quot;pizzacoin&quot; &quot;khancoin&quot; &quot;ernus&quot; &quot;23-skidoo&quot; &quot;satoshicard&quot; &quot;horiemoncard&quot; &quot;royalcoin-2&quot; &quot;nxttyacci&quot; &quot;forevercoin&quot; &quot;pluton&quot; &quot;e-dinar-coin&quot; &quot;bfx&quot; &quot;leocoin&quot; &quot;techshares&quot; &quot;clubcoin&quot; &quot;maskcoin&quot; &quot;wowecoin&quot; &quot;dynamiccoin&quot; &quot;asset-backed-coin&quot; &quot;heat-ledger&quot; &quot;the-dao&quot; &quot;edrcoin&quot; &quot;index-coin&quot; &quot;omicron&quot; &quot;mind-gene&quot; &quot;first-blood&quot; &quot;alpacoin&quot; &quot;npccoin&quot; &quot;gaycoin&quot; &quot;biglifecoin&quot; &quot;international-diamond&quot; &quot;uncoin&quot; &quot;tbcoin&quot; &quot;happy-creator-coin&quot; &quot;caliphcoin&quot; &quot;first-bitcoin&quot; &quot;invisiblecoin&quot; &quot;deltacredits&quot; &quot;gbcgoldcoin&quot; &quot;taopay&quot; &quot;timekoin&quot; &quot;futurepoints&quot; &quot;lecoin&quot; &quot;neptunecoin&quot; &quot;alphabet-coin-fund&quot; &quot;rhodiumcoin&quot; &quot;lomocoin&quot; &quot;bitland&quot; &quot;eclipse&quot; &quot;digitalfund&quot; &quot;enecoin&quot; &quot;kolschcoin&quot; &quot;sharkcoin&quot; &quot;bagcoin&quot; &quot;revcoin&quot; &quot;clinton&quot; &quot;president-johnson&quot; &quot;woodshares&quot; &quot;cthulhu-offerings&quot; &quot;gotfomo&quot; &quot;peacecoin&quot; &quot;cartercoin&quot; &quot;xaucoin&quot; &quot;shellpay&quot; &quot;advanced-internet-blocks&quot; &quot;royalcoin&quot; &quot;president-trump&quot; &quot;upcoin&quot; &quot;eggcoin&quot; &quot;futcoin&quot; &quot;rcoin&quot; &quot;goldmaxcoin&quot; &quot;cbd-crystals&quot; &quot;chncoin&quot; &quot;cleverbot&quot; &quot;bitalphacoin&quot; &quot;ocow&quot; &quot;trickycoin&quot; &quot;frankywillcoin&quot; &quot;psilocybin&quot; &quot;bitcoinfast&quot; &quot;rublebit&quot; &quot;kcoin&quot; &quot;local-family-owned&quot; &quot;richcoin&quot; &quot;digital-bullion-gold&quot; &quot;gameleaguecoin&quot; &quot;fedorashare&quot; &quot;pabyosicoin&quot; &quot;denarius&quot; &quot;flaxscript&quot; &quot;braincoin&quot; &quot;asiccoin&quot; &quot;avatarcoin&quot; &quot;xab&quot; &quot;motocoin&quot; &quot;todaycoin&quot; &quot;quebecoin&quot; &quot;cycling-coin&quot; &quot;linkedcoin&quot; &quot;dubstep&quot; &quot;operand&quot; &quot;opescoin&quot; &quot;mobilecash&quot; &quot;lazaruscoin&quot; &quot;sportscoin&quot; &quot;darklisk&quot; &quot;superstaketoken&quot; &quot;skeincoin&quot; &quot;president-clinton&quot; &quot;ugain&quot; &quot;lathaan&quot; &quot;fitcoin&quot; &quot;vegascoin&quot; &quot;sakuracoin&quot; &quot;paypeer&quot; &quot;moneta2&quot; &quot;digieuro&quot; &quot;prismchain&quot; &quot;pokechain&quot; &quot;teamup&quot; &quot;aces&quot; &quot;cashme&quot; &quot;bitmoon&quot; &quot;golfcoin&quot; &quot;nucleustokens&quot; &quot;valorbit&quot; &quot;superturbostake&quot; &quot;thecreed&quot; &quot;fireflycoin&quot; &quot;x2&quot; &quot;soulcoin&quot; &quot;safecoin&quot; &quot;pokecoin&quot; &quot;tellurion&quot; &quot;victoriouscoin&quot; &quot;ganjacoin-v2&quot; &quot;choofcoin&quot; &quot;xpay&quot; &quot;nutcoin&quot; &quot;paccoin&quot;})</pre></td></tr><tr><td class="docs"><p>Local representation of most important oanda account details</p>
+</td><td class="codes"><pre class="brush: clojure">(def oanda-account-rep
+  {:current-order {} :open-date nil :stop-loss nil :buy-or-sell nil :order-price nil :account 1000 :history []})</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/def ::url (s/with-gen
                (s/and string? #(.contains % &quot;://&quot;))
                (fn [] (s/gen #{&quot;https://www.cryptocompare.com/api/data/coinlist/&quot;}))))</pre></td></tr><tr><td class="docs">
@@ -2950,35 +2954,57 @@ sequence has been run through simple strat.  </p>
 'body' of the candle and the difference between the extent of the 'wicks'. Here are some candle patterns with known 
 ratios bewteen the bodies and the wicks.</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def green-half-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.9, :high 1.2, :close 1.1})
-(def green-one-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.9, :high 1.3, :close 1.2})
-(def green-onehalf-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.9, :high 1.4, :close 1.3})</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def red-half-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.8, :high 1.1, :close 0.9})
-(def red-one-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.7, :high 1.1, :close 0.8})
-(def red-onehalf-ratio {:unixtimestamp 1479470400000, :open 1, :low 0.6, :high 1.1, :close 0.7})</pre></td></tr><tr><td class="docs"><h2>Assorted utilities</h2>
+</td><td class="codes"><pre class="brush: clojure">(def green-half-ratio 
+    {:unixtimestamp 1479470400000, :open 1, :low 0.9, :high 1.2, :close 1.1})
+(def green-one-ratio 
+    {:unixtimestamp 1479470400000, :open 1, :low 0.9, :high 1.3, :close 1.2})
+(def green-onehalf-ratio 
+  {:unixtimestamp 1479470400000, :open 1, :low 0.9, :high 1.4, :close 1.3})</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def red-half-ratio 
+  {:unixtimestamp 1479470400000, :open 1, :low 0.8, :high 1.1, :close 0.9})
+(def red-one-ratio 
+  {:unixtimestamp 1479470400000, :open 1, :low 0.7, :high 1.1, :close 0.8})
+(def red-onehalf-ratio 
+  {:unixtimestamp 1479470400000, :open 1, :low 0.6, :high 1.1, :close 0.7})</pre></td></tr><tr><td class="docs"><h2>Assorted utilities</h2>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef json-get
         :args (s/cat :url ::url :opts (s/? map?))
         :ret map?)</pre></td></tr><tr><td class="docs"><p>GET from a JSON source and return a clojure map</p>
-</td><td class="codes"><pre class="brush: clojure">(defn json-get 
-  [url &amp; opts]
-  (as-&gt; (cnt/get url (when opts (first opts))) x
-        (:body x)
-        (jsn/read-str x :key-fn keyword)))</pre></td></tr><tr><td class="docs"><p>Count the number of digits in a number. Doesn't count digits after the decimal place.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn digit-count 
-  [no]
-  (int (+ 1 (Math/floor (Math/log10 no)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(with-test 
+  (defn json-get 
+    [url &amp; opts]
+    (as-&gt; (cnt/get url (when opts (first opts))) x
+          (:body x)
+          (jsn/read-str x :key-fn keyword))) 
+  (is 
+    (map? (json-get &quot;http://ip.jsontest.com/&quot;))))</pre></td></tr><tr><td class="docs"><p>Count the number of digits in a number. Doesn't count digits after the decimal place.</p>
+</td><td class="codes"><pre class="brush: clojure">(with-test 
+  (defn digit-count 
+    [no]
+    (int (+ 1 (Math/floor (Math/log10 no))))) 
+  (is 
+    (= 5 (digit-count 12345))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef to-human
-        :args (s/cat :unix ::unixtimestamp))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn to-human [unix]
-      (let [ts-length (digit-count unix)
-            convert (fn [x] (.toString (c/from-long (long x))))]
-           (cond
-             (&gt;= 10 ts-length) (convert (* 1000 unix))
-             (&lt; 10 ts-length) (convert unix)
-             :else (convert unix))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn map-&gt;mapofcol [damap]
-      (into {} (map (fn [x] [(first x) [(last x)]]) damap)))</pre></td></tr><tr><td class="docs">
+        :args (s/cat :unix ::unixtimestamp))</pre></td></tr><tr><td class="docs"><p>From unix to human readable timestamp of the form e.g. 2016-11-18T12:00:00.000Z</p>
+</td><td class="codes"><pre class="brush: clojure">(with-test 
+  (defn to-human 
+    [unix]
+    (let [ts-length (digit-count unix)
+          convert (fn [x] (.toString (c/from-long (long x))))]
+      (cond
+        (&gt;= 10 ts-length) (convert (* 1000 unix))
+        (&lt; 10 ts-length) (convert unix)
+        :else (convert unix))))
+  (is 
+    (= (to-human 1479470400000) &quot;2016-11-18T12:00:00.000Z&quot;)))</pre></td></tr><tr><td class="docs"><p>Puts the vals of a map into vectors</p>
+</td><td class="codes"><pre class="brush: clojure">(with-test 
+  (defn map-&gt;mapofcol 
+    [damap]
+    (into {} (map (fn [x] [(first x) [(last x)]]) damap))) 
+  (is 
+    (=  
+      {:unixtimestamp [1479470400000], :open [1], :low [0.6], :high [1.1], :close [0.7]}
+      (map-&gt;mapofcol {:unixtimestamp 1479470400000, :open 1, :low 0.6, :high 1.1, :close 0.7}))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn series-insert [series damap]
       (apply
         merge
@@ -3115,7 +3141,18 @@ ratios bewteen the bodies and the wicks.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn round2
     [precision d]
     (let [factor (Math/pow 10 precision)]
-      (/ (Math/round (* d factor)) factor)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.core" name="core.core"><h1 class="project-name">core.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+      (/ (Math/round (* d factor)) factor)))</pre></td></tr><tr><td class="docs"><p>Takes a function that executes a request when given a url and returns the result on a channel.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn basic-stub
+    [req-fn] 
+    (with-routes!
+      {&quot;/something&quot; {:status 200 :content-type &quot;application/json&quot;
+                     :body   (jsn/write-str {:hello &quot;world&quot;})}}
+      (:hello (&lt;!! (req-fn (str uri &quot;/something&quot;))))))</pre></td></tr><tr><td class="docs"><p>Takes a mock request and returns the body of the response as a map</p>
+
+<p>Mock request as provided for by stub-http</p>
+</td><td class="codes"><pre class="brush: clojure">  (defn mock-req-&gt;body-data
+    [mock-req]
+    (jsn/read-str (get (:body mock-req) &quot;postData&quot;) :key-fn keyword ))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.core" name="core.core"><h1 class="project-name">core.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns core.core)</pre></td></tr><tr><td class="docs"><h1>To the moon</h1>
 
 <p>The goal of this project is try out different automated trading strategies for trading various instruments 
@@ -3137,17 +3174,28 @@ a stop loss at the high of the last candle. </p>
 
 <p>These are a group of strategies that modify the decision to trade or not based on the ratio of the body of a candle 
 to its wicks.</p>
+
+<h1>An experiment in heavy documentation and inline testing</h1>
+
+<p>After returning to this project after a few months off I found it difficult to jump back in. One week I happened to 
+read various articles and other minor events that lead me to belive going heavy on documentation would be cool thing 
+to try. Having tests inline is also a form of documentation. The primary concern here would be that large tests 
+would obscure the source code and make navigating around more diffcult. My pet theory was that if the funcitons 
+could be kept small and single purposed enough then large tests wouldn't be necessary. Even if they were their 
+details could be abstracted away into functions. This could provide motivation to abstract relentlessly. </p>
 </td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.datasources" name="core.datasources"><h1 class="project-name">core.datasources</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns core.datasources
-    (:require
-      [http.async.client :as http]
-      [clojure.data.json :as jsn]
-      [clojure.spec :as s]
-      [clojure.spec.gen :as gen]
-      [clojure.spec.test :as ts :refer [check]]
-      [clojure.spec.gen :as gen]
-      [core.utils :as u]
-      [clojure.core.async :as casy :refer [&lt;! &gt;! go]]))</pre></td></tr><tr><td class="docs">
+  (:require
+    [clojure.test :as tst :refer [is with-test]]
+    [http.async.client :as http]
+    [clojure.data.json :as jsn]
+    [clojure.spec :as s]
+    [clojure.spec.gen :as gen]
+    [clojure.spec.test :as ts :refer [check]]
+    [clojure.spec.gen :as gen]
+    [core.utils :as u]
+    [clojure.core.async :as casy :refer [&lt;!! &lt;! &gt;! go]]
+    [stub-http.core :refer :all]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def cryptocompare-syms #{&quot;MCN&quot; &quot;FRN&quot; &quot;SDP&quot; &quot;DGORE&quot; &quot;HYP&quot; &quot;PAK&quot; &quot;2BACCO&quot; &quot;CPC&quot; &quot;NEOS&quot; &quot;GRN&quot; &quot;TWLV&quot; &quot;MND&quot; &quot;RIPO&quot; &quot;VTA&quot; &quot;HAL&quot; &quot;RCX&quot; &quot;ENRG&quot; &quot;1337&quot; &quot;NUBIS&quot; &quot;LANA&quot; &quot;BEN&quot; &quot;2015&quot; &quot;ZRC&quot; &quot;IOC&quot; &quot;CJ&quot; &quot;CDX&quot; &quot;BST&quot; &quot;SQL&quot; &quot;VPRC&quot; &quot;NRS&quot; &quot;BTCRY&quot; &quot;STEPS&quot; &quot;CNL&quot; &quot;LQD&quot; &quot;DT&quot; &quot;ADZ&quot; &quot;HALLO&quot; &quot;1CR&quot; &quot;DASH&quot; &quot;EQUAL&quot; &quot;MST&quot; &quot;BYC&quot; &quot;BSTY&quot; &quot;XT&quot; &quot;NTC&quot; &quot;XHI&quot; &quot;SOLE&quot; &quot;MINT&quot; &quot;TRIG&quot; &quot;CRW&quot; &quot;LAB&quot; &quot;BAY&quot; &quot;RISE&quot; &quot;RZR&quot; &quot;GEN&quot; &quot;CACH&quot; &quot;CLINT&quot; &quot;WBB&quot; &quot;UIS&quot; &quot;BTCL&quot; &quot;SNRG&quot; &quot;REP&quot; &quot;MOIN&quot; &quot;QTL&quot; &quot;ISL&quot; &quot;XBOT&quot; &quot;ANS&quot; &quot;NEU&quot; &quot;SC&quot; &quot;MOOND&quot; &quot;CYP&quot; &quot;START&quot; &quot;OK&quot; &quot;GP&quot; &quot;BCR&quot; &quot;NRB&quot; &quot;MC&quot; &quot;EDRC&quot; &quot;GAY&quot; &quot;BOTS&quot; &quot;611&quot; &quot;EQM&quot; &quot;VRC&quot; &quot;GRS&quot; &quot;SH&quot; &quot;CRBIT&quot; &quot;KEY&quot; &quot;MIL&quot; &quot;ARG&quot; &quot;RT2&quot; &quot;OC&quot; &quot;GOON&quot; &quot;LXC&quot; &quot;MSC&quot; &quot;GB&quot; &quot;DGD&quot; &quot;ROYAL&quot; &quot;BLC&quot; &quot;LSD&quot; &quot;GAP&quot; &quot;CRX&quot; &quot;FTP&quot; &quot;1ST&quot; &quot;RDD&quot; &quot;ADCN&quot; &quot;LTB&quot; &quot;CHILD&quot; &quot;NXTI&quot; &quot;TAGR&quot; &quot;NEBU&quot; &quot;XPM&quot; &quot;MUE&quot; &quot;AERO&quot; &quot;CRE&quot; &quot;NYAN&quot; &quot;FIRE&quot; &quot;MRP&quot; &quot;UTIL&quot; &quot;NZC&quot; &quot;COC&quot; &quot;UNC&quot; &quot;NAUT&quot; &quot;CRACK&quot; &quot;CMC&quot; &quot;DIME&quot; &quot;CC&quot; &quot;CHOOF&quot; &quot;BLK&quot; &quot;FCT&quot; &quot;TEAM&quot; &quot;FLT&quot; &quot;SBD&quot; &quot;SWEET&quot; &quot;WOLF&quot; &quot;BM&quot; &quot;MAPC&quot; &quot;HZ&quot; &quot;PYC&quot; &quot;ZOOM&quot; &quot;ALF&quot; &quot;42&quot; &quot;XNX&quot; &quot;TELL&quot; &quot;ERC&quot; &quot;TRON&quot; &quot;SWIFT&quot; &quot;NOTE&quot; &quot;DKC&quot; &quot;ANTI&quot; &quot;CKC&quot; &quot;SRC&quot; &quot;AMP&quot; &quot;007&quot; &quot;GIVE&quot; &quot;EMIGR&quot; &quot;TRUST&quot; &quot;MYR&quot; &quot;EKN&quot; &quot;EXCL&quot; &quot;CLR&quot; &quot;CALC&quot; &quot;YOC&quot; &quot;PSEUD&quot; &quot;GRT&quot; &quot;GPU&quot; &quot;DOT&quot; &quot;UNB&quot; &quot;C2&quot; &quot;CBX&quot; &quot;QTZ&quot; &quot;LYC&quot; &quot;XRE&quot; &quot;CTC&quot; &quot;DTC&quot; &quot;ERB&quot; &quot;CHASH&quot; &quot;AMC&quot; &quot;BOB&quot; &quot;SKB&quot; &quot;LC&quot; &quot;LEA&quot; &quot;DB&quot; &quot;NKC&quot; &quot;MI&quot; &quot;XCR&quot; &quot;XMG&quot; &quot;LYB&quot; &quot;ELE&quot; &quot;CRC&quot; &quot;AEC&quot; &quot;WC&quot; &quot;LTC&quot; &quot;QRK&quot; &quot;PKB&quot; &quot;XWT&quot; &quot;DCNT&quot; &quot;TOR&quot; &quot;CHA&quot; &quot;FRC&quot; &quot;CURE&quot; &quot;CIN&quot; &quot;LDOGE&quot; &quot;NSR&quot; &quot;SYNC&quot; &quot;EAGS&quot; &quot;TRI&quot; &quot;SHLD&quot; &quot;SAK&quot; &quot;NANAS&quot; &quot;BNCR&quot; &quot;GLX&quot; &quot;CAM&quot; &quot;VTR&quot; &quot;GMC&quot; &quot;CYT&quot; &quot;SFE&quot; &quot;CARBON&quot; &quot;ZED&quot; &quot;SBC&quot; &quot;AIB&quot; &quot;DEUR&quot; &quot;SCT&quot; &quot;CIRC&quot; &quot;BCN&quot; &quot;NMC&quot; &quot;BITB&quot; &quot;XTC&quot; &quot;TMC&quot; &quot;STO&quot; &quot;QBK&quot; &quot;BCX&quot; &quot;VRM&quot; &quot;AEON&quot; &quot;CSC&quot; &quot;KMD&quot; &quot;VTC&quot; &quot;ALN&quot; &quot;NAV&quot; &quot;LBC&quot; &quot;PEERPLAYS&quot; &quot;ZNY&quot; &quot;JBS&quot; &quot;ROS&quot; &quot;BTC&quot; &quot;VIA&quot; &quot;BURST&quot; &quot;MG&quot; &quot;AND&quot; &quot;XAI&quot; &quot;DLISK&quot; &quot;NKT&quot; &quot;CLUB&quot; &quot;LTH&quot; &quot;UNAT&quot; &quot;DBG&quot; &quot;IBANK&quot; &quot;BYTES&quot; &quot;GSY&quot; &quot;EDC&quot; &quot;EXP&quot; &quot;SPC&quot; &quot;KGC&quot; &quot;XDN&quot; &quot;XUP&quot; &quot;BLU&quot; &quot;ETH&quot; &quot;BTG&quot; &quot;GROW&quot; &quot;GCC&quot; &quot;CINNI&quot; &quot;MMC&quot; &quot;AIR&quot; &quot;EC&quot; &quot;VIP&quot; &quot;STR*&quot; &quot;TEK&quot; &quot;XXX&quot; &quot;GCR&quot; &quot;DGDC&quot; &quot;SLG&quot; &quot;KOBO&quot; &quot;SAT2&quot; &quot;LGBTQ&quot; &quot;UNITY&quot; &quot;BET&quot; &quot;UNIQ&quot; &quot;XCE&quot; &quot;MOON&quot; &quot;FFC&quot; &quot;ASN&quot; &quot;XID&quot; &quot;HODL&quot; &quot;GLOBE&quot; &quot;MAX&quot; &quot;GRC&quot; &quot;SLS&quot; &quot;OCTO&quot; &quot;MNM&quot; &quot;JUDGE&quot; &quot;BTE&quot; &quot;SCRPT&quot; &quot;TRK&quot; &quot;FSC2&quot; &quot;RMS&quot; &quot;VLT&quot; &quot;XPH&quot; &quot;TDFB&quot; &quot;STEEM&quot; &quot;DEM&quot; &quot;PSY&quot; &quot;RUST&quot; &quot;MEME&quot; &quot;CON&quot; &quot;JKC&quot; &quot;BLOCKPAY&quot; &quot;HKG&quot; &quot;ELC&quot; &quot;PXL&quot; &quot;ZCC&quot; &quot;ORB&quot; &quot;RCN&quot; &quot;STHR&quot; &quot;BAC&quot; &quot;XC&quot; &quot;OBITS&quot; &quot;SWING&quot; &quot;DGC&quot; &quot;THC&quot; &quot;FLAP&quot; &quot;MONETA&quot; &quot;XPY&quot; &quot;NTRN&quot; &quot;VAPOR&quot; &quot;APC&quot; &quot;ORLY&quot; &quot;MONA&quot; &quot;NUM&quot; &quot;DSB&quot; &quot;J&quot; &quot;WGC&quot; &quot;JOBS&quot; &quot;CLV&quot; &quot;OPAL&quot; &quot;SPOTS&quot; &quot;BOOM&quot; &quot;ARCH&quot; &quot;MED&quot; &quot;BQC&quot; &quot;TES&quot; &quot;EAC&quot; &quot;KUBO&quot; &quot;SXC&quot; &quot;SSD&quot; &quot;HTC&quot; &quot;PWR&quot; &quot;PINK&quot; &quot;CUBE&quot; &quot;CRYPT&quot; &quot;XVG&quot; &quot;BUK&quot; &quot;VPN&quot; &quot;EVENT&quot; &quot;INV&quot; &quot;SMLY&quot; &quot;PDC&quot; &quot;ACOIN&quot; &quot;INCP&quot; &quot;CRAFT&quot; &quot;GSM&quot; &quot;FOREX&quot; &quot;SEN&quot; &quot;PBC&quot; &quot;BTX&quot; &quot;EMC2&quot; &quot;HILL&quot; &quot;HVC&quot; &quot;UTH&quot; &quot;LSK&quot; &quot;BUCKS&quot; &quot;SUPER&quot; &quot;VTX&quot; &quot;KRAK&quot; &quot;STS&quot; &quot;RYC&quot; &quot;FC2&quot; &quot;LEMON&quot; &quot;DIGS&quot; &quot;XBS&quot; &quot;TX&quot; &quot;SPRTS&quot; &quot;OMNI&quot; &quot;NEC&quot; &quot;MPRO&quot; &quot;BBCC&quot; &quot;OMC&quot; &quot;RPC&quot; &quot;XWC&quot; &quot;BLOCK&quot; &quot;SLING&quot; &quot;ARDR&quot; &quot;XMS&quot; &quot;CF&quot; &quot;GRID&quot; &quot;LFC&quot; &quot;ANC&quot; &quot;CFC&quot; &quot;N7&quot; &quot;COOL&quot; &quot;TCR&quot; &quot;PIZZA&quot; &quot;SDC&quot; &quot;PRE&quot; &quot;TTC&quot; &quot;PRIME&quot; &quot;KARM&quot; &quot;VERSA&quot; &quot;ETC&quot; &quot;DGB&quot; &quot;NAN&quot; &quot;XRP&quot; &quot;X2&quot; &quot;BRK&quot; &quot;TOT&quot; &quot;DISK&quot; &quot;WDC&quot; &quot;TRA&quot; &quot;SMAC&quot; &quot;GDC&quot; &quot;MUDRA&quot; &quot;NBT&quot; &quot;MDC&quot; &quot;JIF&quot; &quot;FLY&quot; &quot;FCN&quot; &quot;EXB&quot; &quot;CHESS&quot; &quot;DVC&quot; &quot;MARV&quot; &quot;BTMI&quot; &quot;2FLAV&quot; &quot;PRM&quot; &quot;DNET&quot; &quot;CLOAK&quot; &quot;PTS&quot; &quot;MIN&quot; &quot;EGO&quot; &quot;BERN&quot; &quot;XRA&quot; &quot;INFX&quot; &quot;REE&quot; &quot;ULTC&quot; &quot;BELA&quot; &quot;SOUL&quot; &quot;LIMX&quot; &quot;VOOT&quot; &quot;GAIA&quot; &quot;XG&quot; &quot;DCR&quot; &quot;HNC&quot; &quot;FX&quot; &quot;JPC&quot; &quot;CAP&quot; &quot;LUX&quot; &quot;VEC2&quot; &quot;SMSR&quot; &quot;GIG&quot; &quot;RING&quot; &quot;GRM&quot; &quot;DRZ&quot; &quot;XAU&quot; &quot;M1&quot; &quot;GBT&quot; &quot;RBIT&quot; &quot;SCRT&quot; &quot;GIZ&quot; &quot;TODAY&quot; &quot;KAT&quot; &quot;TAG&quot; &quot;ZET2&quot; &quot;DROP&quot; &quot;COX&quot; &quot;SPHR&quot; &quot;XAUR&quot; &quot;ZYD&quot; &quot;RBT&quot; &quot;FCS&quot; &quot;BRONZ&quot; &quot;SCN&quot; &quot;SCOT&quot; &quot;QSLV&quot; &quot;B3&quot; &quot;POLY&quot; &quot;INCH&quot; &quot;OMA&quot; &quot;ANTC&quot; &quot;AC&quot; &quot;MMNXT&quot; &quot;SPM&quot; &quot;TUR&quot; &quot;MRS&quot; &quot;COV&quot; &quot;SIGU&quot; &quot;HBN&quot; &quot;TIA&quot; &quot;GHC&quot; &quot;WAY&quot; &quot;CHIP&quot; &quot;DMD&quot; &quot;DES&quot; &quot;FRK&quot; &quot;DIEM&quot; &quot;TAM&quot; &quot;SUP&quot; &quot;PXC&quot; &quot;DRKT&quot; &quot;CANN&quot; &quot;UNIT&quot; &quot;XZC&quot; &quot;CNMT&quot; &quot;CYG&quot; &quot;CTO&quot; &quot;QORA&quot; &quot;GLYPH&quot; &quot;SPX&quot; &quot;GLD&quot; &quot;OLYMP&quot; &quot;BTD&quot; &quot;XMR&quot; &quot;2GIVE&quot; &quot;XDE2&quot; &quot;CAT&quot; &quot;PRC&quot; &quot;LAZ&quot; &quot;TRUMP&quot; &quot;FONZ&quot; &quot;CRNK&quot; &quot;DCC&quot; &quot;KTK&quot; &quot;ENE&quot; &quot;COVAL&quot; &quot;UFO&quot; &quot;RRT&quot; &quot;GRAV&quot; &quot;SMC&quot; &quot;DLC&quot; &quot;FLO&quot; &quot;EGG&quot; &quot;CXC&quot; &quot;ION&quot; &quot;LK7&quot; &quot;GMX&quot; &quot;HMP&quot; &quot;KRB&quot; &quot;PHS&quot; &quot;BTA&quot; &quot;EXIT&quot; &quot;SPORT&quot; &quot;HVCO&quot; &quot;STRAT&quot; &quot;LOG&quot; &quot;LTCD&quot; &quot;RDN&quot; &quot;TKN&quot; &quot;VIOR&quot; &quot;UBIQ&quot; &quot;CSH&quot; &quot;REV&quot; &quot;RIC&quot; &quot;EGC&quot; &quot;BIOS&quot; &quot;HIRE&quot; &quot;BITUSD&quot; &quot;GML&quot; &quot;ICN&quot; &quot;BITCNY&quot; &quot;FRAC&quot; &quot;ACP&quot; &quot;FAIR&quot; &quot;CYC&quot; &quot;MN&quot; &quot;DOGE&quot; &quot;MZC&quot; &quot;NOBL&quot; &quot;AUR&quot; &quot;CASH&quot; &quot;FIBRE&quot; &quot;MARS&quot; &quot;OSC&quot; &quot;FRWC&quot; &quot;BOST&quot; &quot;BUZZ&quot; &quot;EVIL&quot; &quot;CRAIG&quot; &quot;KORE&quot; &quot;SOON&quot; &quot;CESC&quot; &quot;LTCX&quot; &quot;DANK&quot; &quot;KRC&quot; &quot;LKY&quot; &quot;AGS&quot; &quot;GREXIT&quot; &quot;GHS&quot; &quot;XDB&quot; &quot;GLC&quot; &quot;SHF&quot; &quot;GOTX&quot; &quot;ICB&quot; &quot;VIRAL&quot; &quot;NEVA&quot; &quot;PSI&quot; &quot;MAID&quot; &quot;BITS&quot; &quot;PSB&quot; &quot;CLUD&quot; &quot;RBR&quot; &quot;CGA&quot; &quot;VOX&quot; &quot;SLM&quot; &quot;GNJ&quot; &quot;XDP&quot; &quot;MMXIV&quot; &quot;BON&quot; &quot;NBL&quot; &quot;BITZ&quot; &quot;XLB&quot; &quot;GPL&quot; &quot;404&quot; &quot;XFC&quot; &quot;STR&quot; &quot;EZC&quot; &quot;NAS2&quot; &quot;TIT&quot; &quot;FJC&quot; &quot;WINGS&quot; &quot;CLAM&quot; &quot;BTCR&quot; &quot;ZNE&quot; &quot;XQN&quot; &quot;CRAB&quot; &quot;DCK&quot; &quot;BTM&quot; &quot;USDE&quot; &quot;COIN&quot; &quot;XST&quot; &quot;XNA&quot; &quot;MYST&quot; &quot;DSH&quot; &quot;NXS&quot; &quot;XCP&quot; &quot;SNS&quot; &quot;GEO&quot; &quot;DBTC&quot; &quot;SLR&quot; &quot;NVC&quot; &quot;CNC&quot; &quot;TENNET&quot; &quot;ARM&quot; &quot;TRC&quot; &quot;RBY&quot; &quot;XBC&quot; &quot;PIO&quot; &quot;I0C&quot; &quot;ZUR&quot; &quot;BCY&quot; &quot;NKA&quot; &quot;SPACE&quot; &quot;AXR&quot; &quot;32BIT&quot; &quot;FLDC&quot; &quot;HYPER&quot; &quot;BIGUP&quot; &quot;GUE&quot; &quot;EMD&quot; &quot;SANDG&quot; &quot;SPR&quot; &quot;MNE&quot; &quot;POST&quot; &quot;IXC&quot; &quot;NXTTY&quot; &quot;BHC&quot; &quot;WEX&quot; &quot;WAVES&quot; &quot;EDGE&quot; &quot;BTS&quot; &quot;ZEIT&quot; &quot;BSC&quot; &quot;GAME&quot; &quot;NET&quot; &quot;SYS&quot; &quot;IVZ&quot; &quot;KNC&quot; &quot;CCN&quot; &quot;ATM&quot; &quot;SONG&quot; &quot;TAB&quot; &quot;UNO&quot; &quot;STA&quot; &quot;STV&quot; &quot;MWC&quot; &quot;LTBC&quot; &quot;ZET&quot; &quot;HUGE&quot; &quot;DCS.&quot; &quot;VMC&quot; &quot;MT&quot; &quot;XCO&quot; &quot;CAIX&quot; &quot;YBC&quot; &quot;RADS&quot; &quot;XEM&quot; &quot;BTQ&quot; &quot;BXT&quot; &quot;LGD&quot; &quot;HEAT&quot; &quot;OLDSF&quot; &quot;COMM&quot; &quot;NLC&quot; &quot;WMC&quot; &quot;GHOUL&quot; &quot;ROOT&quot; &quot;EXE&quot; &quot;METAL&quot; &quot;NODE&quot; &quot;BEATS&quot; &quot;CRAVE&quot; &quot;MRY&quot; &quot;CREVA&quot; &quot;SSTC&quot; &quot;FLX&quot; &quot;XPD&quot; &quot;MOJO&quot; &quot;MARYJ&quot; &quot;MEC&quot; &quot;ARI&quot; &quot;ETHS&quot; &quot;AMS&quot; &quot;VOYA&quot; &quot;SJCX&quot; &quot;SILK&quot; &quot;LIR&quot; &quot;SEC&quot; &quot;CV2&quot; &quot;SYNX&quot; &quot;SIB&quot; &quot;SOIL&quot; &quot;SAR&quot; &quot;DBIC&quot; &quot;TGC&quot; &quot;GBRC&quot; &quot;BLITZ&quot; &quot;DOPE&quot; &quot;BTB&quot; &quot;BLRY&quot; &quot;DOGED&quot; &quot;LYKKE&quot; &quot;POINTS&quot; &quot;U&quot; &quot;CAB&quot; &quot;XDQ&quot; &quot;SPEC&quot; &quot;RBIES&quot; &quot;GAM&quot; &quot;MTR&quot; &quot;ICASH&quot; &quot;SPA&quot; &quot;UTC&quot; &quot;GEMZ&quot; &quot;XVC&quot; &quot;XSI&quot; &quot;FTC&quot; &quot;EMC&quot; &quot;AXIOM&quot; &quot;LTS&quot; &quot;HEDG&quot; &quot;BS&quot; &quot;ENTER&quot; &quot;BBR&quot; &quot;VTY&quot; &quot;ADC&quot; &quot;DPAY&quot; &quot;PEC&quot; &quot;FUZZ&quot; &quot;KR&quot; &quot;UNF&quot; &quot;PUTIN&quot; &quot;BIT16&quot; &quot;POT&quot; &quot;SNGLS&quot; &quot;EPY&quot; &quot;PNK&quot; &quot;CMT&quot; &quot;NMB&quot; &quot;NXT&quot; &quot;FSN&quot; &quot;GSX&quot; &quot;808&quot; &quot;IFC&quot; &quot;OBS&quot; &quot;BFX&quot; &quot;BTCD&quot; &quot;BRAIN&quot; &quot;DUB&quot; &quot;BNT&quot; &quot;VDO&quot; &quot;YAC&quot; &quot;PULSE&quot; &quot;ABY&quot; &quot;ZEC&quot; &quot;BOLI&quot; &quot;MYC&quot; &quot;ADN&quot; &quot;SPT&quot; &quot;YOVI&quot; &quot;RUBIT&quot; &quot;EBS&quot; &quot;HCC&quot; &quot;ARB&quot; &quot;PTC&quot; &quot;ATOM&quot; &quot;FUTC&quot; &quot;QCN&quot; &quot;NXE&quot; &quot;SWARM&quot; &quot;CETI&quot; &quot;NETC&quot; &quot;ANNC&quot; &quot;888&quot; &quot;DRKC&quot; &quot;DRACO&quot; &quot;GRAM&quot; &quot;APEX&quot; &quot;AM&quot; &quot;KDC&quot; &quot;SFR&quot; &quot;XPOKE&quot; &quot;STAR&quot; &quot;HUC&quot; &quot;8BIT&quot; &quot;CELL&quot; &quot;EFL&quot; &quot;TAK&quot; &quot;FST&quot; &quot;SHREK&quot; &quot;SHADE&quot; &quot;EKO&quot; &quot;XCN&quot; &quot;FIT&quot; &quot;PXI&quot; &quot;SSV&quot; &quot;PINKX&quot; &quot;MINE&quot; &quot;XPB&quot; &quot;PIGGY&quot; &quot;URO&quot; &quot;XSEED&quot; &quot;NLG&quot; &quot;JWL&quot; &quot;XPO&quot; &quot;MNC&quot; &quot;PPC&quot; &quot;WARP&quot; &quot;BSD&quot; &quot;XCASH&quot; &quot;XJO&quot; &quot;AMBER&quot;})</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def oanda-api-key &quot;d20a1b3948e96474eb08dfe59d438c45-9934d1346ba813e46f3403cbab5adfc9&quot;)</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def rest-api-base &quot;https://api-fxpractice.oanda.com/v1/&quot;)</pre></td></tr><tr><td class="docs">
@@ -3196,13 +3244,14 @@ to its wicks.</p>
 </td><td class="codes"><pre class="brush: clojure">(s/fdef oanda-candle-&gt;standard
   :args (s/cat :oanda-candle ::oanda-candle)
   :ret ::u/standard-candle)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn oanda-candle-&gt;standard [oanda-candle]
-      (let [{:keys [highBid time lowBid openAsk closeAsk openBid highAsk closeBid lowAsk]} oanda-candle]
-           {:unixtimestamp (u/timestamp-&gt;unix time)
-            :open (u/average openAsk openBid)
-            :low (u/average lowBid lowAsk)
-            :high (u/average highAsk highBid)
-            :close (u/average closeAsk closeBid)}))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">                          (defn oanda-candle-&gt;standard 
+                            [oanda-candle]
+                            (let [{:keys [highBid time lowBid openAsk closeAsk openBid highAsk closeBid lowAsk]} oanda-candle]
+                              {:unixtimestamp (u/timestamp-&gt;unix time)
+                               :open (u/average openAsk openBid)
+                               :low (u/average lowBid lowAsk)
+                               :high (u/average highAsk highBid)
+                               :close (u/average closeAsk closeBid)}))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn oanda-price-stream-start [client callback instrument]
       (let [resp (http/stream-seq client
                                   :get (str
@@ -3231,18 +3280,21 @@ to its wicks.</p>
              (when-let [err (http/error resp)]
                        (println &quot;failed processing request: &quot; err))
              (doseq [s (http/string resp)]
-                    (&gt;! chan s)))))</pre></td></tr><tr><td class="docs"><p>EUR_USD 5000 M1</p>
-</td><td class="codes"><pre class="brush: clojure">(defn oanda-historical
-      [instrument count granularity]
-      (-&gt;&gt;
-        (u/json-get
-          (str rest-api-base &quot;candles&quot;)
-          {:headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)}
-           :query-params {&quot;instrument&quot; instrument
-                          &quot;count&quot; count
-                          &quot;granularity&quot; granularity}})
-        :candles
-        (map oanda-candle-&gt;standard)))</pre></td></tr><tr><td class="docs"><p>EUR_USD 5000 M1</p>
+                    (&gt;! chan s)))))</pre></td></tr><tr><td class="docs"><p>[EUR_USD 5000 M1]</p>
+</td><td class="codes"><pre class="brush: clojure">(with-test 
+  (defn oanda-historical
+    [instrument count granularity]
+    (-&gt;&gt;
+      (u/json-get
+        (str rest-api-base &quot;candles&quot;)
+        {:headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)}
+         :query-params {&quot;instrument&quot; instrument
+                        &quot;count&quot; count
+                        &quot;granularity&quot; granularity}})
+      :candles
+      (map oanda-candle-&gt;standard))) 
+  (is 
+    (s/valid? (s/coll-of ::u/standard-candle) (oanda-historical &quot;EUR_USD&quot; &quot;10&quot; &quot;M5&quot;))))</pre></td></tr><tr><td class="docs"><p>EUR_USD 5000 M1</p>
 </td><td class="codes"><pre class="brush: clojure">(defn oanda-historical-raw
       [instrument count granularity]
       (-&gt;&gt;
@@ -3252,42 +3304,83 @@ to its wicks.</p>
            :query-params {&quot;instrument&quot; instrument
                           &quot;count&quot; count
                           &quot;granularity&quot; granularity}})
-        :candles))</pre></td></tr><tr><td class="docs"><p>EUR_USD 200</p>
-</td><td class="codes"><pre class="brush: clojure">(defn oanda-open-order
-      [instrument units &amp; stoploss]
-      (with-open [client (http/create-client)]
-                 (let [resp (http/POST client
-                                       (str rest-api-base-v3 &quot;accounts/&quot; account-no &quot;/orders&quot;)
-                                       :headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)
-                                                 :Content-type &quot;application/json&quot;}
-                                       :body (jsn/write-str {:order (merge
-                                                                      {:units units
-                                                                       :instrument instrument
-                                                                       :timeInForce &quot;FOK&quot;
-                                                                       :type &quot;MARKET&quot;
-                                                                       :positionFill &quot;DEFAULT&quot;}
-                                                                      (when stoploss
-                                                                            {:stopLossOnFill {:price (first stoploss)
-                                                                                              :timeInForce &quot;GTC&quot;}}))}))]
-                      (http/await resp)
-                      (println (http/string resp)))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn oanda-open-order-cas [chan instrument units &amp; stoploss]
-      (with-open [client (http/create-client)]
-                 (let [resp (http/POST client
-                                       (str rest-api-base-v3 &quot;accounts/&quot; account-no &quot;/orders&quot;)
-                                       :headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)
-                                                 :Content-type &quot;application/json&quot;}
-                                       :body (jsn/write-str {:order (merge
-                                                                      {:units units
-                                                                       :instrument instrument
-                                                                       :timeInForce &quot;FOK&quot;
-                                                                       :type &quot;MARKET&quot;
-                                                                       :positionFill &quot;DEFAULT&quot;}
-                                                                      (when stoploss
-                                                                            {:stopLossOnFill {:price (first stoploss)
-                                                                                              :timeInForce &quot;GTC&quot;}}))}))]
-                      (http/await resp)
-                      (go (&gt;! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))</pre></td></tr><tr><td class="docs">
+        :candles))</pre></td></tr><tr><td class="docs"><p>http request that requires a body such as POST and PUT, returns a channel</p>
+</td><td class="codes"><pre class="brush: clojure">(with-test
+  (defn http-body-cas 
+    [url headers body method]
+    (with-open [client (http/create-client)]
+      (let [resp (method client
+                            url
+                            :headers headers 
+                            :body (jsn/write-str body))]
+        (http/await resp)
+        (go (jsn/read-str (http/string resp) :key-fn keyword))))) 
+  (with-routes!
+    {&quot;/something&quot; {:status 200 :content-type &quot;application/json&quot;
+                   :body   (jsn/write-str {:hello &quot;world&quot;})}}
+    (is 
+      (= &quot;world&quot; (:hello (&lt;!! (http-body-cas (str uri &quot;/something&quot;) {} {} http/POST)))))))</pre></td></tr><tr><td class="docs"><p>http request that doesn't require a body such as GET, returns a channel</p>
+</td><td class="codes"><pre class="brush: clojure">(with-test 
+  (defn http-cas 
+    [url headers method]
+    (with-open [client (http/create-client)]
+      (let [resp (method client
+                         url
+                         :headers headers)]
+        (http/await resp)
+        (go (jsn/read-str (http/string resp) :key-fn keyword))))) 
+  (is 
+    (= &quot;world&quot; (u/basic-stub (fn [uri] (http-cas uri {} http/GET))))))</pre></td></tr><tr><td class="docs"><p>Order map for placing an order with oanda</p>
+</td><td class="codes"><pre class="brush: clojure">(defn order-gen 
+  [units instrument]
+  {:order {:units units
+           :instrument instrument
+           :timeInForce &quot;FOK&quot;
+           :type &quot;MARKET&quot;
+           :positionFill &quot;DEFAULT&quot;}})</pre></td></tr><tr><td class="docs"><p>Stop loss map for placing a stop loss with an oanda order</p>
+</td><td class="codes"><pre class="brush: clojure">(defn stop-loss-gen
+  [stoploss]
+  {:stopLossOnFill {:price stoploss 
+                    :timeInForce &quot;GTC&quot;}})</pre></td></tr><tr><td class="docs"><p>Request header map for placing an order with oanda</p>
+</td><td class="codes"><pre class="brush: clojure">(defn oanda-order-header-gen 
+  ([] 
+   (oanda-order-header-gen oanda-api-key))
+  ([oanda-api-key]
+   {:Authorization (str &quot;Bearer &quot; oanda-api-key)
+    :Content-type &quot;application/json&quot;}))</pre></td></tr><tr><td class="docs"><p>Open oanda order e.g. [EUR<em>USD 100], optional stop loss and url can be provided. Default url will use ACCOUNT</em>NO envvar</p>
+</td><td class="codes"><pre class="brush: clojure">(with-test 
+  (defn oanda-open-order-cas! 
+    ([instrument units]
+     (oanda-open-order-cas! instrument units :url (str rest-api-base-v3 &quot;accounts/&quot; account-no &quot;/orders&quot;)))
+    ([instrument units &amp; opts]
+     (let [{:keys [url stoploss]} opts]
+       (cond
+         (and url stoploss) (http-body-cas  
+                              url 
+                              (oanda-order-header-gen)
+                              (update-in (order-gen units instrument) [:order] merge (stop-loss-gen stoploss))
+                              http/POST) 
+         (and url (not stoploss)) (http-body-cas url (oanda-order-header-gen) (order-gen units instrument) http/POST) 
+         (and (not url) stoploss) (http-body-cas  
+                                    (str rest-api-base-v3 &quot;accounts/&quot; account-no &quot;/orders&quot;)
+                                    (oanda-order-header-gen)
+                                    (update-in (order-gen units instrument) [:order] merge (stop-loss-gen stoploss))
+                                    http/POST) 
+         :else (throw (Exception. &quot;oanda-open-order-cas cond failed&quot;)))))) 
+  (is 
+    (with-routes! {&quot;/something&quot; {:status 200 :content-type &quot;text/plain&quot; :body (jsn/write-str {:hi &quot;there&quot;})}}
+      (&lt;!! (oanda-open-order-cas! &quot;EUR_USD&quot; 100 :url (str uri &quot;/something&quot;) :stoploss 123.233))
+      (let [requests (recorded-requests server)
+            order (:order (u/mock-req-&gt;body-data (first requests)))]
+        (contains? order :stopLossOnFill))))
+  (is 
+    (with-routes! {&quot;/something&quot; {:status 200 :content-type &quot;text/plain&quot; :body (jsn/write-str {:hi &quot;there&quot;})}}
+      (&lt;!! (oanda-open-order-cas! &quot;EUR_USD&quot; 100 :url (str uri &quot;/something&quot;)))
+      (let [requests (recorded-requests server)
+            order (:order (u/mock-req-&gt;body-data (first requests)))]
+        (and 
+          (not (contains? order :stopLossOnFill))
+          (contains? order :positionFill))))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn oanda-patch-order-cas [chan tradeid stoploss]
       (with-open [client (http/create-client)]
                  (let [resp (http/PUT client
@@ -4201,126 +4294,132 @@ to its wicks.</p>
   (is
     (=
       (* 1000 (u/percentage-change 1.2 1.1 :hi))
-      (:account (simple-strat-perc u/green-&gt;green-&gt;green-stop-out)))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn simple-strat-perc-live  [{:keys [stop-loss buy-or-sell order-price account history open-date] :as x}
-                               {:keys [unixtimestamp open high low close] :as y}]
-      (let [c (chan)
-            buy-sell-sub-fn (fn [acc bos order-price stop-loss open-date units]
-                                (let [rslt (do
-                                               (println &quot;buy sell sub: &quot; units stop-loss)
-                                               (ds/oanda-open-order-cas c &quot;EUR_USD&quot; units (subs (str stop-loss) 0 7))
-                                               (&lt;!! c))]
-                                       (-&gt;
-                                         (update-in acc [:current-order] (fn [_] rslt ))
-                                         (update-in  [:buy-or-sell] (fn [_] bos))
-                                         (update-in [:order-price] (fn [_] order-price))
-                                         (update-in [:stop-loss] (fn [_] stop-loss))
-                                         (update-in [:open-date] (fn [_] unixtimestamp)))))
-            update-hist (fn [damap start end perc]
-                            (update-in damap [:history] #(conj % {:start (u/to-human start)
-                                                                  :end (u/to-human end)
-                                                                  :perc perc})))
-            buy-or-sell-fn (fn [acc candle high low close unixtimestamp]
-                               (cond
-                                 (u/green? candle)  (buy-sell-sub-fn acc &quot;buy&quot; close low unixtimestamp &quot;100&quot;)
-                                 :red (buy-sell-sub-fn acc &quot;sell&quot; close high unixtimestamp &quot;-100&quot;)))]
-           (cond
-             (= buy-or-sell &quot;buy&quot;) (do
-                                     (if
-                                       (u/green? y)
-                                       (cond
-                                         (&lt; low stop-loss) (-&gt;
-                                                             (update-hist
-                                                               x
-                                                               open-date
-                                                               unixtimestamp
-                                                               (u/percentage-change order-price stop-loss :spicy))
-                                                             (update-in [:account]
-                                                                        (fn [acc]
-                                                                            (* acc
-                                                                               (u/percentage-change order-price stop-loss :spicy))))
-                                                             clear-fn
-                                                             (buy-or-sell-fn y high low close unixtimestamp))
-                                         :else (-&gt;
-                                                 (update-in x [:stop-loss] (fn [_] low))))
-                                       (cond
-                                         (&lt; low stop-loss) (-&gt;
-                                                             (update-hist
-                                                               x
-                                                               open-date
-                                                               unixtimestamp
-                                                               (u/percentage-change order-price stop-loss :spicy))
-                                                             (update-in [:account]
-                                                                        (fn [acc]
-                                                                            (* acc
-                                                                               (u/percentage-change order-price stop-loss :spicy))))
-                                                             clear-fn
-                                                             (buy-or-sell-fn y high low close unixtimestamp))
-                                         :else (-&gt;
-                                                 (update-hist
-                                                   x
-                                                   open-date
-                                                   unixtimestamp
-                                                   (u/percentage-change order-price close :spicy))
-                                                 (update-in [:account]
-                                                            (fn [acc]
-                                                                (* acc
-                                                                   (u/percentage-change order-price close :spicy))))
-                                                 clear-fn
-                                                 (buy-or-sell-fn y high low close unixtimestamp)))))
-             (= buy-or-sell &quot;sell&quot;) (if
-                                      (not (u/green? y))
-                                      (cond
-                                        (&gt; high stop-loss) (-&gt;
-                                                             (update-hist
-                                                               x
-                                                               open-date
-                                                               unixtimestamp
-                                                               (u/percentage-change stop-loss order-price :spicy))
-                                                             (update-in [:account]
-                                                                        (fn [acc]
-                                                                            (* acc
-                                                                               (u/percentage-change stop-loss order-price :spicy))))
-                                                             clear-fn
-                                                             (buy-or-sell-fn y high low close unixtimestamp))
-                                        :else (-&gt;
-                                                (update-in x [:stop-loss] (fn [_] high))))
-                                      (cond
-                                        (&gt; high stop-loss) (-&gt;
-                                                             (update-hist
-                                                               x
-                                                               open-date
-                                                               unixtimestamp
-                                                               (u/percentage-change stop-loss order-price :spicy))
-                                                             (update-in [:account]
-                                                                        (fn [acc]
-                                                                            (* acc
-                                                                               (u/percentage-change stop-loss order-price :spicy))))
-                                                             clear-fn
-                                                             (buy-or-sell-fn y high low close unixtimestamp))
-                                        :else (-&gt;
-                                                (update-hist
-                                                  x
-                                                  open-date
-                                                  unixtimestamp
-                                                  (u/percentage-change close order-price :spicy))
-                                                (update-in [:account]
-                                                           (fn [acc]
-                                                               (* acc
-                                                                  (u/percentage-change close order-price :spicy))))
-                                                clear-fn
-                                                (buy-or-sell-fn y high low close unixtimestamp))))
-             (= buy-or-sell nil)  (do
-                                    (println &quot;hi there&quot;)
-                                    (buy-or-sell-fn x y high low close unixtimestamp)))))</pre></td></tr><tr><td class="docs">
+      (:account (simple-strat-perc u/green-&gt;green-&gt;green-stop-out)))))</pre></td></tr><tr><td class="docs"><p>Takes a map representing an oanda account and a candle and places a trade</p>
+</td><td class="codes"><pre class="brush: clojure">(with-test 
+  (defn simple-strat-perc-live  
+    [{:keys [stop-loss buy-or-sell order-price account history open-date] :as x}
+     {:keys [unixtimestamp open high low close] :as y}]
+    (let [c (chan)
+          buy-sell-sub-fn (fn [acc bos order-price stop-loss open-date units]
+                            (let [rslt (do
+                                         (println &quot;buy sell sub: &quot; units stop-loss)
+                                         (&lt;!! (ds/oanda-open-order-cas! &quot;EUR_USD&quot; units :stoploss (subs (str stop-loss) 0 7))))]
+                              (-&gt;
+                                (update-in acc [:current-order] (fn [_] rslt ))
+                                (update-in  [:buy-or-sell] (fn [_] bos))
+                                (update-in [:order-price] (fn [_] order-price))
+                                (update-in [:stop-loss] (fn [_] stop-loss))
+                                (update-in [:open-date] (fn [_] unixtimestamp)))))
+          update-hist (fn [damap start end perc]
+                        (update-in damap [:history] #(conj % {:start (u/to-human start)
+                                                              :end (u/to-human end)
+                                                              :perc perc})))
+          buy-or-sell-fn (fn [acc candle high low close unixtimestamp]
+                           (cond
+                             (u/green? candle)  (buy-sell-sub-fn acc &quot;buy&quot; close low unixtimestamp &quot;100&quot;)
+                             :red (buy-sell-sub-fn acc &quot;sell&quot; close high unixtimestamp &quot;-100&quot;)))]
+      (cond
+        (= buy-or-sell &quot;buy&quot;) (do
+                                (if
+                                  (u/green? y)
+                                  (cond
+                                    (&lt; low stop-loss) (-&gt;
+                                                        (update-hist
+                                                          x
+                                                          open-date
+                                                          unixtimestamp
+                                                          (u/percentage-change order-price stop-loss :spicy))
+                                                        (update-in [:account]
+                                                                   (fn [acc]
+                                                                     (* acc
+                                                                        (u/percentage-change order-price stop-loss :spicy))))
+                                                        clear-fn
+                                                        (buy-or-sell-fn y high low close unixtimestamp))
+                                    :else (-&gt;
+                                            (update-in x [:stop-loss] (fn [_] low))))
+                                  (cond
+                                    (&lt; low stop-loss) (-&gt;
+                                                        (update-hist
+                                                          x
+                                                          open-date
+                                                          unixtimestamp
+                                                          (u/percentage-change order-price stop-loss :spicy))
+                                                        (update-in [:account]
+                                                                   (fn [acc]
+                                                                     (* acc
+                                                                        (u/percentage-change order-price stop-loss :spicy))))
+                                                        clear-fn
+                                                        (buy-or-sell-fn y high low close unixtimestamp))
+                                    :else (-&gt;
+                                            (update-hist
+                                              x
+                                              open-date
+                                              unixtimestamp
+                                              (u/percentage-change order-price close :spicy))
+                                            (update-in [:account]
+                                                       (fn [acc]
+                                                         (* acc
+                                                            (u/percentage-change order-price close :spicy))))
+                                            clear-fn
+                                            (buy-or-sell-fn y high low close unixtimestamp)))))
+        (= buy-or-sell &quot;sell&quot;) (if
+                                 (not (u/green? y))
+                                 (cond
+                                   (&gt; high stop-loss) (-&gt;
+                                                        (update-hist
+                                                          x
+                                                          open-date
+                                                          unixtimestamp
+                                                          (u/percentage-change stop-loss order-price :spicy))
+                                                        (update-in [:account]
+                                                                   (fn [acc]
+                                                                     (* acc
+                                                                        (u/percentage-change stop-loss order-price :spicy))))
+                                                        clear-fn
+                                                        (buy-or-sell-fn y high low close unixtimestamp))
+                                   :else (-&gt;
+                                           (update-in x [:stop-loss] (fn [_] high))))
+                                 (cond
+                                   (&gt; high stop-loss) (-&gt;
+                                                        (update-hist
+                                                          x
+                                                          open-date
+                                                          unixtimestamp
+                                                          (u/percentage-change stop-loss order-price :spicy))
+                                                        (update-in [:account]
+                                                                   (fn [acc]
+                                                                     (* acc
+                                                                        (u/percentage-change stop-loss order-price :spicy))))
+                                                        clear-fn
+                                                        (buy-or-sell-fn y high low close unixtimestamp))
+                                   :else (-&gt;
+                                           (update-hist
+                                             x
+                                             open-date
+                                             unixtimestamp
+                                             (u/percentage-change close order-price :spicy))
+                                           (update-in [:account]
+                                                      (fn [acc]
+                                                        (* acc
+                                                           (u/percentage-change close order-price :spicy))))
+                                           clear-fn
+                                           (buy-or-sell-fn y high low close unixtimestamp))))
+        (= buy-or-sell nil)  (do
+                               (println &quot;hi there&quot;)
+                               (buy-or-sell-fn x y high low close unixtimestamp))))) 
+#_(is 
+  (contains? 
+    (simple-strat-perc-live 
+      u/oanda-account-rep
+      (first (ds/oanda-historical &quot;EUR_USD&quot; &quot;10&quot; &quot;M5&quot;)))
+    :current-order)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn simple-strat-perc-live-two  [{:keys [stop-loss buy-or-sell order-price account history open-date] :as x}
                                {:keys [unixtimestamp open high low close] :as y}]
       (let [c (chan)
             buy-sell-sub-fn (fn [acc bos order-price stop-loss open-date units]
                                 (let [rslt (do
                                                (println &quot;buy sell sub: &quot; units stop-loss)
-                                               (ds/oanda-open-order-cas c &quot;EUR_USD&quot; units (subs (str stop-loss) 0 7))
-                                               (&lt;!! c))]
+                                               (&lt;!! (ds/oanda-open-order-cas! &quot;EUR_USD&quot; units (subs (str stop-loss) 0 7))))]
                                        (-&gt;
                                          (update-in acc [:current-order] (fn [_] rslt ))
                                          (update-in  [:buy-or-sell] (fn [_] bos))
