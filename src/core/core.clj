@@ -11,12 +11,6 @@
 ;
 ;(dev) To watch for file changes and run tests and recompile docs
 ;
-;## Simple strat
-;
-;This is the implementation of a very simple trading strategy based on candlesticks.  
-;If the last candle was green, buy, and put a stop loss at the low of the last candle, on the sell side, sell and put 
-;a stop loss at the high of the last candle. 
-;
 ;### Simple strat candle ratio
 ;
 ;These are a group of strategies that modify the decision to trade or not based on the ratio of the body of a candle 
@@ -31,3 +25,7 @@
 ;could be kept small and single purposed enough then large tests wouldn't be necessary. Even if they were their 
 ;details could be abstracted away into functions. This could provide motivation to abstract relentlessly. 
 ;
+;#Backtesting
+;
+;Backtesting is implemented as a reducer function. The reducer takes a map representing a trading account 
+;and a time series of OHLC data (candles). The reducer then runs and returns the final account value. 

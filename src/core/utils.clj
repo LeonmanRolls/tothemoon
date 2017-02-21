@@ -257,13 +257,16 @@
       (> close open))
 
 (with-test
-  (defn percentage-change [old new & opts]
-        (let [basic (* (/ (- new old) old) 100)]
-             (if opts
-               (if (> basic 0)
-                 (/ (+ 100 basic) 100)
-                 (- 1 (Math/abs (/ basic 100))))
-               basic)))
+
+  (defn percentage-change 
+    "Calculates the percentage change between two numbers. Optionally calculates as a multiple instead." 
+    [old new & opts]
+    (let [basic (* (/ (- new old) old) 100)]
+      (if opts
+        (if (> basic 0)
+          (/ (+ 100 basic) 100)
+          (- 1 (Math/abs (/ basic 100))))
+        basic)))
 
   (is (= 100 (percentage-change 1 2)))
   (is (= -50 (percentage-change 2 1)))
