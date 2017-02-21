@@ -21,6 +21,17 @@
   "Local representation of most important oanda account details" 
   {:current-order {} :open-date nil :stop-loss nil :buy-or-sell nil :order-price nil :account 1000 :history []})
 
+(s/def ::current-order any?)
+(s/def ::open-date any?)
+(s/def ::stop-loss any?)
+(s/def ::buy-or-sell any?)
+(s/def ::order-price any?)
+(s/def ::account any?)
+(s/def ::history any?)
+
+(s/def ::mock-account 
+   (s/keys :req-un [::open-date ::stop-loss ::buy-or-sell ::order-price ::account ::history]))
+
 (s/def ::url (s/with-gen
                (s/and string? #(.contains % "://"))
                (fn [] (s/gen #{"https://www.cryptocompare.com/api/data/coinlist/"}))))
