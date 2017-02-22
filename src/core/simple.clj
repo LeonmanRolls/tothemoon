@@ -218,12 +218,12 @@
      (cond
        (if ratio (> ratio (u/body-ratio candle)) false) acc
 
-       (u/green? candle) (do 
+       (green? candle) (do 
                            (when live 
                              (ds/oanda-open-order-cas! instrument units :stoploss low))
                            (update-mock-acc acc "buy" close low unixtimestamp))
 
-       (not (u/green? candle)) (do 
+       (not (green? candle)) (do 
                                  (when live 
                                    (ds/oanda-open-order-cas! instrument (- units) :stoploss high))
                                  (update-mock-acc acc "sell" close high unixtimestamp))))))
@@ -277,12 +277,12 @@
         (cond
           (= buy-or-sell "buy") (cond
                                   (< low stop-loss) (simple-strat-next-position x y order-price stop-loss ratio)
-                                  (u/green? y) (update-stop-loss x low)
+                                  (green? y) (update-stop-loss x low)
                                   :red (simple-strat-next-position x y order-price close ratio))
 
           (= buy-or-sell "sell") (cond
                                    (< low stop-loss) (simple-strat-next-position x y stop-loss order-price ratio)
-                                   (not (u/green? y)) (update-stop-loss x high)
+                                   (not (green? y)) (update-stop-loss x high)
                                    :green (simple-strat-next-position x y close order-price ratio))
 
           :resting  (buy-or-sell-judge x y high low close unixtimestamp ratio)))

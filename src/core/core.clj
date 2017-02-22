@@ -38,11 +38,15 @@
 ;Backtesting is implemented as a reducer function. The reducer takes a map representing a trading account 
 ;and a time series of OHLC data (candles). The reducer then runs and returns the final account value. 
 ;
+;#Code guidelines
+;
+;Any function that makes a network request should take a url so that it can be tested
+;
+;Within a file constants are defined first, then specs then functions.
+;
+;
 ;#Glossary 
 ;
 ;cc - crypto-compare
 ;simple strat - simple strategy
-;
-;#Code guidelines
-;
-;Any function that makes a network request should take a url so that it can be tested
+;cas - core.async

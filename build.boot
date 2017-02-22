@@ -94,8 +94,6 @@
 
 (comment
 
-
-
   (let [c (chan)]
        (ds/oanda-patch-order-cas c "300" "1.0625")
        (<!! c))

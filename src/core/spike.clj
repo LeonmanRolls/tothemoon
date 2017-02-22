@@ -171,17 +171,6 @@
         (:body x)
         (jsn/read-str x :key-fn keyword)))
 
-(s/fdef avg  
-        :args (s/cat :num-col (s/and (s/coll-of number?) #(not (empty? %))))
-        :ret number?)
-
-(defn avg 
-  "Simple average of a series of numbers" 
-  [num-col]
-  (/
-    (reduce + num-col) 
-    (count num-col)))
-
 (s/fdef orderbook-entry-avg  
         :args (s/cat :ob-entry ::orderbook)
         :ret ::obavg)
@@ -189,8 +178,8 @@
 (defn orderbook-entry-avg 
   "Given a particular entry, get the avg bid and ask"
   [ob-entry]
-  {:bidavg (avg (map :Rate (:buy ob-entry)))
-   :askavg (avg (map :Rate (:sell ob-entry)))})
+  {:bidavg (u/average (map :Rate (:buy ob-entry)))
+   :askavg (u/average (map :Rate (:sell ob-entry)))})
 
 (s/fdef ob-avgs
   :args (s/cat :orderbooks (s/coll-of ::ob-db-entry :min-count 1))

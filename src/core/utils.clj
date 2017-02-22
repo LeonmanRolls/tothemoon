@@ -30,6 +30,7 @@
 (s/def ::account any?)
 (s/def ::history any?)
 
+;Mock account for use with backtesting reducers.
 (s/def ::mock-account 
    (s/keys :req-un [::open-date ::stop-loss ::buy-or-sell ::order-price ::account ::history]))
 
@@ -42,31 +43,31 @@
     (s/and number? #(> 1577580878000 % 0))
     (fn [] (s/gen #{157758087000}))))
 
-(s/def ::coinmarketcap-sym cmc-syms)
-
-(s/def ::price double?)
-
 (s/def ::open double?)
 (s/def ::close double?)
 (s/def ::high double?)
 (s/def ::low double?)
 
+;The standard candle that all internal calculations should operate on. Data coming from external sources should be 
+;converted for this format for further processing.
 (s/def ::standard-candle (s/keys :req-un [::open ::close ::high ::low ::unixtimestamp]))
 
+;Formatter for converting a human readable timestamp to unix.
 (s/def ::formatter
   (s/with-gen
     #(= (type %) org.joda.time.format.DateTimeFormatter)
     (fn [] (s/gen #{(f/formatters :date-time-parser)}))))
 
+;Human readable timestamp
 (s/def ::timestamp
   (s/with-gen
     (s/and
       string?
       #(.contains % "T"))
     (fn []
-        (gen/fmap
-          #(.toString (c/from-date %))
-          (s/gen (s/inst-in #inst "2015" #inst "2016"))))))
+      (gen/fmap
+        #(.toString (c/from-date %))
+        (s/gen (s/inst-in #inst "2015" #inst "2016"))))))
 
 ;##Basic candle sequences for simple strat
 ;
@@ -200,47 +201,37 @@
       {:unixtimestamp [1479470400000], :open [1], :low [0.6], :high [1.1], :close [0.7]}
       (map->mapofcol {:unixtimestamp 1479470400000, :open 1, :low 0.6, :high 1.1, :close 0.7}))))
 
-(defn series-insert [series damap]
-      (apply
-        merge
-        (map
-          (fn [y]
-              {(first y) (conj (last y) ((first y) damap))})
-          series)))
-
-(defn reduce->mapofcol [collofmap]
-      (reduce
-        (fn [x y]
-            (cond
-              (vector? (val (first x))) (series-insert x y)
-              :else (series-insert (map->mapofcol x) y)))
-        collofmap))
-
 (s/fdef average
         ::args (s/cat :numbers (s/? (s/coll-of number?))))
 
 (defn average
-      [& numbers]
-      (/ (apply + numbers) (count numbers)))
+  "Average of a seq of numbers"
+  [& numbers]
+  (/ (apply + numbers) (count numbers)))
 
 (s/fdef timestamp->unix
         :args (s/cat :timestamp ::timestamp :formatter (s/? ::formatter))
         :ret number?)
 
 (defn timestamp->unix
-      ([timestamp]
-        (timestamp->unix timestamp (f/formatters :date-time-parser)))
+  "Human readable timestamp to unix."
+  ([timestamp]
+   (timestamp->unix timestamp (f/formatters :date-time-parser)))
 
-      ([timestamp formatter]
-        (as-> timestamp  x
-              (f/parse formatter x)
-              (c/to-long x))))
+  ([timestamp formatter]
+   (as-> timestamp  x
+         (f/parse formatter x)
+         (c/to-long x))))
 
-(defn update-all-vals [data keyvec fn]
-      (map #(update-in % keyvec fn) data))
+(defn update-all-vals 
+  "Update all vals by key in a series of maps." 
+  [data keyvec fn]
+  (map #(update-in % keyvec fn) data))
 
-(defn rename-all-keys [data from to]
-      (map #(clojure.set/rename-keys % {from to}) data))
+(defn rename-all-keys 
+  "Rename all keys in a series of maps." 
+  [data from to]
+  (map #(clojure.set/rename-keys % {from to}) data))
 
 (defn candles-between
       "2014-08-21T00:00:00.000Z - 2014-09-30T00:00:00.000Z"
@@ -251,11 +242,10 @@
             (timestamp->unix newest))
         candles))
 
-(defn first-and-last [coll]
-      [(first coll) (last coll)])
-
-(defn green? [{:keys [open close]}]
-      (> close open))
+(defn first-and-last 
+  "Get first and last items in a collection." 
+  [coll]
+  [(first coll) (last coll)])
 
 (with-test
 
@@ -275,26 +265,18 @@
   (is (= 0.9 (percentage-change 1 0.9 :heyhey))))
 
 
-(defn mid-week? [unixtime]
-        (or
-          (pr/tuesday? (c/from-long unixtime))
-          (pr/wednesday? (c/from-long unixtime))
-          (pr/thursday? (c/from-long unixtime))))
-
-(defn vec-remove
-      "remove elem in coll"
-      [coll pos]
-      (vec (concat (subvec coll 0 pos) (subvec coll (inc pos)))))
-
-(defn index-exclude [r ex]
-      "Take all indices execpted ex"
-      (filter #(not (ex %)) (range r)))
-
-(defn dissoc-idx [v & ds]
-      (map v (index-exclude (count v) (into #{} ds))))
+(defn mid-week? 
+  "Does a unix timestamp describe a date that falls on tuesday, wednesday or thursday." 
+  [unixtime]
+  (or
+    (pr/tuesday? (c/from-long unixtime))
+    (pr/wednesday? (c/from-long unixtime))
+    (pr/thursday? (c/from-long unixtime))))
 
 (with-test
-  (defn body-ratio [{:keys [open low high close] :as candle}]
+  (defn body-ratio 
+   "Ratio between the difference between the open/close and high/low." 
+    [{:keys [open low high close] :as candle}]
         (cond
           (green? candle) (/ (- close open) (if (= 0.0 (+ (- high close) (- open low))) 0.001 (+ (- high close) (- open low)) ))
           :red (/ (- open close) (if (= 0.0 (+ (- high open) (- close low))) 0.001 (+ (- high open) (- close low))))))
@@ -324,18 +306,9 @@
       (float (/ 0.3 0.2))
       (float (body-ratio red-onehalf-ratio)))))
 
-(defn h1-to-weeks [oanda-data]
-      (reduce
-        (fn [x y]
-            (cond
-              (empty? (last x)) (update-in x [0] #(conj % y))
-              (< (- (:unixtimestamp y) (:unixtimestamp (last (last x)))) 7200000) (update-in x [(- (count x) 1)] #(conj % y))
-              :greater-than-hour (conj x [y])
-              ))
-        [[]]
-        oanda-data))
-
-(defn tue-thu-filter [dadata]
+(defn tue-thu-filter 
+ "Given timeseries data only return the datapoints that " 
+  [dadata]
         (->>
           dadata
           vec
@@ -347,23 +320,30 @@
             [[]])
           (filter #(not (empty? %)))))
 
-(defn now [] (new java.util.Date))
+(defn now 
+  "Current date" 
+  [] 
+  (new java.util.Date))
 
-(defn on-the-x-second [chan second]
+(defn on-the-x-second 
+ "Place true onto channel every x seconds" 
+  [chan second]
       (go
         (while true
                (<! (timeout 1000))
                (when (= second (.getSeconds (now))) (>! chan true)))))
 
-(defn on-the-minute-second [chan minutes seconds]
-      (go
-        (while true
-               (<! (timeout 1000))
-               (when
-                 (and
-                   (.contains minutes (.getMinutes (now)))
-                   (.contains seconds (.getSeconds (now))))
-                 (>! chan true)))))
+(defn on-the-minute-second 
+  "Place true onto channel every minute-second " 
+  [chan minutes seconds]
+  (go
+    (while true
+      (<! (timeout 1000))
+      (when
+        (and
+          (.contains minutes (.getMinutes (now)))
+          (.contains seconds (.getSeconds (now))))
+        (>! chan true)))))
 
 (defn round2
     "Round a double to the given precision (number of significant digits)"

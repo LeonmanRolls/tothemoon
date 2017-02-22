@@ -2891,7 +2891,7 @@ net.brehaut.ClojureTools = (function (SH) {
 (s/def ::buy-or-sell any?)
 (s/def ::order-price any?)
 (s/def ::account any?)
-(s/def ::history any?)</pre></td></tr><tr><td class="docs">
+(s/def ::history any?)</pre></td></tr><tr><td class="docs"><p>Mock account for use with backtesting reducers.</p>
 </td><td class="codes"><pre class="brush: clojure">(s/def ::mock-account 
    (s/keys :req-un [::open-date ::stop-loss ::buy-or-sell ::order-price ::account ::history]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/def ::url (s/with-gen
@@ -2901,26 +2901,25 @@ net.brehaut.ClojureTools = (function (SH) {
   (s/with-gen
     (s/and number? #(&gt; 1577580878000 % 0))
     (fn [] (s/gen #{157758087000}))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(s/def ::coinmarketcap-sym cmc-syms)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(s/def ::price double?)</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/def ::open double?)
 (s/def ::close double?)
 (s/def ::high double?)
-(s/def ::low double?)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(s/def ::standard-candle (s/keys :req-un [::open ::close ::high ::low ::unixtimestamp]))</pre></td></tr><tr><td class="docs">
+(s/def ::low double?)</pre></td></tr><tr><td class="docs"><p>The standard candle that all internal calculations should operate on. Data coming from external sources should be 
+converted for this format for further processing.</p>
+</td><td class="codes"><pre class="brush: clojure">(s/def ::standard-candle (s/keys :req-un [::open ::close ::high ::low ::unixtimestamp]))</pre></td></tr><tr><td class="docs"><p>Formatter for converting a human readable timestamp to unix.</p>
 </td><td class="codes"><pre class="brush: clojure">(s/def ::formatter
   (s/with-gen
     #(= (type %) org.joda.time.format.DateTimeFormatter)
-    (fn [] (s/gen #{(f/formatters :date-time-parser)}))))</pre></td></tr><tr><td class="docs">
+    (fn [] (s/gen #{(f/formatters :date-time-parser)}))))</pre></td></tr><tr><td class="docs"><p>Human readable timestamp</p>
 </td><td class="codes"><pre class="brush: clojure">(s/def ::timestamp
   (s/with-gen
     (s/and
       string?
       #(.contains % &quot;T&quot;))
     (fn []
-        (gen/fmap
-          #(.toString (c/from-date %))
-          (s/gen (s/inst-in #inst &quot;2015&quot; #inst &quot;2016&quot;))))))</pre></td></tr><tr><td class="docs"><h2>Basic candle sequences for simple strat</h2>
+      (gen/fmap
+        #(.toString (c/from-date %))
+        (s/gen (s/inst-in #inst &quot;2015&quot; #inst &quot;2016&quot;))))))</pre></td></tr><tr><td class="docs"><h2>Basic candle sequences for simple strat</h2>
 
 <p>Sequences of candles primarily for testing. 'stop-out' means that the last candle would trigger the stop loss placed 
 based on the previous candle according to simple strat. Values below are the overall profit or loss after the whole 
@@ -3014,50 +3013,37 @@ ratios bewteen the bodies and the wicks.</p>
     (=  
       {:unixtimestamp [1479470400000], :open [1], :low [0.6], :high [1.1], :close [0.7]}
       (map-&gt;mapofcol {:unixtimestamp 1479470400000, :open 1, :low 0.6, :high 1.1, :close 0.7}))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn series-insert [series damap]
-      (apply
-        merge
-        (map
-          (fn [y]
-              {(first y) (conj (last y) ((first y) damap))})
-          series)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn reduce-&gt;mapofcol [collofmap]
-      (reduce
-        (fn [x y]
-            (cond
-              (vector? (val (first x))) (series-insert x y)
-              :else (series-insert (map-&gt;mapofcol x) y)))
-        collofmap))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef average
-        ::args (s/cat :numbers (s/? (s/coll-of number?))))</pre></td></tr><tr><td class="docs">
+        ::args (s/cat :numbers (s/? (s/coll-of number?))))</pre></td></tr><tr><td class="docs"><p>Average of a seq of numbers</p>
 </td><td class="codes"><pre class="brush: clojure">(defn average
-      [&amp; numbers]
-      (/ (apply + numbers) (count numbers)))</pre></td></tr><tr><td class="docs">
+  [&amp; numbers]
+  (/ (apply + numbers) (count numbers)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef timestamp-&gt;unix
         :args (s/cat :timestamp ::timestamp :formatter (s/? ::formatter))
-        :ret number?)</pre></td></tr><tr><td class="docs">
+        :ret number?)</pre></td></tr><tr><td class="docs"><p>Human readable timestamp to unix.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn timestamp-&gt;unix
-      ([timestamp]
-        (timestamp-&gt;unix timestamp (f/formatters :date-time-parser)))
-      ([timestamp formatter]
-        (as-&gt; timestamp  x
-              (f/parse formatter x)
-              (c/to-long x))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn update-all-vals [data keyvec fn]
-      (map #(update-in % keyvec fn) data))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn rename-all-keys [data from to]
-      (map #(clojure.set/rename-keys % {from to}) data))</pre></td></tr><tr><td class="docs"><p>2014-08-21T00:00:00.000Z - 2014-09-30T00:00:00.000Z</p>
+  ([timestamp]
+   (timestamp-&gt;unix timestamp (f/formatters :date-time-parser)))
+  ([timestamp formatter]
+   (as-&gt; timestamp  x
+         (f/parse formatter x)
+         (c/to-long x))))</pre></td></tr><tr><td class="docs"><p>Update all vals by key in a series of maps.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn update-all-vals 
+  [data keyvec fn]
+  (map #(update-in % keyvec fn) data))</pre></td></tr><tr><td class="docs"><p>Rename all keys in a series of maps.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn rename-all-keys 
+  [data from to]
+  (map #(clojure.set/rename-keys % {from to}) data))</pre></td></tr><tr><td class="docs"><p>2014-08-21T00:00:00.000Z - 2014-09-30T00:00:00.000Z</p>
 </td><td class="codes"><pre class="brush: clojure">(defn candles-between
       [oldest newest candles]
       (filter
         #(&lt; (timestamp-&gt;unix oldest)
             (* 1000 (:unixtimestamp %))
             (timestamp-&gt;unix newest))
-        candles))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn first-and-last [coll]
-      [(first coll) (last coll)])</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn green? [{:keys [open close]}]
-      (&gt; close open))</pre></td></tr><tr><td class="docs"><p>Calculates the percentage change between two numbers. Optionally calculates as a multiple instead.</p>
+        candles))</pre></td></tr><tr><td class="docs"><p>Get first and last items in a collection.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn first-and-last 
+  [coll]
+  [(first coll) (last coll)])</pre></td></tr><tr><td class="docs"><p>Calculates the percentage change between two numbers. Optionally calculates as a multiple instead.</p>
 </td><td class="codes"><pre class="brush: clojure">(with-test
   (defn percentage-change 
     [old new &amp; opts]
@@ -3070,22 +3056,16 @@ ratios bewteen the bodies and the wicks.</p>
   (is (= 100 (percentage-change 1 2)))
   (is (= -50 (percentage-change 2 1)))
   (is (= 2 (percentage-change 1 2 :heyhey)))
-  (is (= 0.9 (percentage-change 1 0.9 :heyhey))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn mid-week? [unixtime]
-        (or
-          (pr/tuesday? (c/from-long unixtime))
-          (pr/wednesday? (c/from-long unixtime))
-          (pr/thursday? (c/from-long unixtime))))</pre></td></tr><tr><td class="docs"><p>remove elem in coll</p>
-</td><td class="codes"><pre class="brush: clojure">(defn vec-remove
-      [coll pos]
-      (vec (concat (subvec coll 0 pos) (subvec coll (inc pos)))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn index-exclude [r ex]
-      &quot;Take all indices execpted ex&quot;
-      (filter #(not (ex %)) (range r)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn dissoc-idx [v &amp; ds]
-      (map v (index-exclude (count v) (into #{} ds))))</pre></td></tr><tr><td class="docs">
+  (is (= 0.9 (percentage-change 1 0.9 :heyhey))))</pre></td></tr><tr><td class="docs"><p>Does a unix timestamp describe a date that falls on tuesday, wednesday or thursday.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn mid-week? 
+  [unixtime]
+  (or
+    (pr/tuesday? (c/from-long unixtime))
+    (pr/wednesday? (c/from-long unixtime))
+    (pr/thursday? (c/from-long unixtime))))</pre></td></tr><tr><td class="docs"><p>Ratio between the difference between the open/close and high/low.</p>
 </td><td class="codes"><pre class="brush: clojure">(with-test
-  (defn body-ratio [{:keys [open low high close] :as candle}]
+  (defn body-ratio 
+    [{:keys [open low high close] :as candle}]
         (cond
           (green? candle) (/ (- close open) (if (= 0.0 (+ (- high close) (- open low))) 0.001 (+ (- high close) (- open low)) ))
           :red (/ (- open close) (if (= 0.0 (+ (- high open) (- close low))) 0.001 (+ (- high open) (- close low))))))
@@ -3112,17 +3092,9 @@ ratios bewteen the bodies and the wicks.</p>
   (is
     (=
       (float (/ 0.3 0.2))
-      (float (body-ratio red-onehalf-ratio)))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn h1-to-weeks [oanda-data]
-      (reduce
-        (fn [x y]
-            (cond
-              (empty? (last x)) (update-in x [0] #(conj % y))
-              (&lt; (- (:unixtimestamp y) (:unixtimestamp (last (last x)))) 7200000) (update-in x [(- (count x) 1)] #(conj % y))
-              :greater-than-hour (conj x [y])))
-        [[]]
-        oanda-data))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn tue-thu-filter [dadata]
+      (float (body-ratio red-onehalf-ratio)))))</pre></td></tr><tr><td class="docs"><p>Given timeseries data only return the datapoints that </p>
+</td><td class="codes"><pre class="brush: clojure">(defn tue-thu-filter 
+  [dadata]
         (-&gt;&gt;
           dadata
           vec
@@ -3132,22 +3104,26 @@ ratios bewteen the bodies and the wicks.</p>
                   (mid-week? (:unixtimestamp y)) (update-in x [(- (count x) 1)] #(conj % y))
                   :else (conj x [])))
             [[]])
-          (filter #(not (empty? %)))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn now [] (new java.util.Date))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn on-the-x-second [chan second]
+          (filter #(not (empty? %)))))</pre></td></tr><tr><td class="docs"><p>Current date</p>
+</td><td class="codes"><pre class="brush: clojure">(defn now 
+  [] 
+  (new java.util.Date))</pre></td></tr><tr><td class="docs"><p>Place true onto channel every x seconds</p>
+</td><td class="codes"><pre class="brush: clojure">(defn on-the-x-second 
+  [chan second]
       (go
         (while true
                (&lt;! (timeout 1000))
-               (when (= second (.getSeconds (now))) (&gt;! chan true)))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn on-the-minute-second [chan minutes seconds]
-      (go
-        (while true
-               (&lt;! (timeout 1000))
-               (when
-                 (and
-                   (.contains minutes (.getMinutes (now)))
-                   (.contains seconds (.getSeconds (now))))
-                 (&gt;! chan true)))))</pre></td></tr><tr><td class="docs"><p>Round a double to the given precision (number of significant digits)</p>
+               (when (= second (.getSeconds (now))) (&gt;! chan true)))))</pre></td></tr><tr><td class="docs"><p>Place true onto channel every minute-second </p>
+</td><td class="codes"><pre class="brush: clojure">(defn on-the-minute-second 
+  [chan minutes seconds]
+  (go
+    (while true
+      (&lt;! (timeout 1000))
+      (when
+        (and
+          (.contains minutes (.getMinutes (now)))
+          (.contains seconds (.getSeconds (now))))
+        (&gt;! chan true)))))</pre></td></tr><tr><td class="docs"><p>Round a double to the given precision (number of significant digits)</p>
 </td><td class="codes"><pre class="brush: clojure">(defn round2
     [precision d]
     (let [factor (Math/pow 10 precision)]
@@ -3201,15 +3177,18 @@ details could be abstracted away into functions. This could provide motivation t
 <p>Backtesting is implemented as a reducer function. The reducer takes a map representing a trading account 
 and a time series of OHLC data (candles). The reducer then runs and returns the final account value. </p>
 
-<h1>Glossary</h1>
-
-<p>cc - crypto-compare
-simple strat - simple strategy</p>
-
 <h1>Code guidelines</h1>
 
 <p>Any function that makes a network request should take a url so that it can be tested</p>
-</td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.datasources" name="core.datasources"><h1 class="project-name">core.datasources</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+
+<p>Within a file constants are defined first, then specs then functions.</p>
+
+<h1>Glossary</h1>
+
+<p>cc - crypto-compare
+simple strat - simple strategy
+cas - core.async</p>
+</td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.datasources" name="core.datasources"><h1 class="project-name">core.datasources</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Interface between core application code and external data sources.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns core.datasources
   (:require
     [clojure.test :as tst :refer [is with-test]]
@@ -3221,20 +3200,67 @@ simple strat - simple strategy</p>
     [clojure.spec.gen :as gen]
     [core.utils :as u]
     [clojure.core.async :as casy :refer [&lt;!! &lt;! &gt;! go]]
-    [stub-http.core :refer :all]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def cryptocompare-syms #{&quot;MCN&quot; &quot;FRN&quot; &quot;SDP&quot; &quot;DGORE&quot; &quot;HYP&quot; &quot;PAK&quot; &quot;2BACCO&quot; &quot;CPC&quot; &quot;NEOS&quot; &quot;GRN&quot; &quot;TWLV&quot; &quot;MND&quot; &quot;RIPO&quot; &quot;VTA&quot; &quot;HAL&quot; &quot;RCX&quot; &quot;ENRG&quot; &quot;1337&quot; &quot;NUBIS&quot; &quot;LANA&quot; &quot;BEN&quot; &quot;2015&quot; &quot;ZRC&quot; &quot;IOC&quot; &quot;CJ&quot; &quot;CDX&quot; &quot;BST&quot; &quot;SQL&quot; &quot;VPRC&quot; &quot;NRS&quot; &quot;BTCRY&quot; &quot;STEPS&quot; &quot;CNL&quot; &quot;LQD&quot; &quot;DT&quot; &quot;ADZ&quot; &quot;HALLO&quot; &quot;1CR&quot; &quot;DASH&quot; &quot;EQUAL&quot; &quot;MST&quot; &quot;BYC&quot; &quot;BSTY&quot; &quot;XT&quot; &quot;NTC&quot; &quot;XHI&quot; &quot;SOLE&quot; &quot;MINT&quot; &quot;TRIG&quot; &quot;CRW&quot; &quot;LAB&quot; &quot;BAY&quot; &quot;RISE&quot; &quot;RZR&quot; &quot;GEN&quot; &quot;CACH&quot; &quot;CLINT&quot; &quot;WBB&quot; &quot;UIS&quot; &quot;BTCL&quot; &quot;SNRG&quot; &quot;REP&quot; &quot;MOIN&quot; &quot;QTL&quot; &quot;ISL&quot; &quot;XBOT&quot; &quot;ANS&quot; &quot;NEU&quot; &quot;SC&quot; &quot;MOOND&quot; &quot;CYP&quot; &quot;START&quot; &quot;OK&quot; &quot;GP&quot; &quot;BCR&quot; &quot;NRB&quot; &quot;MC&quot; &quot;EDRC&quot; &quot;GAY&quot; &quot;BOTS&quot; &quot;611&quot; &quot;EQM&quot; &quot;VRC&quot; &quot;GRS&quot; &quot;SH&quot; &quot;CRBIT&quot; &quot;KEY&quot; &quot;MIL&quot; &quot;ARG&quot; &quot;RT2&quot; &quot;OC&quot; &quot;GOON&quot; &quot;LXC&quot; &quot;MSC&quot; &quot;GB&quot; &quot;DGD&quot; &quot;ROYAL&quot; &quot;BLC&quot; &quot;LSD&quot; &quot;GAP&quot; &quot;CRX&quot; &quot;FTP&quot; &quot;1ST&quot; &quot;RDD&quot; &quot;ADCN&quot; &quot;LTB&quot; &quot;CHILD&quot; &quot;NXTI&quot; &quot;TAGR&quot; &quot;NEBU&quot; &quot;XPM&quot; &quot;MUE&quot; &quot;AERO&quot; &quot;CRE&quot; &quot;NYAN&quot; &quot;FIRE&quot; &quot;MRP&quot; &quot;UTIL&quot; &quot;NZC&quot; &quot;COC&quot; &quot;UNC&quot; &quot;NAUT&quot; &quot;CRACK&quot; &quot;CMC&quot; &quot;DIME&quot; &quot;CC&quot; &quot;CHOOF&quot; &quot;BLK&quot; &quot;FCT&quot; &quot;TEAM&quot; &quot;FLT&quot; &quot;SBD&quot; &quot;SWEET&quot; &quot;WOLF&quot; &quot;BM&quot; &quot;MAPC&quot; &quot;HZ&quot; &quot;PYC&quot; &quot;ZOOM&quot; &quot;ALF&quot; &quot;42&quot; &quot;XNX&quot; &quot;TELL&quot; &quot;ERC&quot; &quot;TRON&quot; &quot;SWIFT&quot; &quot;NOTE&quot; &quot;DKC&quot; &quot;ANTI&quot; &quot;CKC&quot; &quot;SRC&quot; &quot;AMP&quot; &quot;007&quot; &quot;GIVE&quot; &quot;EMIGR&quot; &quot;TRUST&quot; &quot;MYR&quot; &quot;EKN&quot; &quot;EXCL&quot; &quot;CLR&quot; &quot;CALC&quot; &quot;YOC&quot; &quot;PSEUD&quot; &quot;GRT&quot; &quot;GPU&quot; &quot;DOT&quot; &quot;UNB&quot; &quot;C2&quot; &quot;CBX&quot; &quot;QTZ&quot; &quot;LYC&quot; &quot;XRE&quot; &quot;CTC&quot; &quot;DTC&quot; &quot;ERB&quot; &quot;CHASH&quot; &quot;AMC&quot; &quot;BOB&quot; &quot;SKB&quot; &quot;LC&quot; &quot;LEA&quot; &quot;DB&quot; &quot;NKC&quot; &quot;MI&quot; &quot;XCR&quot; &quot;XMG&quot; &quot;LYB&quot; &quot;ELE&quot; &quot;CRC&quot; &quot;AEC&quot; &quot;WC&quot; &quot;LTC&quot; &quot;QRK&quot; &quot;PKB&quot; &quot;XWT&quot; &quot;DCNT&quot; &quot;TOR&quot; &quot;CHA&quot; &quot;FRC&quot; &quot;CURE&quot; &quot;CIN&quot; &quot;LDOGE&quot; &quot;NSR&quot; &quot;SYNC&quot; &quot;EAGS&quot; &quot;TRI&quot; &quot;SHLD&quot; &quot;SAK&quot; &quot;NANAS&quot; &quot;BNCR&quot; &quot;GLX&quot; &quot;CAM&quot; &quot;VTR&quot; &quot;GMC&quot; &quot;CYT&quot; &quot;SFE&quot; &quot;CARBON&quot; &quot;ZED&quot; &quot;SBC&quot; &quot;AIB&quot; &quot;DEUR&quot; &quot;SCT&quot; &quot;CIRC&quot; &quot;BCN&quot; &quot;NMC&quot; &quot;BITB&quot; &quot;XTC&quot; &quot;TMC&quot; &quot;STO&quot; &quot;QBK&quot; &quot;BCX&quot; &quot;VRM&quot; &quot;AEON&quot; &quot;CSC&quot; &quot;KMD&quot; &quot;VTC&quot; &quot;ALN&quot; &quot;NAV&quot; &quot;LBC&quot; &quot;PEERPLAYS&quot; &quot;ZNY&quot; &quot;JBS&quot; &quot;ROS&quot; &quot;BTC&quot; &quot;VIA&quot; &quot;BURST&quot; &quot;MG&quot; &quot;AND&quot; &quot;XAI&quot; &quot;DLISK&quot; &quot;NKT&quot; &quot;CLUB&quot; &quot;LTH&quot; &quot;UNAT&quot; &quot;DBG&quot; &quot;IBANK&quot; &quot;BYTES&quot; &quot;GSY&quot; &quot;EDC&quot; &quot;EXP&quot; &quot;SPC&quot; &quot;KGC&quot; &quot;XDN&quot; &quot;XUP&quot; &quot;BLU&quot; &quot;ETH&quot; &quot;BTG&quot; &quot;GROW&quot; &quot;GCC&quot; &quot;CINNI&quot; &quot;MMC&quot; &quot;AIR&quot; &quot;EC&quot; &quot;VIP&quot; &quot;STR*&quot; &quot;TEK&quot; &quot;XXX&quot; &quot;GCR&quot; &quot;DGDC&quot; &quot;SLG&quot; &quot;KOBO&quot; &quot;SAT2&quot; &quot;LGBTQ&quot; &quot;UNITY&quot; &quot;BET&quot; &quot;UNIQ&quot; &quot;XCE&quot; &quot;MOON&quot; &quot;FFC&quot; &quot;ASN&quot; &quot;XID&quot; &quot;HODL&quot; &quot;GLOBE&quot; &quot;MAX&quot; &quot;GRC&quot; &quot;SLS&quot; &quot;OCTO&quot; &quot;MNM&quot; &quot;JUDGE&quot; &quot;BTE&quot; &quot;SCRPT&quot; &quot;TRK&quot; &quot;FSC2&quot; &quot;RMS&quot; &quot;VLT&quot; &quot;XPH&quot; &quot;TDFB&quot; &quot;STEEM&quot; &quot;DEM&quot; &quot;PSY&quot; &quot;RUST&quot; &quot;MEME&quot; &quot;CON&quot; &quot;JKC&quot; &quot;BLOCKPAY&quot; &quot;HKG&quot; &quot;ELC&quot; &quot;PXL&quot; &quot;ZCC&quot; &quot;ORB&quot; &quot;RCN&quot; &quot;STHR&quot; &quot;BAC&quot; &quot;XC&quot; &quot;OBITS&quot; &quot;SWING&quot; &quot;DGC&quot; &quot;THC&quot; &quot;FLAP&quot; &quot;MONETA&quot; &quot;XPY&quot; &quot;NTRN&quot; &quot;VAPOR&quot; &quot;APC&quot; &quot;ORLY&quot; &quot;MONA&quot; &quot;NUM&quot; &quot;DSB&quot; &quot;J&quot; &quot;WGC&quot; &quot;JOBS&quot; &quot;CLV&quot; &quot;OPAL&quot; &quot;SPOTS&quot; &quot;BOOM&quot; &quot;ARCH&quot; &quot;MED&quot; &quot;BQC&quot; &quot;TES&quot; &quot;EAC&quot; &quot;KUBO&quot; &quot;SXC&quot; &quot;SSD&quot; &quot;HTC&quot; &quot;PWR&quot; &quot;PINK&quot; &quot;CUBE&quot; &quot;CRYPT&quot; &quot;XVG&quot; &quot;BUK&quot; &quot;VPN&quot; &quot;EVENT&quot; &quot;INV&quot; &quot;SMLY&quot; &quot;PDC&quot; &quot;ACOIN&quot; &quot;INCP&quot; &quot;CRAFT&quot; &quot;GSM&quot; &quot;FOREX&quot; &quot;SEN&quot; &quot;PBC&quot; &quot;BTX&quot; &quot;EMC2&quot; &quot;HILL&quot; &quot;HVC&quot; &quot;UTH&quot; &quot;LSK&quot; &quot;BUCKS&quot; &quot;SUPER&quot; &quot;VTX&quot; &quot;KRAK&quot; &quot;STS&quot; &quot;RYC&quot; &quot;FC2&quot; &quot;LEMON&quot; &quot;DIGS&quot; &quot;XBS&quot; &quot;TX&quot; &quot;SPRTS&quot; &quot;OMNI&quot; &quot;NEC&quot; &quot;MPRO&quot; &quot;BBCC&quot; &quot;OMC&quot; &quot;RPC&quot; &quot;XWC&quot; &quot;BLOCK&quot; &quot;SLING&quot; &quot;ARDR&quot; &quot;XMS&quot; &quot;CF&quot; &quot;GRID&quot; &quot;LFC&quot; &quot;ANC&quot; &quot;CFC&quot; &quot;N7&quot; &quot;COOL&quot; &quot;TCR&quot; &quot;PIZZA&quot; &quot;SDC&quot; &quot;PRE&quot; &quot;TTC&quot; &quot;PRIME&quot; &quot;KARM&quot; &quot;VERSA&quot; &quot;ETC&quot; &quot;DGB&quot; &quot;NAN&quot; &quot;XRP&quot; &quot;X2&quot; &quot;BRK&quot; &quot;TOT&quot; &quot;DISK&quot; &quot;WDC&quot; &quot;TRA&quot; &quot;SMAC&quot; &quot;GDC&quot; &quot;MUDRA&quot; &quot;NBT&quot; &quot;MDC&quot; &quot;JIF&quot; &quot;FLY&quot; &quot;FCN&quot; &quot;EXB&quot; &quot;CHESS&quot; &quot;DVC&quot; &quot;MARV&quot; &quot;BTMI&quot; &quot;2FLAV&quot; &quot;PRM&quot; &quot;DNET&quot; &quot;CLOAK&quot; &quot;PTS&quot; &quot;MIN&quot; &quot;EGO&quot; &quot;BERN&quot; &quot;XRA&quot; &quot;INFX&quot; &quot;REE&quot; &quot;ULTC&quot; &quot;BELA&quot; &quot;SOUL&quot; &quot;LIMX&quot; &quot;VOOT&quot; &quot;GAIA&quot; &quot;XG&quot; &quot;DCR&quot; &quot;HNC&quot; &quot;FX&quot; &quot;JPC&quot; &quot;CAP&quot; &quot;LUX&quot; &quot;VEC2&quot; &quot;SMSR&quot; &quot;GIG&quot; &quot;RING&quot; &quot;GRM&quot; &quot;DRZ&quot; &quot;XAU&quot; &quot;M1&quot; &quot;GBT&quot; &quot;RBIT&quot; &quot;SCRT&quot; &quot;GIZ&quot; &quot;TODAY&quot; &quot;KAT&quot; &quot;TAG&quot; &quot;ZET2&quot; &quot;DROP&quot; &quot;COX&quot; &quot;SPHR&quot; &quot;XAUR&quot; &quot;ZYD&quot; &quot;RBT&quot; &quot;FCS&quot; &quot;BRONZ&quot; &quot;SCN&quot; &quot;SCOT&quot; &quot;QSLV&quot; &quot;B3&quot; &quot;POLY&quot; &quot;INCH&quot; &quot;OMA&quot; &quot;ANTC&quot; &quot;AC&quot; &quot;MMNXT&quot; &quot;SPM&quot; &quot;TUR&quot; &quot;MRS&quot; &quot;COV&quot; &quot;SIGU&quot; &quot;HBN&quot; &quot;TIA&quot; &quot;GHC&quot; &quot;WAY&quot; &quot;CHIP&quot; &quot;DMD&quot; &quot;DES&quot; &quot;FRK&quot; &quot;DIEM&quot; &quot;TAM&quot; &quot;SUP&quot; &quot;PXC&quot; &quot;DRKT&quot; &quot;CANN&quot; &quot;UNIT&quot; &quot;XZC&quot; &quot;CNMT&quot; &quot;CYG&quot; &quot;CTO&quot; &quot;QORA&quot; &quot;GLYPH&quot; &quot;SPX&quot; &quot;GLD&quot; &quot;OLYMP&quot; &quot;BTD&quot; &quot;XMR&quot; &quot;2GIVE&quot; &quot;XDE2&quot; &quot;CAT&quot; &quot;PRC&quot; &quot;LAZ&quot; &quot;TRUMP&quot; &quot;FONZ&quot; &quot;CRNK&quot; &quot;DCC&quot; &quot;KTK&quot; &quot;ENE&quot; &quot;COVAL&quot; &quot;UFO&quot; &quot;RRT&quot; &quot;GRAV&quot; &quot;SMC&quot; &quot;DLC&quot; &quot;FLO&quot; &quot;EGG&quot; &quot;CXC&quot; &quot;ION&quot; &quot;LK7&quot; &quot;GMX&quot; &quot;HMP&quot; &quot;KRB&quot; &quot;PHS&quot; &quot;BTA&quot; &quot;EXIT&quot; &quot;SPORT&quot; &quot;HVCO&quot; &quot;STRAT&quot; &quot;LOG&quot; &quot;LTCD&quot; &quot;RDN&quot; &quot;TKN&quot; &quot;VIOR&quot; &quot;UBIQ&quot; &quot;CSH&quot; &quot;REV&quot; &quot;RIC&quot; &quot;EGC&quot; &quot;BIOS&quot; &quot;HIRE&quot; &quot;BITUSD&quot; &quot;GML&quot; &quot;ICN&quot; &quot;BITCNY&quot; &quot;FRAC&quot; &quot;ACP&quot; &quot;FAIR&quot; &quot;CYC&quot; &quot;MN&quot; &quot;DOGE&quot; &quot;MZC&quot; &quot;NOBL&quot; &quot;AUR&quot; &quot;CASH&quot; &quot;FIBRE&quot; &quot;MARS&quot; &quot;OSC&quot; &quot;FRWC&quot; &quot;BOST&quot; &quot;BUZZ&quot; &quot;EVIL&quot; &quot;CRAIG&quot; &quot;KORE&quot; &quot;SOON&quot; &quot;CESC&quot; &quot;LTCX&quot; &quot;DANK&quot; &quot;KRC&quot; &quot;LKY&quot; &quot;AGS&quot; &quot;GREXIT&quot; &quot;GHS&quot; &quot;XDB&quot; &quot;GLC&quot; &quot;SHF&quot; &quot;GOTX&quot; &quot;ICB&quot; &quot;VIRAL&quot; &quot;NEVA&quot; &quot;PSI&quot; &quot;MAID&quot; &quot;BITS&quot; &quot;PSB&quot; &quot;CLUD&quot; &quot;RBR&quot; &quot;CGA&quot; &quot;VOX&quot; &quot;SLM&quot; &quot;GNJ&quot; &quot;XDP&quot; &quot;MMXIV&quot; &quot;BON&quot; &quot;NBL&quot; &quot;BITZ&quot; &quot;XLB&quot; &quot;GPL&quot; &quot;404&quot; &quot;XFC&quot; &quot;STR&quot; &quot;EZC&quot; &quot;NAS2&quot; &quot;TIT&quot; &quot;FJC&quot; &quot;WINGS&quot; &quot;CLAM&quot; &quot;BTCR&quot; &quot;ZNE&quot; &quot;XQN&quot; &quot;CRAB&quot; &quot;DCK&quot; &quot;BTM&quot; &quot;USDE&quot; &quot;COIN&quot; &quot;XST&quot; &quot;XNA&quot; &quot;MYST&quot; &quot;DSH&quot; &quot;NXS&quot; &quot;XCP&quot; &quot;SNS&quot; &quot;GEO&quot; &quot;DBTC&quot; &quot;SLR&quot; &quot;NVC&quot; &quot;CNC&quot; &quot;TENNET&quot; &quot;ARM&quot; &quot;TRC&quot; &quot;RBY&quot; &quot;XBC&quot; &quot;PIO&quot; &quot;I0C&quot; &quot;ZUR&quot; &quot;BCY&quot; &quot;NKA&quot; &quot;SPACE&quot; &quot;AXR&quot; &quot;32BIT&quot; &quot;FLDC&quot; &quot;HYPER&quot; &quot;BIGUP&quot; &quot;GUE&quot; &quot;EMD&quot; &quot;SANDG&quot; &quot;SPR&quot; &quot;MNE&quot; &quot;POST&quot; &quot;IXC&quot; &quot;NXTTY&quot; &quot;BHC&quot; &quot;WEX&quot; &quot;WAVES&quot; &quot;EDGE&quot; &quot;BTS&quot; &quot;ZEIT&quot; &quot;BSC&quot; &quot;GAME&quot; &quot;NET&quot; &quot;SYS&quot; &quot;IVZ&quot; &quot;KNC&quot; &quot;CCN&quot; &quot;ATM&quot; &quot;SONG&quot; &quot;TAB&quot; &quot;UNO&quot; &quot;STA&quot; &quot;STV&quot; &quot;MWC&quot; &quot;LTBC&quot; &quot;ZET&quot; &quot;HUGE&quot; &quot;DCS.&quot; &quot;VMC&quot; &quot;MT&quot; &quot;XCO&quot; &quot;CAIX&quot; &quot;YBC&quot; &quot;RADS&quot; &quot;XEM&quot; &quot;BTQ&quot; &quot;BXT&quot; &quot;LGD&quot; &quot;HEAT&quot; &quot;OLDSF&quot; &quot;COMM&quot; &quot;NLC&quot; &quot;WMC&quot; &quot;GHOUL&quot; &quot;ROOT&quot; &quot;EXE&quot; &quot;METAL&quot; &quot;NODE&quot; &quot;BEATS&quot; &quot;CRAVE&quot; &quot;MRY&quot; &quot;CREVA&quot; &quot;SSTC&quot; &quot;FLX&quot; &quot;XPD&quot; &quot;MOJO&quot; &quot;MARYJ&quot; &quot;MEC&quot; &quot;ARI&quot; &quot;ETHS&quot; &quot;AMS&quot; &quot;VOYA&quot; &quot;SJCX&quot; &quot;SILK&quot; &quot;LIR&quot; &quot;SEC&quot; &quot;CV2&quot; &quot;SYNX&quot; &quot;SIB&quot; &quot;SOIL&quot; &quot;SAR&quot; &quot;DBIC&quot; &quot;TGC&quot; &quot;GBRC&quot; &quot;BLITZ&quot; &quot;DOPE&quot; &quot;BTB&quot; &quot;BLRY&quot; &quot;DOGED&quot; &quot;LYKKE&quot; &quot;POINTS&quot; &quot;U&quot; &quot;CAB&quot; &quot;XDQ&quot; &quot;SPEC&quot; &quot;RBIES&quot; &quot;GAM&quot; &quot;MTR&quot; &quot;ICASH&quot; &quot;SPA&quot; &quot;UTC&quot; &quot;GEMZ&quot; &quot;XVC&quot; &quot;XSI&quot; &quot;FTC&quot; &quot;EMC&quot; &quot;AXIOM&quot; &quot;LTS&quot; &quot;HEDG&quot; &quot;BS&quot; &quot;ENTER&quot; &quot;BBR&quot; &quot;VTY&quot; &quot;ADC&quot; &quot;DPAY&quot; &quot;PEC&quot; &quot;FUZZ&quot; &quot;KR&quot; &quot;UNF&quot; &quot;PUTIN&quot; &quot;BIT16&quot; &quot;POT&quot; &quot;SNGLS&quot; &quot;EPY&quot; &quot;PNK&quot; &quot;CMT&quot; &quot;NMB&quot; &quot;NXT&quot; &quot;FSN&quot; &quot;GSX&quot; &quot;808&quot; &quot;IFC&quot; &quot;OBS&quot; &quot;BFX&quot; &quot;BTCD&quot; &quot;BRAIN&quot; &quot;DUB&quot; &quot;BNT&quot; &quot;VDO&quot; &quot;YAC&quot; &quot;PULSE&quot; &quot;ABY&quot; &quot;ZEC&quot; &quot;BOLI&quot; &quot;MYC&quot; &quot;ADN&quot; &quot;SPT&quot; &quot;YOVI&quot; &quot;RUBIT&quot; &quot;EBS&quot; &quot;HCC&quot; &quot;ARB&quot; &quot;PTC&quot; &quot;ATOM&quot; &quot;FUTC&quot; &quot;QCN&quot; &quot;NXE&quot; &quot;SWARM&quot; &quot;CETI&quot; &quot;NETC&quot; &quot;ANNC&quot; &quot;888&quot; &quot;DRKC&quot; &quot;DRACO&quot; &quot;GRAM&quot; &quot;APEX&quot; &quot;AM&quot; &quot;KDC&quot; &quot;SFR&quot; &quot;XPOKE&quot; &quot;STAR&quot; &quot;HUC&quot; &quot;8BIT&quot; &quot;CELL&quot; &quot;EFL&quot; &quot;TAK&quot; &quot;FST&quot; &quot;SHREK&quot; &quot;SHADE&quot; &quot;EKO&quot; &quot;XCN&quot; &quot;FIT&quot; &quot;PXI&quot; &quot;SSV&quot; &quot;PINKX&quot; &quot;MINE&quot; &quot;XPB&quot; &quot;PIGGY&quot; &quot;URO&quot; &quot;XSEED&quot; &quot;NLG&quot; &quot;JWL&quot; &quot;XPO&quot; &quot;MNC&quot; &quot;PPC&quot; &quot;WARP&quot; &quot;BSD&quot; &quot;XCASH&quot; &quot;XJO&quot; &quot;AMBER&quot;})</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def oanda-api-key &quot;d20a1b3948e96474eb08dfe59d438c45-9934d1346ba813e46f3403cbab5adfc9&quot;)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def rest-api-base &quot;https://api-fxpractice.oanda.com/v1/&quot;)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def streaming-api-base &quot;https://stream-fxpractice.oanda.com/v3/&quot;)</pre></td></tr><tr><td class="docs"><p>Switch to live base urls later</p>
-</td><td class="codes"><pre class="brush: clojure">(def account-no &quot;101-004-4632889-001&quot;)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def oanda-api-key &quot;d20a1b3948e96474eb08dfe59d438c45-9934d1346ba813e46f3403cbab5adfc9&quot;)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def rest-api-base &quot;https://api-fxpractice.oanda.com/v1/&quot;)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def rest-api-base-v3 &quot;https://api-fxpractice.oanda.com/v3/&quot;)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def streaming-api-base &quot;https://stream-fxpractice.oanda.com/v1/&quot;)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def kraken-api-base &quot;api.kraken.com&quot;)</pre></td></tr><tr><td class="docs">
+    [stub-http.core :refer :all]))</pre></td></tr><tr><td class="docs"><h1>General</h1>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>http request that requires a body such as POST and PUT, returns a channel</p>
+</td><td class="codes"><pre class="brush: clojure">(with-test
+  (defn http-body-cas 
+    [url headers body method]
+    (go 
+      (with-open [client (http/create-client)]
+        (let [resp (method client
+                           url
+                           :headers headers 
+                           :body (jsn/write-str body))]
+          (http/await resp)
+          (jsn/read-str (http/string resp) :key-fn keyword))))) 
+  (with-routes!
+    {&quot;/something&quot; {:status 200 :content-type &quot;application/json&quot;
+                   :body   (jsn/write-str {:hello &quot;world&quot;})}}
+    (is 
+      (= &quot;world&quot; (:hello (&lt;!! (http-body-cas (str uri &quot;/something&quot;) {} {} http/POST)))))))</pre></td></tr><tr><td class="docs"><p>http request that doesn't require a body such as GET, returns a channel</p>
+</td><td class="codes"><pre class="brush: clojure">(with-test 
+  (defn http-cas 
+    [url headers method]
+    (with-open [client (http/create-client)]
+      (let [resp (method client
+                         url
+                         :headers headers)]
+        (http/await resp)
+        (go (jsn/read-str (http/string resp) :key-fn keyword))))) 
+  (is 
+    (= &quot;world&quot; (u/basic-stub (fn [uri] (http-cas uri {} http/GET))))))</pre></td></tr><tr><td class="docs"><h1>Cryptocompare</h1>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>All the symbols provided by cryptocompare.</p>
+</td><td class="codes"><pre class="brush: clojure">(def cryptocompare-syms 
+  #{&quot;MCN&quot; &quot;FRN&quot; &quot;SDP&quot; &quot;DGORE&quot; &quot;HYP&quot; &quot;PAK&quot; &quot;2BACCO&quot; &quot;CPC&quot; &quot;NEOS&quot; &quot;GRN&quot; &quot;TWLV&quot; &quot;MND&quot; &quot;RIPO&quot; &quot;VTA&quot; &quot;HAL&quot; &quot;RCX&quot; &quot;ENRG&quot; &quot;1337&quot; &quot;NUBIS&quot; &quot;LANA&quot; &quot;BEN&quot; &quot;2015&quot; &quot;ZRC&quot; &quot;IOC&quot; &quot;CJ&quot; &quot;CDX&quot; &quot;BST&quot; &quot;SQL&quot; &quot;VPRC&quot; &quot;NRS&quot; &quot;BTCRY&quot; &quot;STEPS&quot; &quot;CNL&quot; &quot;LQD&quot; &quot;DT&quot; &quot;ADZ&quot; &quot;HALLO&quot; &quot;1CR&quot; &quot;DASH&quot; &quot;EQUAL&quot; &quot;MST&quot; &quot;BYC&quot; &quot;BSTY&quot; &quot;XT&quot; &quot;NTC&quot; &quot;XHI&quot; &quot;SOLE&quot; &quot;MINT&quot; &quot;TRIG&quot; &quot;CRW&quot; &quot;LAB&quot; &quot;BAY&quot; &quot;RISE&quot; &quot;RZR&quot; &quot;GEN&quot; &quot;CACH&quot; &quot;CLINT&quot; &quot;WBB&quot; &quot;UIS&quot; &quot;BTCL&quot; &quot;SNRG&quot; &quot;REP&quot; &quot;MOIN&quot; &quot;QTL&quot; &quot;ISL&quot; &quot;XBOT&quot; &quot;ANS&quot; &quot;NEU&quot; &quot;SC&quot; &quot;MOOND&quot; &quot;CYP&quot; &quot;START&quot; &quot;OK&quot; &quot;GP&quot; &quot;BCR&quot; &quot;NRB&quot; &quot;MC&quot; &quot;EDRC&quot; &quot;GAY&quot; &quot;BOTS&quot; &quot;611&quot; &quot;EQM&quot; &quot;VRC&quot; &quot;GRS&quot; &quot;SH&quot; &quot;CRBIT&quot; &quot;KEY&quot; &quot;MIL&quot; &quot;ARG&quot; &quot;RT2&quot; &quot;OC&quot; &quot;GOON&quot; &quot;LXC&quot; &quot;MSC&quot; &quot;GB&quot; &quot;DGD&quot; &quot;ROYAL&quot; &quot;BLC&quot; &quot;LSD&quot; &quot;GAP&quot; &quot;CRX&quot; &quot;FTP&quot; &quot;1ST&quot; &quot;RDD&quot; &quot;ADCN&quot; &quot;LTB&quot; &quot;CHILD&quot; &quot;NXTI&quot; &quot;TAGR&quot; &quot;NEBU&quot; &quot;XPM&quot; &quot;MUE&quot; &quot;AERO&quot; &quot;CRE&quot; &quot;NYAN&quot; &quot;FIRE&quot; &quot;MRP&quot; &quot;UTIL&quot; &quot;NZC&quot; &quot;COC&quot; &quot;UNC&quot; &quot;NAUT&quot; &quot;CRACK&quot; &quot;CMC&quot; &quot;DIME&quot; &quot;CC&quot; &quot;CHOOF&quot; &quot;BLK&quot; &quot;FCT&quot; &quot;TEAM&quot; &quot;FLT&quot; &quot;SBD&quot; &quot;SWEET&quot; &quot;WOLF&quot; &quot;BM&quot; &quot;MAPC&quot; &quot;HZ&quot; &quot;PYC&quot; &quot;ZOOM&quot; &quot;ALF&quot; &quot;42&quot; &quot;XNX&quot; &quot;TELL&quot; &quot;ERC&quot; &quot;TRON&quot; &quot;SWIFT&quot; &quot;NOTE&quot; &quot;DKC&quot; &quot;ANTI&quot; &quot;CKC&quot; &quot;SRC&quot; &quot;AMP&quot; &quot;007&quot; &quot;GIVE&quot; &quot;EMIGR&quot; &quot;TRUST&quot; &quot;MYR&quot; &quot;EKN&quot; &quot;EXCL&quot; &quot;CLR&quot; &quot;CALC&quot; &quot;YOC&quot; &quot;PSEUD&quot; &quot;GRT&quot; &quot;GPU&quot; &quot;DOT&quot; &quot;UNB&quot; &quot;C2&quot; &quot;CBX&quot; &quot;QTZ&quot; &quot;LYC&quot; &quot;XRE&quot; &quot;CTC&quot; &quot;DTC&quot; &quot;ERB&quot; &quot;CHASH&quot; &quot;AMC&quot; &quot;BOB&quot; &quot;SKB&quot; &quot;LC&quot; &quot;LEA&quot; &quot;DB&quot; &quot;NKC&quot; &quot;MI&quot; &quot;XCR&quot; &quot;XMG&quot; &quot;LYB&quot; &quot;ELE&quot; &quot;CRC&quot; &quot;AEC&quot; &quot;WC&quot; &quot;LTC&quot; &quot;QRK&quot; &quot;PKB&quot; &quot;XWT&quot; &quot;DCNT&quot; &quot;TOR&quot; &quot;CHA&quot; &quot;FRC&quot; &quot;CURE&quot; &quot;CIN&quot; &quot;LDOGE&quot; &quot;NSR&quot; &quot;SYNC&quot; &quot;EAGS&quot; &quot;TRI&quot; &quot;SHLD&quot; &quot;SAK&quot; &quot;NANAS&quot; &quot;BNCR&quot; &quot;GLX&quot; &quot;CAM&quot; &quot;VTR&quot; &quot;GMC&quot; &quot;CYT&quot; &quot;SFE&quot; &quot;CARBON&quot; &quot;ZED&quot; &quot;SBC&quot; &quot;AIB&quot; &quot;DEUR&quot; &quot;SCT&quot; &quot;CIRC&quot; &quot;BCN&quot; &quot;NMC&quot; &quot;BITB&quot; &quot;XTC&quot; &quot;TMC&quot; &quot;STO&quot; &quot;QBK&quot; &quot;BCX&quot; &quot;VRM&quot; &quot;AEON&quot; &quot;CSC&quot; &quot;KMD&quot; &quot;VTC&quot; &quot;ALN&quot; &quot;NAV&quot; &quot;LBC&quot; &quot;PEERPLAYS&quot; &quot;ZNY&quot; &quot;JBS&quot; &quot;ROS&quot; &quot;BTC&quot; &quot;VIA&quot; &quot;BURST&quot; &quot;MG&quot; &quot;AND&quot; &quot;XAI&quot; &quot;DLISK&quot; &quot;NKT&quot; &quot;CLUB&quot; &quot;LTH&quot; &quot;UNAT&quot; &quot;DBG&quot; &quot;IBANK&quot; &quot;BYTES&quot; &quot;GSY&quot; &quot;EDC&quot; &quot;EXP&quot; &quot;SPC&quot; &quot;KGC&quot; &quot;XDN&quot; &quot;XUP&quot; &quot;BLU&quot; &quot;ETH&quot; &quot;BTG&quot; &quot;GROW&quot; &quot;GCC&quot; &quot;CINNI&quot; &quot;MMC&quot; &quot;AIR&quot; &quot;EC&quot; &quot;VIP&quot; &quot;STR*&quot; &quot;TEK&quot; &quot;XXX&quot; &quot;GCR&quot; &quot;DGDC&quot; &quot;SLG&quot; &quot;KOBO&quot; &quot;SAT2&quot; &quot;LGBTQ&quot; &quot;UNITY&quot; &quot;BET&quot; &quot;UNIQ&quot; &quot;XCE&quot; &quot;MOON&quot; &quot;FFC&quot; &quot;ASN&quot; &quot;XID&quot; &quot;HODL&quot; &quot;GLOBE&quot; &quot;MAX&quot; &quot;GRC&quot; &quot;SLS&quot; &quot;OCTO&quot; &quot;MNM&quot; &quot;JUDGE&quot; &quot;BTE&quot; &quot;SCRPT&quot; &quot;TRK&quot; &quot;FSC2&quot; &quot;RMS&quot; &quot;VLT&quot; &quot;XPH&quot; &quot;TDFB&quot; &quot;STEEM&quot; &quot;DEM&quot; &quot;PSY&quot; &quot;RUST&quot; &quot;MEME&quot; &quot;CON&quot; &quot;JKC&quot; &quot;BLOCKPAY&quot; &quot;HKG&quot; &quot;ELC&quot; &quot;PXL&quot; &quot;ZCC&quot; &quot;ORB&quot; &quot;RCN&quot; &quot;STHR&quot; &quot;BAC&quot; &quot;XC&quot; &quot;OBITS&quot; &quot;SWING&quot; &quot;DGC&quot; &quot;THC&quot; &quot;FLAP&quot; &quot;MONETA&quot; &quot;XPY&quot; &quot;NTRN&quot; &quot;VAPOR&quot; &quot;APC&quot; &quot;ORLY&quot; &quot;MONA&quot; &quot;NUM&quot; &quot;DSB&quot; &quot;J&quot; &quot;WGC&quot; &quot;JOBS&quot; &quot;CLV&quot; &quot;OPAL&quot; &quot;SPOTS&quot; &quot;BOOM&quot; &quot;ARCH&quot; &quot;MED&quot; &quot;BQC&quot; &quot;TES&quot; &quot;EAC&quot; &quot;KUBO&quot; &quot;SXC&quot; &quot;SSD&quot; &quot;HTC&quot; &quot;PWR&quot; &quot;PINK&quot; &quot;CUBE&quot; &quot;CRYPT&quot; &quot;XVG&quot; &quot;BUK&quot; &quot;VPN&quot; &quot;EVENT&quot; &quot;INV&quot; &quot;SMLY&quot; &quot;PDC&quot; &quot;ACOIN&quot; &quot;INCP&quot; &quot;CRAFT&quot; &quot;GSM&quot; &quot;FOREX&quot; &quot;SEN&quot; &quot;PBC&quot; &quot;BTX&quot; &quot;EMC2&quot; &quot;HILL&quot; &quot;HVC&quot; &quot;UTH&quot; &quot;LSK&quot; &quot;BUCKS&quot; &quot;SUPER&quot; &quot;VTX&quot; &quot;KRAK&quot; &quot;STS&quot; &quot;RYC&quot; &quot;FC2&quot; &quot;LEMON&quot; &quot;DIGS&quot; &quot;XBS&quot; &quot;TX&quot; &quot;SPRTS&quot; &quot;OMNI&quot; &quot;NEC&quot; &quot;MPRO&quot; &quot;BBCC&quot; &quot;OMC&quot; &quot;RPC&quot; &quot;XWC&quot; &quot;BLOCK&quot; &quot;SLING&quot; &quot;ARDR&quot; &quot;XMS&quot; &quot;CF&quot; &quot;GRID&quot; &quot;LFC&quot; &quot;ANC&quot; &quot;CFC&quot; &quot;N7&quot; &quot;COOL&quot; &quot;TCR&quot; &quot;PIZZA&quot; &quot;SDC&quot; &quot;PRE&quot; &quot;TTC&quot; &quot;PRIME&quot; &quot;KARM&quot; &quot;VERSA&quot; &quot;ETC&quot; &quot;DGB&quot; &quot;NAN&quot; &quot;XRP&quot; &quot;X2&quot; &quot;BRK&quot; &quot;TOT&quot; &quot;DISK&quot; &quot;WDC&quot; &quot;TRA&quot; &quot;SMAC&quot; &quot;GDC&quot; &quot;MUDRA&quot; &quot;NBT&quot; &quot;MDC&quot; &quot;JIF&quot; &quot;FLY&quot; &quot;FCN&quot; &quot;EXB&quot; &quot;CHESS&quot; &quot;DVC&quot; &quot;MARV&quot; &quot;BTMI&quot; &quot;2FLAV&quot; &quot;PRM&quot; &quot;DNET&quot; &quot;CLOAK&quot; &quot;PTS&quot; &quot;MIN&quot; &quot;EGO&quot; &quot;BERN&quot; &quot;XRA&quot; &quot;INFX&quot; &quot;REE&quot; &quot;ULTC&quot; &quot;BELA&quot; &quot;SOUL&quot; &quot;LIMX&quot; &quot;VOOT&quot; &quot;GAIA&quot; &quot;XG&quot; &quot;DCR&quot; &quot;HNC&quot; &quot;FX&quot; &quot;JPC&quot; &quot;CAP&quot; &quot;LUX&quot; &quot;VEC2&quot; &quot;SMSR&quot; &quot;GIG&quot; &quot;RING&quot; &quot;GRM&quot; &quot;DRZ&quot; &quot;XAU&quot; &quot;M1&quot; &quot;GBT&quot; &quot;RBIT&quot; &quot;SCRT&quot; &quot;GIZ&quot; &quot;TODAY&quot; &quot;KAT&quot; &quot;TAG&quot; &quot;ZET2&quot; &quot;DROP&quot; &quot;COX&quot; &quot;SPHR&quot; &quot;XAUR&quot; &quot;ZYD&quot; &quot;RBT&quot; &quot;FCS&quot; &quot;BRONZ&quot; &quot;SCN&quot; &quot;SCOT&quot; &quot;QSLV&quot; &quot;B3&quot; &quot;POLY&quot; &quot;INCH&quot; &quot;OMA&quot; &quot;ANTC&quot; &quot;AC&quot; &quot;MMNXT&quot; &quot;SPM&quot; &quot;TUR&quot; &quot;MRS&quot; &quot;COV&quot; &quot;SIGU&quot; &quot;HBN&quot; &quot;TIA&quot; &quot;GHC&quot; &quot;WAY&quot; &quot;CHIP&quot; &quot;DMD&quot; &quot;DES&quot; &quot;FRK&quot; &quot;DIEM&quot; &quot;TAM&quot; &quot;SUP&quot; &quot;PXC&quot; &quot;DRKT&quot; &quot;CANN&quot; &quot;UNIT&quot; &quot;XZC&quot; &quot;CNMT&quot; &quot;CYG&quot; &quot;CTO&quot; &quot;QORA&quot; &quot;GLYPH&quot; &quot;SPX&quot; &quot;GLD&quot; &quot;OLYMP&quot; &quot;BTD&quot; &quot;XMR&quot; &quot;2GIVE&quot; &quot;XDE2&quot; &quot;CAT&quot; &quot;PRC&quot; &quot;LAZ&quot; &quot;TRUMP&quot; &quot;FONZ&quot; &quot;CRNK&quot; &quot;DCC&quot; &quot;KTK&quot; &quot;ENE&quot; &quot;COVAL&quot; &quot;UFO&quot; &quot;RRT&quot; &quot;GRAV&quot; &quot;SMC&quot; &quot;DLC&quot; &quot;FLO&quot; &quot;EGG&quot; &quot;CXC&quot; &quot;ION&quot; &quot;LK7&quot; &quot;GMX&quot; &quot;HMP&quot; &quot;KRB&quot; &quot;PHS&quot; &quot;BTA&quot; &quot;EXIT&quot; &quot;SPORT&quot; &quot;HVCO&quot; &quot;STRAT&quot; &quot;LOG&quot; &quot;LTCD&quot; &quot;RDN&quot; &quot;TKN&quot; &quot;VIOR&quot; &quot;UBIQ&quot; &quot;CSH&quot; &quot;REV&quot; &quot;RIC&quot; &quot;EGC&quot; &quot;BIOS&quot; &quot;HIRE&quot; &quot;BITUSD&quot; &quot;GML&quot; &quot;ICN&quot; &quot;BITCNY&quot; &quot;FRAC&quot; &quot;ACP&quot; &quot;FAIR&quot; &quot;CYC&quot; &quot;MN&quot; &quot;DOGE&quot; &quot;MZC&quot; &quot;NOBL&quot; &quot;AUR&quot; &quot;CASH&quot; &quot;FIBRE&quot; &quot;MARS&quot; &quot;OSC&quot; &quot;FRWC&quot; &quot;BOST&quot; &quot;BUZZ&quot; &quot;EVIL&quot; &quot;CRAIG&quot; &quot;KORE&quot; &quot;SOON&quot; &quot;CESC&quot; &quot;LTCX&quot; &quot;DANK&quot; &quot;KRC&quot; &quot;LKY&quot; &quot;AGS&quot; &quot;GREXIT&quot; &quot;GHS&quot; &quot;XDB&quot; &quot;GLC&quot; &quot;SHF&quot; &quot;GOTX&quot; &quot;ICB&quot; &quot;VIRAL&quot; &quot;NEVA&quot; &quot;PSI&quot; &quot;MAID&quot; &quot;BITS&quot; &quot;PSB&quot; &quot;CLUD&quot; &quot;RBR&quot; &quot;CGA&quot; &quot;VOX&quot; &quot;SLM&quot; &quot;GNJ&quot; &quot;XDP&quot; &quot;MMXIV&quot; &quot;BON&quot; &quot;NBL&quot; &quot;BITZ&quot; &quot;XLB&quot; &quot;GPL&quot; &quot;404&quot; &quot;XFC&quot; &quot;STR&quot; &quot;EZC&quot; &quot;NAS2&quot; &quot;TIT&quot; &quot;FJC&quot; &quot;WINGS&quot; &quot;CLAM&quot; &quot;BTCR&quot; &quot;ZNE&quot; &quot;XQN&quot; &quot;CRAB&quot; &quot;DCK&quot; &quot;BTM&quot; &quot;USDE&quot; &quot;COIN&quot; &quot;XST&quot; &quot;XNA&quot; &quot;MYST&quot; &quot;DSH&quot; &quot;NXS&quot; &quot;XCP&quot; &quot;SNS&quot; &quot;GEO&quot; &quot;DBTC&quot; &quot;SLR&quot; &quot;NVC&quot; &quot;CNC&quot; &quot;TENNET&quot; &quot;ARM&quot; &quot;TRC&quot; &quot;RBY&quot; &quot;XBC&quot; &quot;PIO&quot; &quot;I0C&quot; &quot;ZUR&quot; &quot;BCY&quot; &quot;NKA&quot; &quot;SPACE&quot; &quot;AXR&quot; &quot;32BIT&quot; &quot;FLDC&quot; &quot;HYPER&quot; &quot;BIGUP&quot; &quot;GUE&quot; &quot;EMD&quot; &quot;SANDG&quot; &quot;SPR&quot; &quot;MNE&quot; &quot;POST&quot; &quot;IXC&quot; &quot;NXTTY&quot; &quot;BHC&quot; &quot;WEX&quot; &quot;WAVES&quot; &quot;EDGE&quot; &quot;BTS&quot; &quot;ZEIT&quot; &quot;BSC&quot; &quot;GAME&quot; &quot;NET&quot; &quot;SYS&quot; &quot;IVZ&quot; &quot;KNC&quot; &quot;CCN&quot; &quot;ATM&quot; &quot;SONG&quot; &quot;TAB&quot; &quot;UNO&quot; &quot;STA&quot; &quot;STV&quot; &quot;MWC&quot; &quot;LTBC&quot; &quot;ZET&quot; &quot;HUGE&quot; &quot;DCS.&quot; &quot;VMC&quot; &quot;MT&quot; &quot;XCO&quot; &quot;CAIX&quot; &quot;YBC&quot; &quot;RADS&quot; &quot;XEM&quot; &quot;BTQ&quot; &quot;BXT&quot; &quot;LGD&quot; &quot;HEAT&quot; &quot;OLDSF&quot; &quot;COMM&quot; &quot;NLC&quot; &quot;WMC&quot; &quot;GHOUL&quot; &quot;ROOT&quot; &quot;EXE&quot; &quot;METAL&quot; &quot;NODE&quot; &quot;BEATS&quot; &quot;CRAVE&quot; &quot;MRY&quot; &quot;CREVA&quot; &quot;SSTC&quot; &quot;FLX&quot; &quot;XPD&quot; &quot;MOJO&quot; &quot;MARYJ&quot; &quot;MEC&quot; &quot;ARI&quot; &quot;ETHS&quot; &quot;AMS&quot; &quot;VOYA&quot; &quot;SJCX&quot; &quot;SILK&quot; &quot;LIR&quot; &quot;SEC&quot; &quot;CV2&quot; &quot;SYNX&quot; &quot;SIB&quot; &quot;SOIL&quot; &quot;SAR&quot; &quot;DBIC&quot; &quot;TGC&quot; &quot;GBRC&quot; &quot;BLITZ&quot; &quot;DOPE&quot; &quot;BTB&quot; &quot;BLRY&quot; &quot;DOGED&quot; &quot;LYKKE&quot; &quot;POINTS&quot; &quot;U&quot; &quot;CAB&quot; &quot;XDQ&quot; &quot;SPEC&quot; &quot;RBIES&quot; &quot;GAM&quot; &quot;MTR&quot; &quot;ICASH&quot; &quot;SPA&quot; &quot;UTC&quot; &quot;GEMZ&quot; &quot;XVC&quot; &quot;XSI&quot; &quot;FTC&quot; &quot;EMC&quot; &quot;AXIOM&quot; &quot;LTS&quot; &quot;HEDG&quot; &quot;BS&quot; &quot;ENTER&quot; &quot;BBR&quot; &quot;VTY&quot; &quot;ADC&quot; &quot;DPAY&quot; &quot;PEC&quot; &quot;FUZZ&quot; &quot;KR&quot; &quot;UNF&quot; &quot;PUTIN&quot; &quot;BIT16&quot; &quot;POT&quot; &quot;SNGLS&quot; &quot;EPY&quot; &quot;PNK&quot; &quot;CMT&quot; &quot;NMB&quot; &quot;NXT&quot; &quot;FSN&quot; &quot;GSX&quot; &quot;808&quot; &quot;IFC&quot; &quot;OBS&quot; &quot;BFX&quot; &quot;BTCD&quot; &quot;BRAIN&quot; &quot;DUB&quot; &quot;BNT&quot; &quot;VDO&quot; &quot;YAC&quot; &quot;PULSE&quot; &quot;ABY&quot; &quot;ZEC&quot; &quot;BOLI&quot; &quot;MYC&quot; &quot;ADN&quot; &quot;SPT&quot; &quot;YOVI&quot; &quot;RUBIT&quot; &quot;EBS&quot; &quot;HCC&quot; &quot;ARB&quot; &quot;PTC&quot; &quot;ATOM&quot; &quot;FUTC&quot; &quot;QCN&quot; &quot;NXE&quot; &quot;SWARM&quot; &quot;CETI&quot; &quot;NETC&quot; &quot;ANNC&quot; &quot;888&quot; &quot;DRKC&quot; &quot;DRACO&quot; &quot;GRAM&quot; &quot;APEX&quot; &quot;AM&quot; &quot;KDC&quot; &quot;SFR&quot; &quot;XPOKE&quot; &quot;STAR&quot; &quot;HUC&quot; &quot;8BIT&quot; &quot;CELL&quot; &quot;EFL&quot; &quot;TAK&quot; &quot;FST&quot; &quot;SHREK&quot; &quot;SHADE&quot; &quot;EKO&quot; &quot;XCN&quot; &quot;FIT&quot; &quot;PXI&quot; &quot;SSV&quot; &quot;PINKX&quot; &quot;MINE&quot; &quot;XPB&quot; &quot;PIGGY&quot; &quot;URO&quot; &quot;XSEED&quot; &quot;NLG&quot; &quot;JWL&quot; &quot;XPO&quot; &quot;MNC&quot; &quot;PPC&quot; &quot;WARP&quot; &quot;BSD&quot; &quot;XCASH&quot; &quot;XJO&quot; &quot;AMBER&quot;})</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/def ::cryptocomapre-sym cryptocompare-syms)</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/def ::fiat-sym #{&quot;USD&quot; &quot;GBP&quot; &quot;EUR&quot;})</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/def ::timescale #{&quot;histominute&quot; &quot;histohour&quot; &quot;histoday&quot;})</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(s/fdef cryptocompare-url-gen
+        :args (s/cat :fsym ::cryptocomapre-sym :tsym ::fiat-sym
+                     :timescale ::timescale :limit #(&gt; 1001 %  0))
+        :ret ::u/url)</pre></td></tr><tr><td class="docs"><p>Generate url to grab historical data from cryptocompare.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn cryptocompare-url-gen 
+    [fsym tsym timescale limit &amp; exchange]
+      (str
+        &quot;https://www.cryptocompare.com/api/data/&quot;
+        timescale
+        (if (first exchange) (str &quot;/?e=&quot; (first exchange)) &quot;/?e=CCCAGG&quot;)
+        &quot;&amp;fsym=&quot; fsym
+        &quot;&amp;tsym=&quot; tsym
+        &quot;&amp;limit=&quot; limit))</pre></td></tr><tr><td class="docs"><p>Get crypto compare history nicely processed.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn cryptocompare-hist 
+    [fsym tsym timescale limit &amp; exchange]
+      (as-&gt; (cryptocompare-url-gen fsym tsym timescale limit (when exchange (first exchange))) x
+            (u/json-get x)
+            (:Data x)
+            (u/update-all-vals x [:time] long)
+            (u/rename-all-keys x :time :unixtimestamp)))</pre></td></tr><tr><td class="docs"><h1>Oanda</h1>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def oanda-api-key &quot;d20a1b3948e96474eb08dfe59d438c45-9934d1346ba813e46f3403cbab5adfc9&quot;)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def rest-api-base &quot;https://api-fxpractice.oanda.com/v1/&quot;)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def rest-api-base-v3 &quot;https://api-fxpractice.oanda.com/v3/&quot;)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def streaming-api-base &quot;https://stream-fxpractice.oanda.com/v3/&quot;)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def account-no &quot;101-004-4632889-001&quot;)</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/def ::oanda-instruments #{&quot;EUR_USD&quot;})</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/def ::highBid number?)
 (s/def ::lowBid number?)
@@ -3246,39 +3272,20 @@ simple strat - simple strategy</p>
 (s/def ::lowAsk number?)
 (s/def ::time ::u/timestamp)</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/def ::oanda-candle (s/keys :req-un [::highBid ::time ::lowBid ::openAsk ::closeAsk ::openBid ::highAsk
-                                       ::closeBid ::lowAsk]))</pre></td></tr><tr><td class="docs"><p>CryptoCompare---</p>
-</td><td class="codes"><pre class="brush: clojure">(s/fdef cryptocompare-url-gen
-        :args (s/cat :fsym ::cryptocomapre-sym :tsym ::fiat-sym
-                     :timescale ::timescale :limit #(&gt; 1001 %  0))
-        :ret ::u/url)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn cryptocompare-url-gen [fsym tsym timescale limit &amp; exchange]
-      (println exchange)
-      (println (if (first exchange) (str &quot;/?e=&quot; (first exchange)) &quot;/?e=CCCAGG&quot;))
-      (str
-        &quot;https://www.cryptocompare.com/api/data/&quot;
-        timescale
-        (if (first exchange) (str &quot;/?e=&quot; (first exchange)) &quot;/?e=CCCAGG&quot;)
-        &quot;&amp;fsym=&quot; fsym
-        &quot;&amp;tsym=&quot; tsym
-        &quot;&amp;limit=&quot; limit))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn cryptocompare-hist [fsym tsym timescale limit &amp; exchange]
-      (as-&gt; (cryptocompare-url-gen fsym tsym timescale limit (when exchange (first exchange))) x
-            (u/json-get x)
-            (:Data x)
-            (u/update-all-vals x [:time] long)
-            (u/rename-all-keys x :time :unixtimestamp)))</pre></td></tr><tr><td class="docs"><p>Oanda---</p>
+                                       ::closeBid ::lowAsk]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef oanda-candle-&gt;standard
-  :args (s/cat :oanda-candle ::oanda-candle)
-  :ret ::u/standard-candle)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">                          (defn oanda-candle-&gt;standard 
-                            [oanda-candle]
-                            (let [{:keys [highBid time lowBid openAsk closeAsk openBid highAsk closeBid lowAsk]} oanda-candle]
-                              {:unixtimestamp (u/timestamp-&gt;unix time)
-                               :open (u/average openAsk openBid)
-                               :low (u/average lowBid lowAsk)
-                               :high (u/average highAsk highBid)
-                               :close (u/average closeAsk closeBid)}))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn oanda-price-stream-start [client callback instrument]
+        :args (s/cat :oanda-candle ::oanda-candle)
+        :ret ::u/standard-candle)</pre></td></tr><tr><td class="docs"><p>Convert oanda candle to standard candle</p>
+</td><td class="codes"><pre class="brush: clojure">(defn oanda-candle-&gt;standard 
+  [oanda-candle]
+  (let [{:keys [highBid time lowBid openAsk closeAsk openBid highAsk closeBid lowAsk]} oanda-candle]
+    {:unixtimestamp (u/timestamp-&gt;unix time)
+     :open (u/average openAsk openBid)
+     :low (u/average lowBid lowAsk)
+     :high (u/average highAsk highBid)
+     :close (u/average closeAsk closeBid)}))</pre></td></tr><tr><td class="docs"><p>Start a stream of real time price data from oanda</p>
+</td><td class="codes"><pre class="brush: clojure">    (defn oanda-price-stream-start 
+      [client callback instrument]
       (let [resp (http/stream-seq client
                                   :get (str
                                          &quot;https://stream-fxpractice.oanda.com/v3/&quot;
@@ -3288,11 +3295,12 @@ simple strat - simple strategy</p>
                                          &quot;/stream&quot;)
                                   :headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)}
                                   :query {:instruments instrument})]
-           (when-let [err (http/error resp)]
-                     (println &quot;failed processing request: &quot; err))
-           (doseq [s (http/string resp)]
-                  (callback s))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn oanda-price-stream-chan [client instrument chan]
+        (when-let [err (http/error resp)]
+          (println &quot;failed processing request: &quot; err))
+        (doseq [s (http/string resp)]
+          (callback s))))</pre></td></tr><tr><td class="docs"><p>Oanda price stream with results placed onto supplied channel.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn oanda-price-stream-chan 
+    [client instrument chan]
       (go
         (let [resp (http/stream-seq client
                                     :get (str
@@ -3330,34 +3338,7 @@ simple strat - simple strategy</p>
            :query-params {&quot;instrument&quot; instrument
                           &quot;count&quot; count
                           &quot;granularity&quot; granularity}})
-        :candles))</pre></td></tr><tr><td class="docs"><p>http request that requires a body such as POST and PUT, returns a channel</p>
-</td><td class="codes"><pre class="brush: clojure">(with-test
-  (defn http-body-cas 
-    [url headers body method]
-    (go 
-      (with-open [client (http/create-client)]
-        (let [resp (method client
-                           url
-                           :headers headers 
-                           :body (jsn/write-str body))]
-          (http/await resp)
-          (jsn/read-str (http/string resp) :key-fn keyword))))) 
-  (with-routes!
-    {&quot;/something&quot; {:status 200 :content-type &quot;application/json&quot;
-                   :body   (jsn/write-str {:hello &quot;world&quot;})}}
-    (is 
-      (= &quot;world&quot; (:hello (&lt;!! (http-body-cas (str uri &quot;/something&quot;) {} {} http/POST)))))))</pre></td></tr><tr><td class="docs"><p>http request that doesn't require a body such as GET, returns a channel</p>
-</td><td class="codes"><pre class="brush: clojure">(with-test 
-  (defn http-cas 
-    [url headers method]
-    (with-open [client (http/create-client)]
-      (let [resp (method client
-                         url
-                         :headers headers)]
-        (http/await resp)
-        (go (jsn/read-str (http/string resp) :key-fn keyword))))) 
-  (is 
-    (= &quot;world&quot; (u/basic-stub (fn [uri] (http-cas uri {} http/GET))))))</pre></td></tr><tr><td class="docs"><p>Order map for placing an order with oanda</p>
+        :candles))</pre></td></tr><tr><td class="docs"><p>Order map for placing an order with oanda</p>
 </td><td class="codes"><pre class="brush: clojure">(defn order-gen 
   [units instrument]
   {:order {:units units
@@ -3407,66 +3388,73 @@ simple strat - simple strategy</p>
             order (:order (u/mock-req-&gt;body-data (first requests)))]
         (and 
           (not (contains? order :stopLossOnFill))
-          (contains? order :positionFill))))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn oanda-patch-order-cas [chan tradeid stoploss]
-      (with-open [client (http/create-client)]
-                 (let [resp (http/PUT client
-                                      (str rest-api-base-v3 &quot;accounts/&quot; account-no &quot;/trades/&quot; tradeid &quot;/orders/&quot;)
-                                      :headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)
-                                                :Content-type &quot;application/json&quot;}
-                                      :body (jsn/write-str {:stopLoss {:price stoploss}}))]
-                      (http/await resp)
-                      (go (&gt;! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn order-info [chan orderid]
-      (with-open [client (http/create-client)]
-                 (let [resp (http/GET client
-                                      (str rest-api-base-v3 &quot;accounts/&quot; account-no &quot;/orders/&quot; orderid)
-                                      :headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)
-                                                :Content-type &quot;application/json&quot;})]
-                      (http/await resp)
-                      (go (&gt;! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn get-orders [chan]
-      (with-open [client (http/create-client)]
-                 (let [resp (http/GET client
-                                      (str rest-api-base-v3 &quot;accounts/&quot; account-no &quot;/orders&quot;)
-                                      :headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)
-                                                :Content-type &quot;application/json&quot;})]
-                      (http/await resp)
-                      (go (&gt;! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn acc-info [chan]
-      (with-open [client (http/create-client)]
-                 (let [resp (http/GET client
-                                      (str rest-api-base-v3 &quot;accounts/&quot; account-no)
-                                      :headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)
-                                                :Content-type &quot;application/json&quot;})]
-                      (http/await resp)
-                      (go (&gt;! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn trade-info [chan tradeid]
-      (with-open [client (http/create-client)]
-                 (let [resp (http/GET client
-                                      (str rest-api-base-v3 &quot;accounts/&quot; account-no &quot;/trades/&quot; tradeid)
-                                      :headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)
-                                                :Content-type &quot;application/json&quot;})]
-                      (http/await resp)
-                      (go (&gt;! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn oanda-history-cas [chan instrument count timeframe]
-      (with-open [client (http/create-client)]
-                 (let [resp (http/GET client (str rest-api-base &quot;candles&quot;)
-                                      :query {:instrument instrument :count count :granularity timeframe})]
-                      (http/await resp)
-                      (go
-                        (&gt;! chan
-                            (-&gt;&gt;
-                              (jsn/read-str (http/string resp) :key-fn keyword)
-                              :candles
-                              (map oanda-candle-&gt;standard)))))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn oanda-hist-&gt;standard-candle [candles]
-      (-&gt;
-        candles
-        (u/update-all-vals [:time] u/timestamp-&gt;unix)
-        (u/rename-all-keys :time :unixtimestamp)))</pre></td></tr><tr><td class="docs"><p>XBTUSD 1440</p>
-
-<p>Kraken---</p>
+          (contains? order :positionFill))))))</pre></td></tr><tr><td class="docs"><p>Update an order, placing result on provided channel</p>
+</td><td class="codes"><pre class="brush: clojure">(defn oanda-patch-order-cas 
+  [chan tradeid stoploss]
+  (with-open [client (http/create-client)]
+    (let [resp (http/PUT client
+                         (str rest-api-base-v3 &quot;accounts/&quot; account-no &quot;/trades/&quot; tradeid &quot;/orders/&quot;)
+                         :headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)
+                                   :Content-type &quot;application/json&quot;}
+                         :body (jsn/write-str {:stopLoss {:price stoploss}}))]
+      (http/await resp)
+      (go (&gt;! chan (jsn/read-str (http/string resp) :key-fn keyword))))))</pre></td></tr><tr><td class="docs"><p>Get info on an order by its order id, place the result on provided channel.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn order-info 
+  [chan orderid]
+  (with-open [client (http/create-client)]
+    (let [resp (http/GET client
+                         (str rest-api-base-v3 &quot;accounts/&quot; account-no &quot;/orders/&quot; orderid)
+                         :headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)
+                                   :Content-type &quot;application/json&quot;})]
+      (http/await resp)
+      (go (&gt;! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))</pre></td></tr><tr><td class="docs"><p>Get current orders, place result on provided channel.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-orders 
+  [chan]
+  (with-open [client (http/create-client)]
+    (let [resp (http/GET client
+                         (str rest-api-base-v3 &quot;accounts/&quot; account-no &quot;/orders&quot;)
+                         :headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)
+                                   :Content-type &quot;application/json&quot;})]
+      (http/await resp)
+      (go (&gt;! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))</pre></td></tr><tr><td class="docs"><p>Get account info, place result on provided chan.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn acc-info 
+  [chan]
+  (with-open [client (http/create-client)]
+    (let [resp (http/GET client
+                         (str rest-api-base-v3 &quot;accounts/&quot; account-no)
+                         :headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)
+                                   :Content-type &quot;application/json&quot;})]
+      (http/await resp)
+      (go (&gt;! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))</pre></td></tr><tr><td class="docs"><p>Get info on a particular trade, result placed on provided chan.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn trade-info 
+  [chan tradeid]
+  (with-open [client (http/create-client)]
+    (let [resp (http/GET client
+                         (str rest-api-base-v3 &quot;accounts/&quot; account-no &quot;/trades/&quot; tradeid)
+                         :headers {:Authorization (str &quot;Bearer &quot; oanda-api-key)
+                                   :Content-type &quot;application/json&quot;})]
+      (http/await resp)
+      (go (&gt;! chan  (jsn/read-str (http/string resp) :key-fn keyword))))))</pre></td></tr><tr><td class="docs"><p>Get historical candle data from oands, result placed on provided chan.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn oanda-history-cas 
+  [chan instrument count timeframe]
+  (with-open [client (http/create-client)]
+    (let [resp (http/GET client (str rest-api-base &quot;candles&quot;)
+                         :query {:instrument instrument :count count :granularity timeframe})]
+      (http/await resp)
+      (go
+        (&gt;! chan
+            (-&gt;&gt;
+              (jsn/read-str (http/string resp) :key-fn keyword)
+              :candles
+              (map oanda-candle-&gt;standard)))))))</pre></td></tr><tr><td class="docs"><p>Convert a series of oanda historical candles into standard candles.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn oanda-hist-&gt;standard-candle 
+  [candles]
+  (-&gt;
+    candles
+    (u/update-all-vals [:time] u/timestamp-&gt;unix)
+    (u/rename-all-keys :time :unixtimestamp)))</pre></td></tr><tr><td class="docs"><h1>Kraken</h1>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def kraken-api-base &quot;api.kraken.com&quot;)</pre></td></tr><tr><td class="docs"><p>XBTUSD 1440</p>
 </td><td class="codes"><pre class="brush: clojure">(defn kraken-hist
       [curr-pair interval]
       (:result (u/json-get
@@ -3626,21 +3614,13 @@ simple strat - simple strategy</p>
         (cnt/get (str x &quot;/orderbook?limit=&quot; limit)) 
         (:body x)
         (jsn/read-str x :key-fn keyword)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(s/fdef avg  
-        :args (s/cat :num-col (s/and (s/coll-of number?) #(not (empty? %))))
-        :ret number?)</pre></td></tr><tr><td class="docs"><p>Simple average of a series of numbers</p>
-</td><td class="codes"><pre class="brush: clojure">(defn avg 
-  [num-col]
-  (/
-    (reduce + num-col) 
-    (count num-col)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef orderbook-entry-avg  
         :args (s/cat :ob-entry ::orderbook)
         :ret ::obavg)</pre></td></tr><tr><td class="docs"><p>Given a particular entry, get the avg bid and ask</p>
 </td><td class="codes"><pre class="brush: clojure">(defn orderbook-entry-avg 
   [ob-entry]
-  {:bidavg (avg (map :Rate (:buy ob-entry)))
-   :askavg (avg (map :Rate (:sell ob-entry)))})</pre></td></tr><tr><td class="docs">
+  {:bidavg (u/average (map :Rate (:buy ob-entry)))
+   :askavg (u/average (map :Rate (:sell ob-entry)))})</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef ob-avgs
   :args (s/cat :orderbooks (s/coll-of ::ob-db-entry :min-count 1))
   :ret (s/coll-of ::timed-avg))</pre></td></tr><tr><td class="docs"><p>Returns a timeseries of average bidask prices given a series of orderbooks.</p>
@@ -4095,11 +4075,11 @@ we will definitely be closing and starting a new trade, only question is did it 
    (let [{:keys [live instrument units]} opts]
      (cond
        (if ratio (&gt; ratio (u/body-ratio candle)) false) acc
-       (u/green? candle) (do 
+       (green? candle) (do 
                            (when live 
                              (ds/oanda-open-order-cas! instrument units :stoploss low))
                            (update-mock-acc acc &quot;buy&quot; close low unixtimestamp))
-       (not (u/green? candle)) (do 
+       (not (green? candle)) (do 
                                  (when live 
                                    (ds/oanda-open-order-cas! instrument (- units) :stoploss high))
                                  (update-mock-acc acc &quot;sell&quot; close high unixtimestamp))))))</pre></td></tr><tr><td class="docs">
@@ -4140,11 +4120,11 @@ we will definitely be closing and starting a new trade, only question is did it 
         (cond
           (= buy-or-sell &quot;buy&quot;) (cond
                                   (&lt; low stop-loss) (simple-strat-next-position x y order-price stop-loss ratio)
-                                  (u/green? y) (update-stop-loss x low)
+                                  (green? y) (update-stop-loss x low)
                                   :red (simple-strat-next-position x y order-price close ratio))
           (= buy-or-sell &quot;sell&quot;) (cond
                                    (&lt; low stop-loss) (simple-strat-next-position x y stop-loss order-price ratio)
-                                   (not (u/green? y)) (update-stop-loss x high)
+                                   (not (green? y)) (update-stop-loss x high)
                                    :green (simple-strat-next-position x y close order-price ratio))
           :resting  (buy-or-sell-judge x y high low close unixtimestamp ratio)))
       {:open-date nil :stop-loss nil :buy-or-sell nil :order-price nil :account 1000 :history []}
