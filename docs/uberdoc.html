@@ -3062,7 +3062,10 @@ ratios bewteen the bodies and the wicks.</p>
   (or
     (pr/tuesday? (c/from-long unixtime))
     (pr/wednesday? (c/from-long unixtime))
-    (pr/thursday? (c/from-long unixtime))))</pre></td></tr><tr><td class="docs"><p>Ratio between the difference between the open/close and high/low.</p>
+    (pr/thursday? (c/from-long unixtime))))</pre></td></tr><tr><td class="docs"><p>Is the candlestick green?</p>
+</td><td class="codes"><pre class="brush: clojure">(defn green? 
+  [{:keys [open close]}]
+      (&gt; close open))</pre></td></tr><tr><td class="docs"><p>Ratio between the difference between the open/close and high/low.</p>
 </td><td class="codes"><pre class="brush: clojure">(with-test
   (defn body-ratio 
     [{:keys [open low high close] :as candle}]

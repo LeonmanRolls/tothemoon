@@ -264,7 +264,6 @@
   (is (= 2 (percentage-change 1 2 :heyhey)))
   (is (= 0.9 (percentage-change 1 0.9 :heyhey))))
 
-
 (defn mid-week? 
   "Does a unix timestamp describe a date that falls on tuesday, wednesday or thursday." 
   [unixtime]
@@ -272,6 +271,11 @@
     (pr/tuesday? (c/from-long unixtime))
     (pr/wednesday? (c/from-long unixtime))
     (pr/thursday? (c/from-long unixtime))))
+
+(defn green? 
+ "Is the candlestick green?" 
+  [{:keys [open close]}]
+      (> close open))
 
 (with-test
   (defn body-ratio 

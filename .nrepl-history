@@ -1,16 +1,3 @@
-    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 (str uri "/something") 123.233))
-    (let [requests (recorded-requests server)]
-      (reset! cache (first requests))
-      (println (type (:body (first requests))))
-      ; Now do something with the responses, for example count them      
-      (is (= 1 (count requests)))))
-(jsn/read-str 
-    (get (:body @cache) "postData")
-    :key-fn
-    keyword
-    )
-(defn mock-req->body-data
-    "Takes a mock request and returns the body of the response as a map" 
     [mock-req]
     (jsn/read-str 
       (get (:body mock-req) "postData")))
@@ -498,3 +485,16 @@ l
 (price-history-raw "BTC" "ETH")
 (price-history-timeseries "BTC" "ETH")
   (get-orderbook-info 10)
+(doc marginalia)
+(docs marginalia)
+(boot (marginalia))
+(in-ns 'build.boot)
+(boot (marginalia))
+(marginalia)
+(boot (marginalia))
+(boot (marginalia -d .))
+(boot (marginalia "-d" "."))
+(boot (marginalia "-d" "../docs"))
+(boot (marginalia "-d" "/home/leeondamiky/Documents/Clojure/trading-tothemoon/"))
+(boot (marginalia "-d" "/home/leeondamiky/Documents/Clojure/trading-tothemoon/docs/"))
+(boot (marginalia))
