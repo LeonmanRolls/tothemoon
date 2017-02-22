@@ -2866,7 +2866,7 @@ net.brehaut.ClojureTools = (function (SH) {
   };
 })(SyntaxHighlighter);
 </script><title> -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name"></h1><h2 class="project-version"></h2><br />
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.9.0-alpha10</td></tr><tr><td class="dep-name">org.clojure/core.async</td><td class="dotted"><hr /></td><td class="dep-version">0.2.395</td></tr><tr><td class="dep-name">org.clojure/core.logic</td><td class="dotted"><hr /></td><td class="dep-version">0.8.11</td></tr><tr><td class="dep-name">clj-http</td><td class="dotted"><hr /></td><td class="dep-version">2.2.0</td></tr><tr><td class="dep-name">org.clojure/data.json</td><td class="dotted"><hr /></td><td class="dep-version">0.2.6</td></tr><tr><td class="dep-name">clojurewerkz/envision</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0-SNAPSHOT</td></tr><tr><td class="dep-name">incanter</td><td class="dotted"><hr /></td><td class="dep-version">1.5.7</td></tr><tr><td class="dep-name">http.async.client</td><td class="dotted"><hr /></td><td class="dep-version">0.5.2</td></tr><tr><td class="dep-name">org.clojure/math.combinatorics</td><td class="dotted"><hr /></td><td class="dep-version">0.1.3</td></tr><tr><td class="dep-name">cfft</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">factual/timely</td><td class="dotted"><hr /></td><td class="dep-version">0.0.3</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.12.0</td></tr><tr><td class="dep-name">se.haleby/stub-http</td><td class="dotted"><hr /></td><td class="dep-version">0.2.1</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#core.utils">core.utils</a></li><li><a href="#core.core">core.core</a></li><li><a href="#core.datasources">core.datasources</a></li><li><a href="#core.visual">core.visual</a></li><li><a href="#core.spike">core.spike</a></li><li><a href="#core.marketcap">core.marketcap</a></li><li><a href="#core.simple">core.simple</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.utils" name="core.utils"><h1 class="project-name">core.utils</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.9.0-alpha10</td></tr><tr><td class="dep-name">org.clojure/core.async</td><td class="dotted"><hr /></td><td class="dep-version">0.2.395</td></tr><tr><td class="dep-name">org.clojure/core.logic</td><td class="dotted"><hr /></td><td class="dep-version">0.8.11</td></tr><tr><td class="dep-name">clj-http</td><td class="dotted"><hr /></td><td class="dep-version">2.2.0</td></tr><tr><td class="dep-name">org.clojure/data.json</td><td class="dotted"><hr /></td><td class="dep-version">0.2.6</td></tr><tr><td class="dep-name">clojurewerkz/envision</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0-SNAPSHOT</td></tr><tr><td class="dep-name">incanter</td><td class="dotted"><hr /></td><td class="dep-version">1.5.7</td></tr><tr><td class="dep-name">http.async.client</td><td class="dotted"><hr /></td><td class="dep-version">0.5.2</td></tr><tr><td class="dep-name">org.clojure/math.combinatorics</td><td class="dotted"><hr /></td><td class="dep-version">0.1.3</td></tr><tr><td class="dep-name">cfft</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">factual/timely</td><td class="dotted"><hr /></td><td class="dep-version">0.0.3</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.12.0</td></tr><tr><td class="dep-name">se.haleby/stub-http</td><td class="dotted"><hr /></td><td class="dep-version">0.2.1</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#core.utils">core.utils</a></li><li><a href="#core.core">core.core</a></li><li><a href="#core.datasources">core.datasources</a></li><li><a href="#core.visual">core.visual</a></li><li><a href="#core.spike">core.spike</a></li><li><a href="#core.marketcap">core.marketcap</a></li><li><a href="#core.simple">core.simple</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.utils" name="core.utils"><h1 class="project-name">core.utils</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Utils used across the app</p>
 </td><td class="codes"><pre class="brush: clojure">(ns core.utils
   (:require
     [clj-http.client :as cnt]
@@ -3166,13 +3166,21 @@ ratios bewteen the bodies and the wicks.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns core.core)</pre></td></tr><tr><td class="docs"><h1>To the moon</h1>
 
 <p>The goal of this project is try out different automated trading strategies for trading various instruments 
-from FOREX to crypto-currencies.  </p>
+from FOREX to crypto-currencies. Officially. </p>
+
+<p>The unofficial goal is to have a project that is sufficently complex to be a good programming playground, and on the 
+off chance that it stumbles upon something profitable that's all the better.   </p>
 
 <h2>Up and running</h2>
 
 <p>Type 'boot repl' into the command line to get started. </p>
 
 <p>(dev) To watch for file changes and run tests and recompile docs</p>
+
+<h2>Simple strat</h2>
+
+<p>One of the simplest strategies one could think of. The basic idea is if the previous candle was green, buy, if red, 
+sell.</p>
 
 <h3>Simple strat candle ratio</h3>
 
@@ -3192,6 +3200,15 @@ details could be abstracted away into functions. This could provide motivation t
 
 <p>Backtesting is implemented as a reducer function. The reducer takes a map representing a trading account 
 and a time series of OHLC data (candles). The reducer then runs and returns the final account value. </p>
+
+<h1>Glossary</h1>
+
+<p>cc - crypto-compare
+simple strat - simple strategy</p>
+
+<h1>Code guidelines</h1>
+
+<p>Any function that makes a network request should take a url so that it can be tested</p>
 </td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.datasources" name="core.datasources"><h1 class="project-name">core.datasources</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns core.datasources
   (:require
@@ -3317,13 +3334,14 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
 </td><td class="codes"><pre class="brush: clojure">(with-test
   (defn http-body-cas 
     [url headers body method]
-    (with-open [client (http/create-client)]
-      (let [resp (method client
-                            url
-                            :headers headers 
-                            :body (jsn/write-str body))]
-        (http/await resp)
-        (go (jsn/read-str (http/string resp) :key-fn keyword))))) 
+    (go 
+      (with-open [client (http/create-client)]
+        (let [resp (method client
+                           url
+                           :headers headers 
+                           :body (jsn/write-str body))]
+          (http/await resp)
+          (jsn/read-str (http/string resp) :key-fn keyword))))) 
   (with-routes!
     {&quot;/something&quot; {:status 200 :content-type &quot;application/json&quot;
                    :body   (jsn/write-str {:hello &quot;world&quot;})}}
@@ -3491,30 +3509,60 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
 </td><td class="codes"><pre class="brush: clojure">(defn plot-between-dates [candles start end]
       (-&gt;
         (filter #(&lt;= start (:unixtimestamp %) end) candles)
-        plot-standard-candles))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.spike" name="core.spike"><h1 class="project-name">core.spike</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+        plot-standard-candles))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.spike" name="core.spike"><h1 class="project-name">core.spike</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Spike theory or 'pump and dump'. This started with noticing that many crypto currencies at some point in their 
+  existence go through a sharp rise followed by sharp fall in price. The goal of this strategy is to try to identify 
+  when a spike is happening early enough to get in and then to get out for a profit. More or less and impossible task. </p>
 </td><td class="codes"><pre class="brush: clojure">(ns core.spike
-    (:require
-      [clj-http.client :as cnt]
-      [clojure.data.json :as jsn]
-      [clojurewerkz.envision.core :as envision]
-      [clojurewerkz.envision.chart-config :as cfg]
-      [clojure.spec :as s]
-      [clojure.spec.gen :as gen]
-      [clojure.spec.test :as ts :refer [check]]
-      [clojure.spec.gen :as gen]
-      [incanter.core :as ic]
-      [incanter.stats :as is]
-      [incanter.charts :as ich]
-      [incanter.datasets :as id]
-      [clj-time.core :as t]
-      [clj-time.format :as f]
-      [clj-time.coerce :as c]
-      [clojure.set :as set]
-      [core.utils :as u]
-      [clojure.core.logic :as lgc]))</pre></td></tr><tr><td class="docs">
+  (:require
+    [clojure.test :as tst :refer [is with-test]]
+    [clj-http.client :as cnt]
+    [clojure.data.json :as jsn]
+    [clojurewerkz.envision.core :as envision]
+    [clojurewerkz.envision.chart-config :as cfg]
+    [clojure.spec :as s]
+    [clojure.spec.gen :as gen]
+    [clojure.spec.test :as ts :refer [check]]
+    [clojure.spec.gen :as gen]
+    [incanter.core :as ic]
+    [incanter.stats :as is]
+    [incanter.charts :as ich]
+    [incanter.datasets :as id]
+    [clj-time.core :as t]
+    [clj-time.format :as f]
+    [clj-time.coerce :as c]
+    [clojure.set :as set]
+    [core.utils :as u]
+    [clojure.core.logic :as lgc]
+    [stub-http.core :refer :all]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def server-ip &quot;http://139.59.226.3:3001&quot;)</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def timeformat &quot;YYYY-MM-DDTHH:MM:SS&quot;)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def epsilon (Math/ulp 1.0))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def epsilon (Math/ulp 1.0))</pre></td></tr><tr><td class="docs"><p>Example historical data for BTC/ETH taken on 22/02/2017</p>
+</td><td class="codes"><pre class="brush: clojure">(def cc-historical-sample-data
+  [{:grad 6.5972222222222255E-6, :price 43.1, :unixtimestamp 1.463184E9} 
+   {:grad 2.5462962962962914E-5, :price 43.67, :unixtimestamp 1.4632704E9} 
+   {:grad -5.844907407407404E-5, :price 45.87, :unixtimestamp 1.4633568E9} 
+   {:grad -4.687499999999997E-5, :price 40.82, :unixtimestamp 1.4634432E9} 
+   {:grad -2.9166666666666704E-5, :price 36.77, :unixtimestamp 1.4635296E9}])</pre></td></tr><tr><td class="docs"><p>Sample response from crypto compare takeon on 22/02/2017</p>
+</td><td class="codes"><pre class="brush: clojure">(def cc-historical-sample-response
+  {:status 200, 
+   :headers {&quot;Server&quot; &quot;cloudflare-nginx&quot;, 
+             &quot;Content-Type&quot; &quot;application/json; charset=utf-8&quot;, 
+             &quot;Access-Control-Allow-Origin&quot; &quot;*&quot;, 
+             &quot;Connection&quot; &quot;close&quot;, 
+             &quot;Transfer-Encoding&quot; &quot;chunked&quot;, 
+             &quot;CF-RAY&quot; &quot;335015ab6f1520f0-LAX&quot;, 
+             &quot;Date&quot; &quot;Wed, 22 Feb 2017 05:37:11 GMT&quot;, 
+             &quot;Cache-Control&quot; &quot;private&quot;}, 
+   :body &quot;{\&quot;Response\&quot;:\&quot;Success\&quot;,\&quot;Message\&quot;:\&quot;Battlecruiser operational.Make it happen.Set a course.Take it slow.\&quot;,\&quot;Type\&quot;:100,\&quot;Aggrgated\&quot;:false,\&quot;Data\&quot;:[{\&quot;time\&quot;:1470441600.0,\&quot;open\&quot;:53.76,\&quot;high\&quot;:54.11,\&quot;low\&quot;:52.36,\&quot;close\&quot;:54.11,\&quot;volumefrom\&quot;:4.3085315400000006,\&quot;volumeto\&quot;:230.9746682058271},{\&quot;time\&quot;:1470528000.0,\&quot;open\&quot;:54.11,\&quot;high\&quot;:54.29,\&quot;low\&quot;:51.02,\&quot;close\&quot;:54.29,\&quot;volumefrom\&quot;:5.5666466000000012,\&quot;volumeto\&quot;:293.26111067387626},{\&quot;time\&quot;:1470614400.0,\&quot;open\&quot;:52.36,\&quot;high\&quot;:54.29,\&quot;low\&quot;:52.36,\&quot;close\&quot;:54.29,\&quot;volumefrom\&quot;:3.2970752999999995,\&quot;volumeto\&quot;:177.8866873675988}],\&quot;FirstValueInArray\&quot;:true,\&quot;TimeTo\&quot;:1487721600,\&quot;TimeFrom\&quot;:1470441600}&quot;, 
+   :request-time 734, 
+   :trace-redirects [&quot;https://www.cryptocompare.com/api/data/histoday/?aggregate=1&amp;e=CCCAGG&amp;fsym=BTC&amp;limit=200&amp;tsym=ETH&quot;], 
+   :orig-content-encoding &quot;gzip&quot;, 
+   :cookies {&quot;__cfduid&quot; {:discard false, :domain &quot;cryptocompare.com&quot;, 
+                         :expires #inst &quot;2018-02-22T05:37:11.000-00:00&quot;, 
+                         :path &quot;/&quot;, 
+                         :secure false, 
+                         :value &quot;d0d3ea2639b89495432ae6af3d3d03c671487741831&quot;, 
+                         :version 0}}})</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/def ::limit 
   (s/with-gen 
     (s/and 
@@ -3562,28 +3610,27 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
 </td><td class="codes"><pre class="brush: clojure">(s/def ::gradentry (s/keys :req-un [::grad ::price ::unixtimestamp]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/def ::grad-timeseries (s/keys :req-un [::grads ::unixtimeseries]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/def ::timestampkey #{:TimeStamp})</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(s/def ::unixtimestamp-map (s/keys :req-un [::unixtimestamp ::price]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn explain [spec data]
- (s/explain spec data))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn generate [spec]
-  (gen/generate 
-    (s/gen spec)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn zero-guard [x]
+</td><td class="codes"><pre class="brush: clojure">(s/def ::unixtimestamp-map (s/keys :req-un [::unixtimestamp ::price]))</pre></td></tr><tr><td class="docs"><p>Used to protect against divide by zero when calculating gradient, which would give an infinite result. Instead return
+  the lowest delta x possible for a unix timestamp, 1. </p>
+</td><td class="codes"><pre class="brush: clojure">(defn zero-guard 
+  [x]
   (if (= 0 x) 1 x))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn coll= [&amp; colls]
       (apply = (map frequencies colls)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef get-orderbook-info 
         :args (s/cat :limit ::limit) 
-        :ret (s/coll-of ::ob-db-entry))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn get-orderbook-info [limit] 
+        :ret (s/coll-of ::ob-db-entry))</pre></td></tr><tr><td class="docs"><p>Get orderbook info from our internal store.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-orderbook-info 
+  [limit] 
   (as-&gt; server-ip x
         (cnt/get (str x &quot;/orderbook?limit=&quot; limit)) 
         (:body x)
         (jsn/read-str x :key-fn keyword)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef avg  
         :args (s/cat :num-col (s/and (s/coll-of number?) #(not (empty? %))))
-        :ret number?)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn avg [num-col]
+        :ret number?)</pre></td></tr><tr><td class="docs"><p>Simple average of a series of numbers</p>
+</td><td class="codes"><pre class="brush: clojure">(defn avg 
+  [num-col]
   (/
     (reduce + num-col) 
     (count num-col)))</pre></td></tr><tr><td class="docs">
@@ -3596,24 +3643,19 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
    :askavg (avg (map :Rate (:sell ob-entry)))})</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef ob-avgs
   :args (s/cat :orderbooks (s/coll-of ::ob-db-entry :min-count 1))
-  :ret (s/coll-of ::timed-avg))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn ob-avgs [orderbooks]
+  :ret (s/coll-of ::timed-avg))</pre></td></tr><tr><td class="docs"><p>Returns a timeseries of average bidask prices given a series of orderbooks.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn ob-avgs 
+  [orderbooks]
   (map 
     (fn [y] 
       {:timestamp (:timestamp y)
        :obavg (orderbook-entry-avg (:orderbook y))})
     orderbooks))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(s/fdef unix-&gt;timestamp 
-        :args (s/cat :timestamp ::unixtimestamp) 
-        :ret (s/and 
-               #(not (.contains % &quot;Z&quot;))
-               string?))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn unix-&gt;timestamp [timestamp]
-  (clojure.string/join (drop-last 2 (.toString (c/from-long timestamp)))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef ob-avgs-&gt;xyz
         :args (s/cat :timedavgs (s/coll-of ::timed-avg)) 
-        :ret (s/keys :req-un [::bidavgs ::askavgs ::unixtimeseries]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn ob-avgs-&gt;xyz [timedavgs]
+        :ret (s/keys :req-un [::bidavgs ::askavgs ::unixtimeseries]))</pre></td></tr><tr><td class="docs"><p>Separate the orderbook timeseries averages into bid and ask averages</p>
+</td><td class="codes"><pre class="brush: clojure">(defn ob-avgs-&gt;xyz 
+  [timedavgs]
   (reduce 
     (fn [x y]
       {:bidavgs (cons (get-in y [:obavg :bidavg]) (:bidavgs x)) 
@@ -3627,20 +3669,11 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
      :askavgs '() 
      :unixtimeseries '()}
     timedavgs))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(s/fdef offset 
-        :args (s/cat :data sequential? :amount number?)
-        :ret (s/coll-of number?))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn offset [data amount]
-  (map #(+ % amount) data))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(s/fdef scale 
-        :args (s/cat :data sequential? :amount number?)
-        :ret (s/coll-of number?))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn scale [data amount]
-  (map #(* % amount) data))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef weighted-avg 
         :args (s/cat :orderdata ::orders)
-        :ret number?)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn weighted-avg [orderdata]
+        :ret number?)</pre></td></tr><tr><td class="docs"><p>Weighted average of orderbook data.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn weighted-avg 
+  [orderdata]
   (/
     (as-&gt; orderdata x
           (map 
@@ -3655,14 +3688,15 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
         :args (s/and (s/cat :basecurrency ::currency :othercurrency ::currency)
                      #(not= (:basecurrency %) (:othercurrency %))
                      #(= (:basecurrency %) &quot;BTC&quot;))
-        :ret (s/coll-of ::rawpricedata))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn price-history-raw [basecurrency othercurrency]
+        :ret (s/coll-of ::rawpricedata))</pre></td></tr><tr><td class="docs"><p>Raw price data from bittrex.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn price-history-raw 
+  [basecurrency othercurrency]
   (as-&gt; (str 
-          &quot;https://bittrex.com/api/v1.1/public/getmarkethistory?market=&quot; 
+          &quot;http://bittrex.com/api/v1.1/public/getmarkethistory?market=&quot; 
           basecurrency
           &quot;-&quot; 
           othercurrency
-          &quot;&amp;depth=50&quot;) x
+          &quot;&amp;count=50&quot;) x
         (cnt/get x) 
         (:body x)
         (jsn/read-str x :key-fn keyword)
@@ -3680,8 +3714,9 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
                   (map 
                     u/timestamp-&gt;unix
                     (map :TimeStamp (price-history-raw basecurrency othercurrency)))
-                  (:unixtimeseries ret)))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn price-history-timeseries [basecurrency othercurrency]
+                  (:unixtimeseries ret)))))</pre></td></tr><tr><td class="docs"><p>Price history timeseries, ready for plotting with incanter. History from bittrex.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn price-history-timeseries 
+  [basecurrency othercurrency]
   (as-&gt; (price-history-raw basecurrency othercurrency) x
         (reduce 
           (fn [y z]
@@ -3690,48 +3725,16 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
           {:unixtimeseries '()
            :priceseries '()}
           x)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(s/fdef bid-ask-avg-timeseries 
-        :args (s/cat :limit ::limit)
-        :ret (s/keys :req-un [::bidavgs ::askavgs ::unixtimeseries]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn bid-ask-avg-timeseries [limit] 
-  (as-&gt; limit x
-        (get-orderbook-info x)
-        (reduce 
-          (fn [x y]
-            {:bidavgs (cons (weighted-avg (get-in y [:orderbook :buy])) (:bidavgs x)) 
-             :askavgs (cons (weighted-avg (get-in y [:orderbook :sell])) (:askavgs x))
-             :unixtimeseries (cons 
-                               (-&gt; 
-                                 (:timestamp y) 
-                                 (u/timestamp-&gt;unix (f/formatters :date-time-parser)))
-                               (:timeseries x))}) 
-          {:bidavgs '() 
-           :askavgs '() 
-           :unixtimeseries '()}
-          x)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(s/fdef graddata-&gt;timeseries 
-        :args (s/cat :raw-history (s/coll-of ::gradentry))
-        :ret  ::grad-timeseries)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn graddata-&gt;timeseries [grad-data]
-  (reduce 
-    (fn [x y]
-      {:grads (cons (:grad y) (:grads x))
-       :unixtimeseries (cons (:unixtimestamp y) (:unixtimeseries x))}) 
-    {:grads '() 
-     :unixtimeseries '()}
-    grad-data))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn colltimestamp-&gt;unix [datacoll]
-  (map 
-    #(update-in % [:TimeStamp] u/timestamp-&gt;unix)
-    datacoll))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef grad-calc
         :args (s/cat :raw-history (s/coll-of ::unixtimestamp-map :min-count 2))
         :ret  (s/coll-of ::gradentry)
         :fn (fn [{:keys [args ret]}]
               (-&gt;&gt;
                 (map :unixtimestamp ret)  
-                (apply &lt;=))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn grad-calc [raw-history]
+                (apply &lt;=))))</pre></td></tr><tr><td class="docs"><p>Given time series data, calculates the gradient at each step. The gradient for a particular candle is the difference 
+  between its close price and the close price of the next candle, divided by the time difference.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn grad-calc 
+  [raw-history]
   (-&gt; 
     (reduce
       (fn [x y]
@@ -3768,35 +3771,23 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
 </td><td class="codes"><pre class="brush: clojure">(s/fdef reduce-&gt;mapofcol 
         :args (s/cat :collofmap (s/coll-of map?))
         :ret map?
-        :fn (fn [{:keys [args ret]}]
-              false
-              ) 
-        )</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn reduce-&gt;mapofcol [collofmap]
+        :fn (fn [{:keys [args ret]}] false))</pre></td></tr><tr><td class="docs"><p>Takes a collection of maps and returns a map with the keys of the individual maps, and all of their corresponding 
+  values in vectors for each of the keys. Motivation is to be able to plot the data using incanter.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn reduce-&gt;mapofcol 
+  [collofmap]
   (reduce 
     (fn [x y]
       (cond 
         (vector? (val (first x))) (series-insert x y) 
         :else (series-insert (map-&gt;mapofcol x) y))) 
-    collofmap))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(s/fdef raw-&gt;unix 
-        :args (s/cat :map (s/coll-of ::rawpricedata :min-count 2) :key ::timestampkey)
-        :ret coll? 
-        :fn (fn [{:keys [args ret]}]
-              (-&gt;&gt;
-                (map :unixtimestamp ret)  
-                (apply &lt;=))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn raw-&gt;unix [raw timestampkey]
-  (-&gt;&gt; 
-    (map 
-      (fn [x]
-        (update-in x [timestampkey] u/timestamp-&gt;unix))
-      raw)
-    (map #(set/rename-keys % {timestampkey :unixtimestamp})) 
-    (sort-by :unixtimestamp)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn update-key [amap target replacement]
-  (map #(set/rename-keys % {target replacement}) amap))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn consecutive-gradient-neg [gradz gradlimit plot chain-length]
+    collofmap))</pre></td></tr><tr><td class="docs"><p>Rename all of the keys in a seq of maps</p>
+</td><td class="codes"><pre class="brush: clojure">(defn update-key 
+  [amap target replacement]
+  (map #(set/rename-keys % {target replacement}) amap))</pre></td></tr><tr><td class="docs"><p>Takes OHLC+gradient timeseries, the gradient above which the gradient is considered high or part of a spike, an 
+  incanter plot and how many consecutive occurances of a gradient above the gradient limit need to occur in a row for 
+  it to be considered a spike.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn consecutive-gradient-neg 
+  [gradz gradlimit plot chain-length]
   (doall 
     (-&gt;&gt;
       (reduce 
@@ -3812,8 +3803,11 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
         gradz)
       (filter #(&lt;= chain-length (count %)))
       (map last)
-      (map #(ich/add-pointer plot (:unixtimestamp %) (:price %))))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn consecutive-gradient-pos [gradz gradlimit plot chain-length]
+      (map #(ich/add-pointer plot (:unixtimestamp %) (:price %))))))</pre></td></tr><tr><td class="docs"><p>Takes OHLC+gradient timeseries, the gradient above which the gradient is considered high or part of a spike, an 
+  incanter plot and how many consecutive occurances of a gradient above the gradient limit need to occur in a row for 
+  it to be considered a spike. Returns the incanter plot.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn consecutive-gradient-pos 
+  [gradz gradlimit plot chain-length]
   (doall 
     (-&gt;&gt;
       (reduce 
@@ -3833,46 +3827,35 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
         #(ich/add-pointer 
            plot 
            (:unixtimestamp %) 
-           (:price %))))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(comment 
-  (let [gradz (as-&gt; (str &quot;https://www.cryptocompare.com/api/data/histoday/?aggregate=1&amp;e=CCCAGG&amp;fsym=ETH&amp;limit=1000&amp;tsym=BTC&quot;) x
-                    (cnt/get x) 
-                    (:body x)
-                    (jsn/read-str x :key-fn keyword)
-                    (:Data x)
-                    (update-key x :open :price)
-                    (update-key x :time :unixtimestamp)
-                    (grad-calc x))
+           (:price %))))))</pre></td></tr><tr><td class="docs"><p>Generate valid url for getting historical data from cryptocompare.com</p>
+</td><td class="codes"><pre class="brush: clojure">(defn cc-historical-url-gen 
+  [fsym tsym limit]
+  (str &quot;https://www.cryptocompare.com/api/data/histoday/?aggregate=1&amp;e=CCCAGG&amp;fsym=&quot; fsym &quot;&amp;limit=&quot; limit &quot;&amp;tsym=&quot; tsym))</pre></td></tr><tr><td class="docs"><p>Get historical data for supplied currency pair from crypto compare and calculate gradients for each candle.</p>
+</td><td class="codes"><pre class="brush: clojure">(with-test 
+  (defn get-gradients-cc 
+    [url]
+    (as-&gt; url x
+          (cnt/get x) 
+          (:body x)
+          (jsn/read-str x :key-fn keyword)
+          (:Data x)
+          (update-key x :open :price)
+          (update-key x :time :unixtimestamp)
+          (grad-calc x))) 
+  (with-routes!
+    {&quot;/something&quot; cc-historical-sample-response}
+    (= 
+      (get-gradients-cc (str uri &quot;/something&quot;)) 
+      '({:grad 4.050925925925942E-6, :price 53.76, :unixtimestamp 1.4704416E9} 
+        {:grad -2.025462962962963E-5, :price 54.11, :unixtimestamp 1.470528E9}))))</pre></td></tr><tr><td class="docs"><p>Graphically display the gradient strat. This will add indictors to the chart where the gradient algo returns a 
+  positive result. e.g. <img src="http://i.imgur.com/AenlmYI.png" alt="Gradient EA example" /></p>
+</td><td class="codes"><pre class="brush: clojure">(defn display-gradient-strat
+  [fsym tsym limit gradlimit chain-length]
+  (let [gradz (get-gradients-cc (cc-historical-url-gen fsym tsym limit))
         {:keys [grad price unixtimestamp]} (reduce-&gt;mapofcol gradz)
-        plot (ich/time-series-plot  
-               unixtimestamp
-               price
-               :points true)
-        ]
-(consecutive-gradient-pos gradz 0.00000001 plot 1)
-    (ic/view plot))
-    (doall 
-      (map 
-        #(ich/add-pointer plot (:unixtimestamp %) (:price %))  
-        highest-grads))
-  (ic/view 
-    (ich/xy-plot  
-      unixtimestamp
-      price
-      :points true))
-  (def sorted-vec (gen/fmap sort (gen/vector (gen/int))))
-  (gen/sample sorted-vec)
-  (s/def ::lookup (s/map-of keyword? string? :min-count 1))
-  (s/def ::lookup-finding-k (s/and (s/cat :lookup ::lookup
-                                          :k keyword?)
-                                   (fn [{:keys [lookup k]}]
-                                     (contains? lookup k))))
-  (defn lookup-finding-k-gen []
-    (gen/bind 
-      (s/gen ::lookup) 
-      #(gen/tuple 
-         (gen/return %) 
-         (gen/elements (keys %))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.marketcap" name="core.marketcap"><h1 class="project-name">core.marketcap</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+        plot (ich/time-series-plot unixtimestamp price :points true)]
+    (consecutive-gradient-pos gradz gradlimit plot chain-length)
+    (ic/view plot)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#core.marketcap" name="core.marketcap"><h1 class="project-name">core.marketcap</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns core.marketcap
     (:require
       [clojure.spec :as s]
@@ -3931,7 +3914,9 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
 
 <p>  This is the implementation of a very simple trading strategy based on candlesticks. <br />
   If the last candle was green, buy, and put a stop loss at the low of the last candle, on the sell side, sell and put 
-  a stop loss at the high of the last candle.</p>
+  a stop loss at the high of the last candle. Repeat each time a new candle appears (closing the previous trade). 
+  Equivalently we can leave a trade open if it is being made in the same direction as the previous trade and just 
+  update the stop loss.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns core.simple
   (:require
     [clj-http.client :as cnt]
@@ -3953,28 +3938,32 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
     [clojure.test :as tst :refer [is run-tests with-test]]
     [core.datasources :as ds]
     [core.utils :as u]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(declare simple-strat-final-profit)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn green? [{:keys [open close]}]
-      (&gt; close open))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn red? [{:keys [open close]}]
-      (&gt; open close))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn profit-calc-red [nexthigh high close nextclose]
+</td><td class="codes"><pre class="brush: clojure">(declare simple-strat-final-profit)</pre></td></tr><tr><td class="docs"><p>Is the candlestick green?</p>
+</td><td class="codes"><pre class="brush: clojure">(defn green? 
+  [{:keys [open close]}]
+      (&gt; close open))</pre></td></tr><tr><td class="docs"><p>Is the candlestick red?</p>
+</td><td class="codes"><pre class="brush: clojure">(defn red? 
+  [{:keys [open close]}]
+      (&gt; open close))</pre></td></tr><tr><td class="docs"><p>Helper for simple strat.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn profit-calc-red 
+  [nexthigh high close nextclose]
       (if
         (&gt; nexthigh high)
         (- close high)
-        (- close nextclose)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn profit-calc [open nextlow low nextclose close]
+        (- close nextclose)))</pre></td></tr><tr><td class="docs"><p>Helper for simple strat</p>
+</td><td class="codes"><pre class="brush: clojure">(defn profit-calc 
+  [open nextlow low nextclose close]
       (if
         (&lt; nextlow low)
         (- low close)
-        (- nextclose close)))</pre></td></tr><tr><td class="docs"><p>Clear mock account data</p>
+        (- nextclose close)))</pre></td></tr><tr><td class="docs"><p>Clear mock account data to simulate closing a trade. Leaves history intact</p>
 </td><td class="codes"><pre class="brush: clojure">(defn clear-fn 
   [mock-acc]
   (-&gt;
-    (update-in mock-acc [:open-date] (fn [_] nil))
-    (update-in [:stop-loss] (fn [_] nil))
-    (update-in [:buy-or-sell] (fn [_] nil))
-    (update-in [:order-price] (fn [_] nil))))</pre></td></tr><tr><td class="docs"><p>Return human or long timestamps</p>
+    (update mock-acc :open-date (fn [_] nil))
+    (update :stop-loss (fn [_] nil))
+    (update :buy-or-sell (fn [_] nil))
+    (update :order-price (fn [_] nil))))</pre></td></tr><tr><td class="docs"><p>Return human or long timestamps</p>
 </td><td class="codes"><pre class="brush: clojure">(defn human-or-long 
   [human? unixtimestamp]
   (if
@@ -4053,7 +4042,8 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
      (simple-strat standard-candles)  
      (simple-strat-profit-calc)
      (u/round2 round-to))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn profit-chains [profits chain-length]
+</td><td class="codes"><pre class="brush: clojure">(defn profit-chains 
+  [profits chain-length]
       (as-&gt; profits x
             (reduce
               (fn [x {:keys [profit] :as y}]
@@ -4069,14 +4059,25 @@ and a time series of OHLC data (candles). The reducer then runs and returns the 
                     :else x))
               [[]]
               x)
-            (filter #(&lt;= chain-length (count %)) x)))</pre></td></tr><tr><td class="docs"><h2>Simple start algorithm</h2>
+            (filter #(&lt;= chain-length (count %)) x)))</pre></td></tr><tr><td class="docs"><h2>Simple start algorithm (backtesting)</h2>
 
-<p>For backtesting so implemented as a reducer. For this strategy the three states we can be in are buy, sell and resting. <br />
-Resting will only happen during the first iteration when no trade has been made yet. Buy and sell states are mirror 
+<p>For backtesting so implemented as a reducer that operates on historical data. 
+For this strategy the three states we can be in are buy, sell and resting.  </p>
+
+<p>Resting will only happen during the first iteration when no trade has been made yet. Buy and sell states are mirror 
 images of eachother. If we are in a buy trade the next candle could be green or red. If it is green it could have 
 hit our stop loss, so we close the trade and open a new one, otherwise we just update our stop loss. If it is red 
 we will definitely be closing and starting a new trade, only question is did it hit our stop loss or not.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
+
+<p>Put simply we either get stopped out, close the current trade at the close of a red canlde or update our stop loss.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Update mock account with order data</p>
+</td><td class="codes"><pre class="brush: clojure">(defn update-mock-acc
+  [acc buy-or-sell close low unixtimestamp]
+  (-&gt;
+    (update acc :buy-or-sell (fn [_] &quot;buy&quot;))
+    (update :order-price (fn [_] close))
+    (update :stop-loss (fn [_] low))
+    (update :open-date (fn [_] unixtimestamp))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef buy-or-sell-judge 
         :args (s/cat :acc ::u/mock-account 
                      :candle any? 
@@ -4084,24 +4085,24 @@ we will definitely be closing and starting a new trade, only question is did it 
                      :low any? 
                      :close any? 
                      :unixtimestamp any? 
-                     :ratio (s/? (s/nilable number?))))</pre></td></tr><tr><td class="docs"><p>Decide to buy or sell based on colour of last candle. Can optionally take into account ratio of last candle. Updates 
-  a local representation of mock account data.</p>
+                     :ratio (s/? (s/nilable number?))
+                     :opts (s/? any?)))</pre></td></tr><tr><td class="docs"><p>Decide to buy or sell based on colour of last candle. Can optionally take into account ratio of last candle. Updates 
+  a local representation of mock account data. If live option is true then will place these orders with oanda too.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn buy-or-sell-judge 
   ([acc candle high low close unixtimestamp]
    (buy-or-sell-judge acc candle high low close unixtimestamp nil))
-  ([acc candle high low close unixtimestamp ratio]
-   (cond
-     (if ratio (&gt; ratio (u/body-ratio candle)) false) acc
-     (u/green? candle) (-&gt;
-                         (update acc :buy-or-sell (fn [_] &quot;buy&quot;))
-                         (update :order-price (fn [_] close))
-                         (update :stop-loss (fn [_] low))
-                         (update :open-date (fn [_] unixtimestamp)))
-     (not (u/green? candle)) (-&gt;
-                               (update acc :buy-or-sell (fn [_] &quot;sell&quot;))
-                               (update :order-price (fn [_] close))
-                               (update :stop-loss (fn [_] high))
-                               (update :open-date (fn [_] unixtimestamp))))))</pre></td></tr><tr><td class="docs">
+  ([acc candle high low close unixtimestamp ratio &amp; opts]
+   (let [{:keys [live instrument units]} opts]
+     (cond
+       (if ratio (&gt; ratio (u/body-ratio candle)) false) acc
+       (u/green? candle) (do 
+                           (when live 
+                             (ds/oanda-open-order-cas! instrument units :stoploss low))
+                           (update-mock-acc acc &quot;buy&quot; close low unixtimestamp))
+       (not (u/green? candle)) (do 
+                                 (when live 
+                                   (ds/oanda-open-order-cas! instrument (- units) :stoploss high))
+                                 (update-mock-acc acc &quot;sell&quot; close high unixtimestamp))))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(s/fdef update-hist 
         :args (s/cat :mock-account #(contains? % :history) :start any? :end any? :old-price any? :new-price any?))</pre></td></tr><tr><td class="docs"><p>Update transaction history in mock account by conjing the next history entry</p>
 </td><td class="codes"><pre class="brush: clojure">(defn update-hist 
@@ -4128,7 +4129,8 @@ we will definitely be closing and starting a new trade, only question is did it 
     (buy-or-sell-judge current-candle high low close unixtimestamp ratio)))</pre></td></tr><tr><td class="docs"><p>Update stop loss in mock account data for simple strat</p>
 </td><td class="codes"><pre class="brush: clojure">(defn update-stop-loss
   [mock-acc stop-loss]
-  (update mock-acc :stop-loss (fn [_] stop-loss)))</pre></td></tr><tr><td class="docs"><p>Simple strat implemented as a reducer for operating on historical data.</p>
+  (update mock-acc :stop-loss (fn [_] stop-loss)))</pre></td></tr><tr><td class="docs"><p>Simple strat implemented as a reducer for operating on historical data. Optionally a trade can be opened based on 
+    the ratio between the candle body and its wicks.</p>
 </td><td class="codes"><pre class="brush: clojure">(with-test
   (defn simple-strat-perc-candleratio 
     [standard-candles ratio]
@@ -4157,475 +4159,7 @@ we will definitely be closing and starting a new trade, only question is did it 
   (is
     (=
       (* 1000 (u/percentage-change 1.2 1.1 :hi))
-      (:account (simple-strat-perc u/green-&gt;green-&gt;green-stop-out)))))</pre></td></tr><tr><td class="docs"><p>Takes a map representing an oanda account and a candle and places a trade</p>
-</td><td class="codes"><pre class="brush: clojure">(with-test 
-  (defn simple-strat-perc-live  
-    [{:keys [stop-loss buy-or-sell order-price account history open-date] :as x}
-     {:keys [unixtimestamp open high low close] :as y}
-     order-url]
-    (let [c (chan)
-          buy-sell-sub-fn (fn [acc bos order-price stop-loss open-date units]
-                            (let [rslt (do
-                                         (println &quot;buy sell sub: &quot; units stop-loss)
-                                         (&lt;!! (ds/oanda-open-order-cas! &quot;EUR_USD&quot; units :stoploss (subs (str stop-loss) 0 7))))]
-                              (-&gt;
-                                (update-in acc [:current-order] (fn [_] rslt ))
-                                (update-in  [:buy-or-sell] (fn [_] bos))
-                                (update-in [:order-price] (fn [_] order-price))
-                                (update-in [:stop-loss] (fn [_] stop-loss))
-                                (update-in [:open-date] (fn [_] unixtimestamp)))))
-          buy-or-sell-fn (fn [acc candle high low close unixtimestamp]
-                           (cond
-                             (u/green? candle)  (buy-sell-sub-fn acc &quot;buy&quot; close low unixtimestamp &quot;100&quot;)
-                             :red (buy-sell-sub-fn acc &quot;sell&quot; close high unixtimestamp &quot;-100&quot;)))]
-      (cond
-        (= buy-or-sell &quot;buy&quot;) (do
-                                (if
-                                  (u/green? y)
-                                  (cond
-                                    (&lt; low stop-loss) (-&gt;
-                                                        (update-hist x open-date unixtimestamp order-price stop-loss)
-                                                        (update-in [:account]
-                                                                   (fn [acc]
-                                                                     (* acc
-                                                                        (u/percentage-change order-price stop-loss :spicy))))
-                                                        clear-fn
-                                                        (buy-or-sell-fn y high low close unixtimestamp))
-                                    :else (-&gt;
-                                            (update-in x [:stop-loss] (fn [_] low))))
-                                  (cond
-                                    (&lt; low stop-loss) (-&gt;
-                                                        (update-hist x open-date unixtimestamp order-price stop-loss)
-                                                        (update-in [:account]
-                                                                   (fn [acc]
-                                                                     (* acc
-                                                                        (u/percentage-change order-price stop-loss :spicy))))
-                                                        clear-fn
-                                                        (buy-or-sell-fn y high low close unixtimestamp))
-                                    :else (-&gt;
-                                            (update-hist
-                                              x
-                                              open-date
-                                              unixtimestamp
-                                              (u/percentage-change order-price close :spicy))
-                                            (update-in [:account]
-                                                       (fn [acc]
-                                                         (* acc
-                                                            (u/percentage-change order-price close :spicy))))
-                                            clear-fn
-                                            (buy-or-sell-fn y high low close unixtimestamp)))))
-        (= buy-or-sell &quot;sell&quot;) (if
-                                 (not (u/green? y))
-                                 (cond
-                                   (&gt; high stop-loss) (-&gt;
-                                                        (update-hist
-                                                          x
-                                                          open-date
-                                                          unixtimestamp
-                                                          (u/percentage-change stop-loss order-price :spicy))
-                                                        (update-in [:account]
-                                                                   (fn [acc]
-                                                                     (* acc
-                                                                        (u/percentage-change stop-loss order-price :spicy))))
-                                                        clear-fn
-                                                        (buy-or-sell-fn y high low close unixtimestamp))
-                                   :else (-&gt;
-                                           (update-in x [:stop-loss] (fn [_] high))))
-                                 (cond
-                                   (&gt; high stop-loss) (-&gt;
-                                                        (update-hist
-                                                          x
-                                                          open-date
-                                                          unixtimestamp
-                                                          (u/percentage-change stop-loss order-price :spicy))
-                                                        (update-in [:account]
-                                                                   (fn [acc]
-                                                                     (* acc
-                                                                        (u/percentage-change stop-loss order-price :spicy))))
-                                                        clear-fn
-                                                        (buy-or-sell-fn y high low close unixtimestamp))
-                                   :else (-&gt;
-                                           (update-hist
-                                             x
-                                             open-date
-                                             unixtimestamp
-                                             (u/percentage-change close order-price :spicy))
-                                           (update-in [:account]
-                                                      (fn [acc]
-                                                        (* acc
-                                                           (u/percentage-change close order-price :spicy))))
-                                           clear-fn
-                                           (buy-or-sell-fn y high low close unixtimestamp))))
-        (= buy-or-sell nil)  (do
-                               (println &quot;hi there&quot;)
-                               (buy-or-sell-fn x y high low close unixtimestamp))))) 
-#_(is 
-  (contains? 
-    (simple-strat-perc-live 
-      u/oanda-account-rep
-      (first (ds/oanda-historical &quot;EUR_USD&quot; &quot;10&quot; &quot;M5&quot;)))
-    :current-order)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn simple-strat-perc-live-two  [{:keys [stop-loss buy-or-sell order-price account history open-date] :as x}
-                               {:keys [unixtimestamp open high low close] :as y}]
-      (let [c (chan)
-            buy-sell-sub-fn (fn [acc bos order-price stop-loss open-date units]
-                                (let [rslt (do
-                                               (println &quot;buy sell sub: &quot; units stop-loss)
-                                               (&lt;!! (ds/oanda-open-order-cas! &quot;EUR_USD&quot; units (subs (str stop-loss) 0 7))))]
-                                       (-&gt;
-                                         (update-in acc [:current-order] (fn [_] rslt ))
-                                         (update-in  [:buy-or-sell] (fn [_] bos))
-                                         (update-in [:order-price] (fn [_] order-price))
-                                         (update-in [:stop-loss] (fn [_] stop-loss))
-                                         (update-in [:open-date] (fn [_] unixtimestamp)))))
-            clear-fn (fn [deets-map]
-                         (-&gt;
-                           (update-in deets-map [:open-date] (fn [_] nil))
-                           (update-in [:stop-loss] (fn [_] nil))
-                           (update-in [:buy-or-sell] (fn [_] nil))
-                           (update-in [:order-price] (fn [_] nil))))
-            update-hist (fn [damap start end perc]
-                            (update-in damap [:history] #(conj % {:start (u/to-human start)
-                                                                  :end (u/to-human end)
-                                                                  :perc perc})))
-            buy-or-sell-fn (fn [acc candle high low close unixtimestamp]
-                               (cond
-                                 (u/green? candle)  (buy-sell-sub-fn acc &quot;buy&quot; close low unixtimestamp &quot;100&quot;)
-                                 :red (buy-sell-sub-fn acc &quot;sell&quot; close high unixtimestamp &quot;-100&quot;)))]
-           (cond
-             (= buy-or-sell &quot;buy&quot;) (do
-                                     (if
-                                       (u/green? y)
-                                       (cond
-                                         (&lt; low stop-loss) (-&gt;
-                                                             (update-hist
-                                                               x
-                                                               open-date
-                                                               unixtimestamp
-                                                               (u/percentage-change order-price stop-loss :spicy))
-                                                             (update-in [:account]
-                                                                        (fn [acc]
-                                                                            (* acc
-                                                                               (u/percentage-change order-price stop-loss :spicy))))
-                                                             clear-fn
-                                                             (buy-or-sell-fn y high low close unixtimestamp))
-                                         :else (-&gt;
-                                                 (update-in x [:stop-loss] (fn [_] low))))
-                                       (cond
-                                         (&lt; low stop-loss) (-&gt;
-                                                             (update-hist
-                                                               x
-                                                               open-date
-                                                               unixtimestamp
-                                                               (u/percentage-change order-price stop-loss :spicy))
-                                                             (update-in [:account]
-                                                                        (fn [acc]
-                                                                            (* acc
-                                                                               (u/percentage-change order-price stop-loss :spicy))))
-                                                             clear-fn
-                                                             (buy-or-sell-fn y high low close unixtimestamp))
-                                         :else (-&gt;
-                                                 (update-hist
-                                                   x
-                                                   open-date
-                                                   unixtimestamp
-                                                   (u/percentage-change order-price close :spicy))
-                                                 (update-in [:account]
-                                                            (fn [acc]
-                                                                (* acc
-                                                                   (u/percentage-change order-price close :spicy))))
-                                                 clear-fn
-                                                 (buy-or-sell-fn y high low close unixtimestamp)))))
-             (= buy-or-sell &quot;sell&quot;) (if
-                                      (not (u/green? y))
-                                      (cond
-                                        (&gt; high stop-loss) (-&gt;
-                                                             (update-hist
-                                                               x
-                                                               open-date
-                                                               unixtimestamp
-                                                               (u/percentage-change stop-loss order-price :spicy))
-                                                             (update-in [:account]
-                                                                        (fn [acc]
-                                                                            (* acc
-                                                                               (u/percentage-change stop-loss order-price :spicy))))
-                                                             clear-fn
-                                                             (buy-or-sell-fn y high low close unixtimestamp))
-                                        :else (-&gt;
-                                                (update-in x [:stop-loss] (fn [_] high))))
-                                      (cond
-                                        (&gt; high stop-loss) (-&gt;
-                                                             (update-hist
-                                                               x
-                                                               open-date
-                                                               unixtimestamp
-                                                               (u/percentage-change stop-loss order-price :spicy))
-                                                             (update-in [:account]
-                                                                        (fn [acc]
-                                                                            (* acc
-                                                                               (u/percentage-change stop-loss order-price :spicy))))
-                                                             clear-fn
-                                                             (buy-or-sell-fn y high low close unixtimestamp))
-                                        :else (-&gt;
-                                                (update-hist
-                                                  x
-                                                  open-date
-                                                  unixtimestamp
-                                                  (u/percentage-change close order-price :spicy))
-                                                (update-in [:account]
-                                                           (fn [acc]
-                                                               (* acc
-                                                                  (u/percentage-change close order-price :spicy))))
-                                                clear-fn
-                                                (buy-or-sell-fn y high low close unixtimestamp))))
-             (= buy-or-sell nil)  (do
-                                    (println &quot;hi there&quot;)
-                                    (buy-or-sell-fn x y high low close unixtimestamp)))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn simple-strat-no-stop-update [standard-candles]
-      (let [clear-fn (fn [deets-map]
-                         (-&gt;
-                           (update-in deets-map [:open-date] (fn [_] nil))
-                           (update-in [:stop-loss] (fn [_] nil))
-                           (update-in [:buy-or-sell] (fn [_] nil))
-                           (update-in [:order-price] (fn [_] nil))))]
-           (reduce
-             (fn [{:keys [stop-loss buy-or-sell order-price account history] :as x}
-                  {:keys [unixtimestamp open high low close] :as y}]
-                 (cond
-                   (= buy-or-sell &quot;buy&quot;) (do
-                                           (println &quot;buy&quot;)
-                                           (if
-                                             (u/green? y)
-                                             (cond
-                                               (&lt; low stop-loss) (-&gt;
-                                                                   (update-in x [:account]
-                                                                              (fn [acc]
-                                                                                  (* acc
-                                                                                     (u/percentage-change order-price stop-loss :spicy))))
-                                                                   clear-fn)
-                                               :else x)
-                                             (cond
-                                               (&lt; low stop-loss) (-&gt;
-                                                                   (update-in x [:account]
-                                                                              (fn [acc]
-                                                                                  (* acc
-                                                                                     (u/percentage-change order-price stop-loss :spicy))))
-                                                                   clear-fn)
-                                               :else (-&gt;
-                                                       (update-in x [:account]
-                                                                  (fn [acc]
-                                                                      (* acc
-                                                                         (u/percentage-change order-price close :spicy))))
-                                                       clear-fn))))
-                   (= buy-or-sell &quot;sell&quot;) (if
-                                            (not (u/green? y))
-                                            (cond
-                                              (&gt; high stop-loss) (-&gt;
-                                                                   (update-in x [:account]
-                                                                              (fn [acc]
-                                                                                  (* acc
-                                                                                     (u/percentage-change stop-loss order-price :spicy))))
-                                                                   clear-fn)
-                                              :else x)
-                                            (cond
-                                              (&gt; high stop-loss) (-&gt;
-                                                                   (update-in x [:account]
-                                                                              (fn [acc]
-                                                                                  (* acc
-                                                                                     (u/percentage-change stop-loss order-price :spicy))))
-                                                                   clear-fn)
-                                              :else (-&gt;
-                                                      (update-in x [:account]
-                                                                 (fn [acc]
-                                                                     (* acc
-                                                                        (u/percentage-change order-price close :spicy))))
-                                                      clear-fn)))
-                   (= buy-or-sell nil)  (do
-                                          (println &quot;not buy or sell&quot;)
-                                          (cond
-                                            (u/green? y) (-&gt;
-                                                           (update-in x [:buy-or-sell] (fn [_] &quot;buy&quot;))
-                                                           (update-in [:order-price] (fn [_] close))
-                                                           (update-in [:stop-loss] (fn [_] low))
-                                                           (update-in [:open-date] (fn [_] unixtimestamp)))
-                                            (not (u/green? y)) (-&gt;
-                                                                 (update-in x [:buy-or-sell] (fn [_] &quot;sell&quot;))
-                                                                 (update-in [:order-price] (fn [_] close))
-                                                                 (update-in [:stop-loss] (fn [_] high))
-                                                                 (update-in [:open-date] (fn [_] unixtimestamp)))))))
-             {:open-date nil
-              :stop-loss nil
-              :buy-or-sell nil
-              :order-price nil
-              :account 1000
-              :history []}
-             standard-candles)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn simple-strat-perc-green [standard-candles]
-      (let [clear-fn (fn [deets-map]
-                         (-&gt;
-                           (update-in deets-map [:open-date] (fn [_] nil))
-                           (update-in [:stop-loss] (fn [_] nil))
-                           (update-in [:buy-or-sell] (fn [_] nil))
-                           (update-in [:order-price] (fn [_] nil))))]
-           (reduce
-             (fn [{:keys [stop-loss buy-or-sell order-price account history] :as x}
-                  {:keys [unixtimestamp open high low close] :as y}]
-                 (cond
-                   (= buy-or-sell &quot;buy&quot;) (do
-                                           (println &quot;buy&quot;)
-                                           (if
-                                             (u/green? y)
-                                             (cond
-                                               (&lt; low stop-loss) (-&gt;
-                                                                   (update-in x [:account]
-                                                                              (fn [acc]
-                                                                                  (* acc
-                                                                                     (u/percentage-change order-price stop-loss :spicy))))
-                                                                   clear-fn)
-                                               :else (-&gt;
-                                                       (update-in x [:stop-loss] (fn [_] low))))
-                                             (cond
-                                               (&lt; low stop-loss) (-&gt;
-                                                                   (update-in x [:account]
-                                                                              (fn [acc]
-                                                                                  (* acc
-                                                                                     (u/percentage-change order-price stop-loss :spicy))))
-                                                                   clear-fn)
-                                               :else (-&gt;
-                                                       (update-in x [:account]
-                                                                  (fn [acc]
-                                                                      (* acc
-                                                                         (u/percentage-change order-price close :spicy))))
-                                                       clear-fn))))
-                   (= buy-or-sell &quot;sell&quot;) (if
-                                            (not (u/green? y))
-                                            (cond
-                                              (&gt; high stop-loss) (-&gt;
-                                                                   (update-in x [:account]
-                                                                              (fn [acc]
-                                                                                  (* acc
-                                                                                     (u/percentage-change stop-loss order-price :spicy))))
-                                                                   clear-fn)
-                                              :else (-&gt;
-                                                      (update-in x [:stop-loss] (fn [_] high))))
-                                            (cond
-                                              (&gt; high stop-loss) (-&gt;
-                                                                   (update-in x [:account]
-                                                                              (fn [acc]
-                                                                                  (* acc
-                                                                                     (u/percentage-change stop-loss order-price :spicy))))
-                                                                   clear-fn)
-                                              :else (-&gt;
-                                                      (update-in x [:account]
-                                                                 (fn [acc]
-                                                                     (* acc
-                                                                        (u/percentage-change order-price close :spicy))))
-                                                      clear-fn)))
-                   (= buy-or-sell nil)  (do
-                                          (println &quot;not buy or sell&quot;)
-                                          (cond
-                                            (u/green? y) (-&gt;
-                                                           (update-in x [:buy-or-sell] (fn [_] &quot;buy&quot;))
-                                                           (update-in [:order-price] (fn [_] close))
-                                                           (update-in [:stop-loss] (fn [_] low))
-                                                           (update-in [:open-date] (fn [_] unixtimestamp)))
-                                            (not (u/green? y)) x))))
-             {:open-date nil
-              :stop-loss nil
-              :buy-or-sell nil
-              :order-price nil
-              :account 1000
-              :history []}
-             standard-candles)))</pre></td></tr><tr><td class="docs"><p>standard-candle bool</p>
-</td><td class="codes"><pre class="brush: clojure">(defn simple-strat-profits
-      [data profits?]
-      (-&gt;&gt;
-        (if profits?
-          (filter #(&lt; 1 (:perc %)) (:history (simple-strat-perc data)))
-          (filter #(&gt; 1 (:perc %)) (:history (simple-strat-perc data))))
-        (map #(update-in % [:start] u/timestamp-&gt;unix))
-        (map #(update-in % [:end] u/timestamp-&gt;unix))))</pre></td></tr><tr><td class="docs"><p>link up individual profit and loss occurances to make chains</p>
-</td><td class="codes"><pre class="brush: clojure">(defn create-chains
-      [profits]
-      (-&gt;&gt;
-        (loop [dadata profits]
-              (let [initial-count (count dadata)
-                    combo-pass (-&gt;&gt;
-                                 (partition 2 dadata)
-                                 (map
-                                   (fn [[a b :as part]]
-                                       (if
-                                         (= (:end a) (:start b))
-                                         {:start (:start a) :end (:end b)}
-                                         part)))
-                                 flatten)
-                    final-count (count combo-pass)]
-                   (cond
-                     (= initial-count final-count) combo-pass
-                     (not= initial-count final-count) (recur combo-pass))))
-        (sort-by (fn [{:keys [start end]}] (- end start)))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn predictive-length [dadata length]
-      (let [data (subvec (vec dadata) 0 (- 5000 length))
-            ratio  (-&gt;&gt;
-                     (map
-                       (fn [x]
-                           {:ratio x
-                            :profit (:account (simple-strat-perc-candleratio data x))})
-                       (range 0 100 1))
-                     (sort-by :profit)
-                     last
-                     :ratio)
-            account (-&gt;&gt;
-                      ratio
-                      (simple-strat-perc-candleratio (take-last length dadata))
-                      :account)]
-           {:length length :account account :ratio ratio}))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(comment
-  (as-&gt; (nth big-daddy-data 11) x
-        (:data x)
-        (:market_cap_by_available_supply x)
-        (filter #(&gt; marketcap (last %)) x))
-  (year-calc (nth big-daddy-data 12))
-  (had-market-cap-filter (nth big-daddy-data 120))
-  (had-market-cap-filter (first big-daddy-data))
-  (had-market-cap-filter &quot;hi&quot;)
-  (as-&gt; (nth big-daddy-data 20) x
-        (:data x)
-        (:market_cap_by_available_supply x)
-        (first x)
-        (last x)
-        (&gt; marketcap x))
-  (map year-calc big-daddy-data)
-  (def testing (data-by-id &quot;litecoin&quot;))
-  (def calc (year-calc testing))
-  (year-calc testing)
-  (count big-daddy-data)
-  (def filtered (as-&gt; big-daddy-data  x
-                      (filter less-than-year-filter x)
-                      (filter market-cap-filter x)
-                      (filter had-market-cap-filter x)))
-  (pprint (map year-calc filtered))
-  (map :id filtered)
-  (map year-calc filtered)
-  (def example-response (cnt/get test-endpoint))
-  (def test-endpoint &quot;https://api.coinmarketcap.com/v1/datapoints/ripple/1351941414000/1478141343000/&quot;)
-  (def testing (u/json-get test-endpoint))
-  (ffirst (:price_btc testing))
-  (apply min-key #(Math/abs (- % -4)) [-3 1 4])
-  (-&gt;
-    (apply min-key #(Math/abs (do
-                                #_(println (- % (c/to-long (t/plus (c/from-long hitcap-time) (t/years 1)))))
-                                (println %)
-                                (- % (c/to-long (t/plus (c/from-long hitcap-time) (t/years 1)))))) (map first (:price_usd data))))
-  (apply
-    min-key
-    #(Math/abs (- (first %) (c/to-long (t/plus (c/from-long hitcap-time) (t/years 1))))))
-  (ich/candle-stick-plot
-    :data (reduce-&gt;mapofcol (:Data resp))
-    :date :time)
-  (ich/candle-stick-plot
-    :data (ic/to-dataset (take 2 (:Data resp)))
-    :date :time))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_core.utils">core.utils</li><li class="floating-toc-li" id="floating-toc_core.core">core.core</li><li class="floating-toc-li" id="floating-toc_core.datasources">core.datasources</li><li class="floating-toc-li" id="floating-toc_core.visual">core.visual</li><li class="floating-toc-li" id="floating-toc_core.spike">core.spike</li><li class="floating-toc-li" id="floating-toc_core.marketcap">core.marketcap</li><li class="floating-toc-li" id="floating-toc_core.simple">core.simple</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+      (:account (simple-strat-perc u/green-&gt;green-&gt;green-stop-out)))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_core.utils">core.utils</li><li class="floating-toc-li" id="floating-toc_core.core">core.core</li><li class="floating-toc-li" id="floating-toc_core.datasources">core.datasources</li><li class="floating-toc-li" id="floating-toc_core.visual">core.visual</li><li class="floating-toc-li" id="floating-toc_core.spike">core.spike</li><li class="floating-toc-li" id="floating-toc_core.marketcap">core.marketcap</li><li class="floating-toc-li" id="floating-toc_core.simple">core.simple</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
 SyntaxHighlighter.all();
 
 // hackity hack

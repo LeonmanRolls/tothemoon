@@ -1,4 +1,5 @@
 (ns core.utils
+  "Utils used across the app"
   (:require
     [clj-http.client :as cnt]
     [clojure.data.json :as jsn]

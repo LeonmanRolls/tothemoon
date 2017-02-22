@@ -3,13 +3,21 @@
 ;#To the moon
 ;
 ;The goal of this project is try out different automated trading strategies for trading various instruments 
-;from FOREX to crypto-currencies.  
+;from FOREX to crypto-currencies. Officially. 
+;
+;The unofficial goal is to have a project that is sufficently complex to be a good programming playground, and on the 
+;off chance that it stumbles upon something profitable that's all the better.   
 ;
 ;##Up and running
 ;
 ;Type 'boot repl' into the command line to get started. 
 ;
 ;(dev) To watch for file changes and run tests and recompile docs
+;
+;##Simple strat
+;
+;One of the simplest strategies one could think of. The basic idea is if the previous candle was green, buy, if red, 
+;sell.
 ;
 ;### Simple strat candle ratio
 ;
@@ -29,3 +37,12 @@
 ;
 ;Backtesting is implemented as a reducer function. The reducer takes a map representing a trading account 
 ;and a time series of OHLC data (candles). The reducer then runs and returns the final account value. 
+;
+;#Glossary 
+;
+;cc - crypto-compare
+;simple strat - simple strategy
+;
+;#Code guidelines
+;
+;Any function that makes a network request should take a url so that it can be tested

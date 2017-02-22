@@ -70,7 +70,7 @@
           (load-file "build.boot")
           (ts/unstrument)
           (ts/instrument)
-          (run-tests 'core.utils 'core.simple 'core.datasources)) 
+          (run-tests 'core.utils 'core.simple 'core.datasources 'core.spike)) 
         result))))
 
 (deftask dev 
@@ -93,6 +93,8 @@
     (ts/instrument)))
 
 (comment
+
+
 
   (let [c (chan)]
        (ds/oanda-patch-order-cas c "300" "1.0625")

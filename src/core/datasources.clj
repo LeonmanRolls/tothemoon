@@ -161,13 +161,14 @@
   (defn http-body-cas 
     "http request that requires a body such as POST and PUT, returns a channel"
     [url headers body method]
-    (with-open [client (http/create-client)]
-      (let [resp (method client
-                            url
-                            :headers headers 
-                            :body (jsn/write-str body))]
-        (http/await resp)
-        (go (jsn/read-str (http/string resp) :key-fn keyword))))) 
+    (go 
+      (with-open [client (http/create-client)]
+        (let [resp (method client
+                           url
+                           :headers headers 
+                           :body (jsn/write-str body))]
+          (http/await resp)
+          (jsn/read-str (http/string resp) :key-fn keyword))))) 
 
   (with-routes!
     {"/something" {:status 200 :content-type "application/json"
