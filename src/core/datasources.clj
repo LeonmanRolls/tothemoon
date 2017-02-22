@@ -49,6 +49,7 @@
   (is 
     (= "world" (u/basic-stub (fn [uri] (http-cas uri {} http/GET))))))
 
+
 ;#Cryptocompare 
 
 (def cryptocompare-syms 

@@ -1,5 +1,3 @@
-    [mock-req]
-    (jsn/read-str 
       (get (:body mock-req) "postData")))
   (mock-req->body-data @cache)
 (defn mock-req->body-data
@@ -498,3 +496,5 @@ l
 (boot (marginalia "-d" "/home/leeondamiky/Documents/Clojure/trading-tothemoon/"))
 (boot (marginalia "-d" "/home/leeondamiky/Documents/Clojure/trading-tothemoon/docs/"))
 (boot (marginalia))
+ls
+(dev)
