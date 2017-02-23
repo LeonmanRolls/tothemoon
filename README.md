@@ -1,5 +1,7 @@
 #To the moon
 
+[API docs](https://leonmanrolls.github.io/tothemoon/) 
+
 The goal of this project is try out different automated trading strategies for trading various instruments 
 from FOREX to crypto-currencies. Officially. 
 
@@ -11,7 +13,9 @@ off chance that it stumbles upon something profitable that's all the better.
 ###Required environment variables.
 
 TOTHEMOON_SERVER_IP
+
 OANDA_API_KEY
+
 OANDA_ACCOUNT_NO
 
 Type 'boot repl' into the command line to get started. 
