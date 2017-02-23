@@ -10,13 +10,31 @@ off chance that it stumbles upon something profitable that's all the better.
 
 ##Up and running
 
-###Required environment variables.
+boot repl 
+
+Then try the following commands.
+
+###poh [P]lot [O]anda [H]istorical. Plot last x candles for given instrument pair. Data from oanda. 
+
+(poh "EUR_USD" 1000 "M1")
+
+###ds [D]isplay [S]pike. Run the spike algorithm to identify spikes.   
+
+(ds "BTC" "ETH" "10000" 0.000001 3)
+
+###[S]imple [S]trat. Returns the value of the account after running simple strat with provided params. Account starts at $1000.
+
+(ss "EUR_USD" 1000 "M1")
+
+##Required environment variables.
 
 TOTHEMOON_SERVER_IP
 
 OANDA_API_KEY
 
 OANDA_ACCOUNT_NO
+
+##Development
 
 Type 'boot repl' into the command line to get started. 
 

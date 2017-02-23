@@ -1,36 +1,3 @@
-      (get (:body mock-req) "postData")))
-  (mock-req->body-data @cache)
-(defn mock-req->body-data
-    "Takes a mock request and returns the body of the response as a map" 
-    [mock-req]
-    (jsn/read-str (get (:body mock-req) "postData") :key-fn keyword ))
-  (mock-req->body-data @cache)
-(rrl)
-  (u/mock-req->body-data @cache)
-(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
-    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 (str uri "/something") 123.233))
-    (let [requests (recorded-requests server)
-          order (:order (u/mock-req->body-data @cache))]
-      (println (contains? :stopLossOnFill order))
-      (is (= 1 (count requests)))))
-(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
-    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 (str uri "/something") 123.233))
-    (let [requests (recorded-requests server)
-          order (:order (u/mock-req->body-data @cache))]
-      (println (contains? order :stopLossOnFill))
-      (is (= 1 (count requests)))))
-(all-ns)
-(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
-    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 (str uri "/something")))
-    (let [requests (recorded-requests server)
-          order (:order (u/mock-req->body-data @cache))]
-      order))
-(rrl)
-(with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
-    (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 (str uri "/something")))
-    (let [requests (recorded-requests server)
-          order (:order (u/mock-req->body-data @cache))]
-      order))
 (with-routes! {"/something" {:status 200 :content-type "text/plain" :body (jsn/write-str {:hi "there"})}}
     (<!! (ds/oanda-open-order-cas! "EUR_USD" 100 :url (str uri "/something")))
     (let [requests (recorded-requests server)
@@ -496,5 +463,38 @@ l
 (boot (marginalia "-d" "/home/leeondamiky/Documents/Clojure/trading-tothemoon/"))
 (boot (marginalia "-d" "/home/leeondamiky/Documents/Clojure/trading-tothemoon/docs/"))
 (boot (marginalia))
-ls
-(dev)
+  (ds/oanda-historical)         
+l
+  (ds/oanda-historical "EUR_USD" 1000 "M1")         
+  (vs/plot-standard-candles (ds/oanda-historical "EUR_USD" 1000 "M1"))         
+(deftask last-x-candles
+  "Get the last x candles from oanda."  
+  [instrument 1000 timescale] 
+  (vs/plot-standard-candles (ds/oanda-historical instrument 1000 timescale)))
+(vs/plot-standard-candles (ds/oanda-historical "EUR_USD" 1000 "M1"))
+(oanda-last-x-candles "-i" "EUR_USD" -n "100" "-t" "M1")
+(oanda-last-x-candles "-i" "EUR_USD" "-n" "100" "-t" "M1")
+(plot-oanda-historical "EUR_USD" 1000 "M1"
+)
+  (poh "EUR_USD" 100 "M1")
+(poh "EUR_USD" 100 "M1")
+(defn ds
+  "[D]isplay [S]pike."
+  [fsym tsym limit gradlimit chain-length]
+  (sp/display-gradient-strat fsym tsym limit gradlimit chain-length))
+(ds "BTC" "ETH" "1000" 0.000001 3)
+(ds "BTC" "ETH" "10000" 0.000001 3)
+ (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" 5000 "M1"))
+(smp/simple-strat-perc (ds/oanda-historical "EUR_USD" 5000 "M1"))
+ (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" 10 "M1"))
+(ds/oanda-historical "EUR_USD" 10 "M1")
+ (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" 10 "M1"))
+ (smp/simple-strat-perc (<!! (ds/oanda-history-cas "EUR_USD" 10 "M1")))
+ (smp/simple-strat-perc-candleratio (ds/oanda-historical "EUR_USD" 10 "M1") nil)
+ (:account (smp/simple-strat-perc (ds/oanda-historical "EUR_USD" 10 "M1")))
+(defn ss
+  "[S]imple [S]trat. Returns the value of the account after running simple strat with provided 
+  params. Account starts at $1000." 
+  [instrument limit timescale]
+  (:account (smp/simple-strat-perc (ds/oanda-historical instrument limit timescale))))
+(ss "EUR_USD" 1000 "M1")

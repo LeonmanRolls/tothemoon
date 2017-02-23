@@ -46,6 +46,8 @@
   '[it.frbracch.boot-marginalia :refer [marginalia]]
   '[stub-http.core :refer :all])
 
+;Development tasks.
+
 (deftask my-task
          "Does nothing."
          []
@@ -79,8 +81,8 @@
   (boot (watch) (test-doc-refresh) (marginalia)))
 
 (deftask rrl
-  []
   "Reload files and re-instrument" 
+  []
   (do
     (load-file "src/core/visual.clj")
     (load-file "src/core/utils.clj")
@@ -92,11 +94,25 @@
     (ts/unstrument)
     (ts/instrument)))
 
-(comment
+;User repl functions.
 
-  (let [c (chan)]
-       (ds/oanda-patch-order-cas c "300" "1.0625")
-       (<!! c))
+(defn poh 
+  "[P]lot [O]anda [H]istorical. Plot last x candles. Data from oanda."  
+  [instrument candles timescale]
+  (vs/plot-standard-candles (ds/oanda-historical instrument candles timescale)))
+
+(defn ds
+  "[D]isplay [S]pike. e.g (ds \"BTC\" \"ETH\" \"10000\" 0.000001 3)"
+  [fsym tsym limit gradlimit chain-length]
+  (sp/display-gradient-strat fsym tsym limit gradlimit chain-length))
+
+(defn ss
+  "[S]imple [S]trat. Returns the value of the account after running simple strat with provided 
+  params. Account starts at $1000. e.g. (ss \"EUR_USD\" 1000 \"M1\")" 
+  [instrument limit timescale]
+  (:account (smp/simple-strat-perc (ds/oanda-historical instrument limit timescale))))
+
+(comment
 
   (defn testing [trade-green?]
         (go

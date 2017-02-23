@@ -170,7 +170,7 @@
 (with-test 
 
   (defn oanda-historical
-    "[EUR_USD 5000 M1]"
+    "[EUR_USD 5000 M1]. Converts oanda data to standard candles."
     [instrument count granularity]
     (->>
       (u/json-get
