@@ -24,7 +24,9 @@
     [clojure.core.logic :as lgc]
     [stub-http.core :refer :all]))
 
-(def server-ip "http://139.59.226.3:3001")
+(def server-ip 
+  "Server address for source of orderbook info." 
+  (System/getenv "TOTHEMOON_SERVER_IP"))
 
 (def timeformat "YYYY-MM-DDTHH:MM:SS")
 
